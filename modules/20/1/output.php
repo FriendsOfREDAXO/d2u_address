@@ -1,0 +1,240 @@
+<?php
+$address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
+$address_type = new AddressType($address_type_id);
+
+if(rex::isBackend()) {
+	// BACKEND
+	print '<h1 style="font-size: 1.5em;">Adressliste</h1>';
+	print "Adressart: ". $address_type->name;
+}
+else {
+	// FRONTEND
+	// Get placeholder wildcard tags and other presets
+	$sprog = rex_addon::get("sprog");
+	$tag_open = $sprog->getConfig('wildcard_open_tag');
+	$tag_close = $sprog->getConfig('wildcard_close_tag');
+
+	$country_id = rex_request('country_id', 'int') == 0 ? 0 : rex_request('country_id', 'int');
+	$country = FALSE;
+	$zip_code = rex_request('zip_code', 'int') == 0 ? 0 : rex_request('zip_code', 'int');
+
+	$d2u_address = rex_addon::get('d2u_address');
+	$default_country_id = $d2u_address->hasConfig('default_country_id') ? $d2u_address->getConfig('default_country_id') : 0;
+
+	$maps_zoom = $address_type->maps_zoom;
+
+	// Form selections
+	$addresses = [];
+	if($address_type->show_country_select == "yes") {
+		if($zip_code > 0) {
+			$addresses = Address::getAddressesForZipcode($zip_code, $address_type, rex_clang::getCurrentId());
+			$country = new Country($default_country_id, rex_clang::getCurrentId());
+			$maps_zoom = $country->maps_zoom;
+		}
+		else if($country_id > 0) {
+			$country = new Country($country_id, rex_clang::getCurrentId());
+			$addresses = $country->getAddresses($address_type, TRUE);
+			$maps_zoom = $country->maps_zoom;
+		}
+		else {
+			$accepted_lang = explode(";", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			$accepted_lang = explode(",", $accepted_lang[0]);
+			$countries = Country::getCountriesByLangCode($accepted_lang[0], rex_clang::getCurrentId());
+			if(count($countries) > 0) {
+				$country_id = $countries[0]->country_id;
+				foreach ($countries as $country) {
+					$countries_addresses = $country->getAddresses($address_type, TRUE);
+					foreach ($countries_addresses as $key => $countries_address) {
+						$addresses[$key] = $countries_address;
+					}
+				}
+			}
+		}
+	}
+	else {
+		$addresses = $address_type->getAddresses(TRUE);
+	}
+
+	// Fallback if no address was found, there should be at least one address
+	if(count($addresses) == 0) {
+		$country = new Country($default_country_id, rex_clang::getCurrentId());
+		$addresses = $country->getAddresses($address_type, TRUE);
+		$maps_zoom = $country->maps_zoom;
+	}
+
+	// Output
+	if($address_type->show_country_select == "yes") {
+		// Only if coutry selection should be available
+		print '<div class="large-12 columns">';
+		print '<h1>'. $tag_open .'d2u_address_local_servicepartner'. $tag_close .'</h1>';
+		print '<div class="finden-text">'. $tag_open .'d2u_address_specialists'. $tag_close .'</div>';
+		print '<br />';
+
+		print '<div class="box-grey">';
+		print '<form method="post">';
+		print '<div class="row">';
+		print '<div class="medium-6 small-12 columns">';
+		print '<select name="country_id" class="white darkerHover w100p" onChange="this.form.submit()">';
+		$countries = Country::getAll(rex_clang::getCurrentId(), TRUE);
+		foreach($countries as $cur_country) {
+			$selected = "";
+			if($country_id == $cur_country->country_id) {
+				$selected = ' selected="selected"';
+			}
+			else if($country_id == 0 && $cur_country->country_id == $default_country_id) {
+				$selected = ' selected="selected"';
+			}
+			print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
+		}
+		print '<option value="-1" '. ($country_id == -1 ? ' selected="selected"' : '') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
+		print '</select>';
+		print '</div>';
+
+		if($country_id <= 0 || $country_id == $default_country_id) {
+			print '<div class="medium-6 small-12 columns end">';
+			print '<div class="h10 show-for-small"></div>';
+			$placeholder = $zip_code == 0 ? $tag_open .'d2u_address_zip_code'. $tag_close : $zip_code;
+			print '<input type="text" value="" name="zip_code" placeholder="'. $placeholder .'" class="w80p darkerFocus fl-left">';
+			print '<input type="submit" value="»" class="w20p fl-left">';
+			print '</div>';
+		}
+
+		print '</div>';
+		print '</form>';
+		print '</div>';
+		print '</div>';
+		print '<br />';
+	} // END if country selection should be available
+
+	if(count($addresses) > 0) {
+		if($address_type->show_country_select == "yes") {
+			// Only if coutry selection should be available
+			print '<div class="large-12 columns"><h4>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h4></div>';
+		}
+		foreach($addresses as $address) {
+			print '<div class="medium-6 columns end">';
+			print '<div class="box-grey with-text hyphens" data-height-watch>';
+			print '<div class="row">';
+			print '<div class="large-3 small-3 columns">';
+			$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
+			$a_href_close = $address->article_id > 0 ? '</a>' : '';
+			if($address->picture != "") {
+				print $a_href_open .'<img src="index.php?rex_media_type=120x150&rex_media_file='. $address->picture
+						.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
+			}
+			print '</div>';
+			print '<div class="large-9 small-9 columns">';
+			if($address->contact_name != "") {
+				print $a_href_open .'<h3>'. $address->contact_name .'</h3>'. $a_href_close;
+				print $address->company .'<br>';
+			}
+			else {
+				print $a_href_open .'<h3>'. $address->company .'</h3>'. $a_href_close;
+			}
+			if($address->company_appendix != "") {
+				print $address->company_appendix .'<br>';
+			}
+			if($address_type->show_address_details == "yes") {
+				print $address->street .'<br>';
+				print $address->zip_code .' '. $address->city .'<br>';
+			}
+			print '<br />';
+			print $tag_open .'d2u_address_phone'. $tag_close .' '. $address->phone .'<br>';
+			print '<a href="mailto:'. $address->email .'">'. $address->email .'</a>';
+			print '</div>';
+			print '</div>';
+			print '</div>';
+			print '</div>';
+		}
+		print '</div>';
+		print '<br />';
+	}
+	?>
+	<div class="row">
+		<div class="large-12 columns">
+		<?php
+		$adressen_js_array = [];
+		$infotext_js_array = [];
+		foreach($addresses as $address) {
+			$adressen_js_array[] = '"'. $address->street .', '. $address->zip_code .' '. $address->city .'"';
+			$infotext = '"'. $address->company .'<br />';
+			if($address->contact_name != "") {
+				$infotext .= $address->contact_name .'<br />';			
+			}
+			$infotext_country = new Country($address->country_id, rex_clang::getCurrentId());
+			$infotext .= $infotext_country->name .' - '. $address->zip_code .' '. $address->city.'"';
+			$infotext_js_array[] = $infotext;
+		}
+
+		$d2u_helper = rex_addon::get("d2u_helper");
+		$api_key = "";
+		if($d2u_helper->hasConfig("maps_key")) {
+			$api_key = 'key='.$d2u_helper->getConfig("maps_key");
+		}
+		?>
+
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
+		<div id="map_canvas" style="display: block; width: 100%; height: 500px;"></div> 
+		<script type="text/javascript">
+			var geocoder;
+			var map;
+			var infowindow = new google.maps.InfoWindow();
+			var places = [];
+			var popup_content = [<?php print implode(", ",$infotext_js_array)?>];
+			var address = [<?php print implode(", ", $adressen_js_array)?>];
+			var address_position = 0;
+			var timeout = 100;
+			var center = true;
+				function initialize() {
+				geocoder = new google.maps.Geocoder();
+				var latlng = new google.maps.LatLng(47.6242,7.67378);
+				var myOptions = {
+				  zoom: <?php print $maps_zoom; ?>,
+				  center: latlng,
+				  mapTypeId: 'hybrid'
+				}
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+				addMarker(address_position);
+			}
+
+			function addMarker(position) {
+				geocoder.geocode({'address': address[position]}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						if(center == true) {
+							map.setCenter(results[0].geometry.location);
+							center = false;
+						}
+						places[position] = results[0].geometry.location;
+
+						var marker = new google.maps.Marker({
+							position: places[position],
+							map: map
+						});
+
+						google.maps.event.addListener(marker, 'click', function() {
+							if (!infowindow) {
+								infowindow = new google.maps.InfoWindow();
+							}
+							infowindow.setContent('<div id="infoWindow" style="white-space: nowrap;">' + popup_content[position] + '</div>');
+							infowindow.open(map, marker);
+						});
+					}
+					else {
+						if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+							setTimeout(function() { addMarker(position); }, (timeout * 3));
+						}
+					}
+					address_position++;
+					if (address_position < address.length) {
+						setTimeout(function() { addMarker(address_position); }, (timeout));
+					}
+				});
+			}
+
+			initialize();
+		</script>
+		</div>
+	</div>
+<?php
+}
+?>

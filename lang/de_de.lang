@@ -1,0 +1,59 @@
+d2u_address_default_country_id = Standardland
+
+
+d2u_address = D2U Adressen
+d2u_address_adress = Adressen
+d2u_address_adress_types = Adressarten
+d2u_address_countries = Länder
+d2u_address_zip_codes = PLZ
+adresszusatz = Adressezusatz
+anzeige_adresse = Adressen komplett anzeigen?
+anzeige_frontend = Land im Frontend anzeigen?
+anzeige_laenderauswahl = Soll die Länderauswahl im Frontend angezeigt werden?
+artikel = Redaxo Artikel
+bild = Bild
+breitengrad = Breitengrad
+email = E-Mailadresse
+ersatzteile = Ersatzteile
+firma = Firma
+firmenzusatz = Firmenzusatz
+hinweis_geocoding = Wenn Google Maps die Adresse dieses Ortes nicht korrekt geocodiert, k&ouml;nnen optional die L&auml;ngen- und Breitengrade eingegeben werden. Hier geht es zum <a href="http://www.linkr.de/2009/03/24/mit-google-maps-laengen-breitengrade-ermitteln-freies-geocoding-skript/" target="_blank" style="color: blue">L&auml;ngen- und Breitengradrechner</a>.
+hinweis_offline_artikel = WICHTIG: Der Link zum Artikel wird nur angezeigt, wenn der Artikel auch in der Struktur online geschaltet ist!
+hinweis_sortier_prio = HINWEIS: Falls Sie sich für eine Sortierzahl entscheinden, fügen Sie bitte voranstehende Nullen an, da sonst die Sortierung falsch erfolgt.<br>Ergebnis bei falscher Eingabe: 1, 10, 2, 3, ...<br>Ergebnis bei korrekter Eingabe: 01, 02, 03, 10, ...
+id = ID
+iso_code = ISO Ländercode
+ja = Ja
+kontakt = Kontakt
+kontaktart = Kontaktart
+ktb_adressen = Kaltenbach Kontaktverwaltung
+
+laengengrad = Längengrad
+landname = Land
+maps_zoom = Zoomstufe Google Maps
+name = Name
+name_adressart = Kürzel Adressart
+name_kontakt = Kontaktperson
+nein = Nein
+offline = Offline
+online = Online
+
+plz_bis = ... bis
+plz_von = PLZ von ...
+sortier_prio = Sortierzahl oder -wort
+sprachunabhaengig = Sprachunabhängige Daten
+stadt = Stadt
+status = Onlinestatus
+strasse = Straße mit Hausnummer
+technischer_service = Technischer Service
+telefax = Telefax
+telefon = Telefnummer
+titel = KTB Adressen Addon
+vertrieb = Vertrieb
+www = Internet URL (inkl. http://)
+zuord_laender = Länderzuordnung
+zuord_plz = Zuordnung Postleitzahlen
+
+d2u_references_rights = D2U Adressen Addon
+d2u_references_rights_edit_data = D2U Adressen Addon: Editierrechte für Daten und sprachübergreifende Inhalte
+d2u_references_rights_edit_lang = D2U Adressen Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)
+d2u_references_rights_settings = D2U Adressen Addon: Einstellungen
