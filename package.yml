@@ -8,10 +8,10 @@ page:
     perm: d2u_address[]
     icon: rex-icon fa-address-card
     subpages:
-        address: { title: 'translate:d2u_address_adress', icon: rex-icon fa-address-card }
-        address_type: { title: 'translate:d2u_address_adress_types', icon: rex-icon fa-address-book }
-        countries: { title: 'translate:d2u_address_countries', icon: rex-icon fa-flag }
-        zip_codes: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road }
+        address: { title: 'translate:d2u_address_address', icon: rex-icon fa-address-card }
+        address_type: { title: 'translate:d2u_address_address_types', icon: rex-icon fa-address-book }
+        country: { title: 'translate:d2u_address_countries', icon: rex-icon fa-flag }
+        zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road }
         settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, perm: d2u_address[settings] }
         setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, perm: d2u_address[settings] }
 

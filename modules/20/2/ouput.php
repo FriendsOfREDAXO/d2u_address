@@ -21,7 +21,7 @@ $address = new Address($adress_id);
 			<select name="land_id" class="white darkerHover select-margin" onChange="this.form.submit()">
 				<option selected="" disabled=""><?php print $tag_open .'d2u_address_failure_country'. $tag_close; ?></option>
 				<?php
-					$countries = Country::getAll(rex_clang::getCurrentId(), $address_type_id);
+					$countries = $address_type->getCountries();
 					foreach($countries as $country) {
 						print '<option value="'. $country->country_id .'">'. $country->name .'</option>';
 					}

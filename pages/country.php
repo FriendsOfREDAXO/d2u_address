@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$country = FALSE;
@@ -59,16 +59,16 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$country_id = $entry_id;
 	if($country_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$country_id = $form['country_id'];
 	}
 	$country = new Country($country_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if object is used
-	$reffering_machines = $country->getMachines();
+	$reffering_addresses = $country->getAddresses(FALSE, FALSE);
 
 	// If not used, delete
-	if(count($reffering_machines) == 0) {
+	if(count($reffering_addresses) == 0 && rex_config::get("d2u_address", "default_country_id") != $country->country_id) {
 		foreach(rex_clang::getAll() as $rex_clang) {
 			if($country === FALSE) {
 				$country = new Country($country_id, $rex_clang->getId());
@@ -83,23 +83,18 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	}
 	else {
 		$message = '<ul>';
-		foreach($reffering_machines as $reffering_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
+		foreach($reffering_addresses as $reffering_address) {
+			$message .= '<li><a href="index.php?page=d2u_address/address&func=edit&entry_id='. $reffering_address->address_id .'">'. $reffering_address->name .'</a></li>';
+		}
+		if(rex_config::get("d2u_address", "default_country_id") == $country->country_id) {
+			$message .= '<li><a href="index.php?page=d2u_address/settings">'. rex_i18n::msg('d2u_helper_settings') .'</a></li>';
 		}
 		$message .= '</ul>';
 
-		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
+		print rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
 	}
 	
 	$func = '';
-}
-// Change online status of machine
-else if($func == 'changestatus') {
-	$country = new Country($entry_id, rex_config::get("d2u_helper", "default_lang"));
-	$country->changeStatus();
-	
-	header("Location: ". rex_url::currentBackendPage());
-	exit;
 }
 
 // Eingabeformular
@@ -107,7 +102,7 @@ if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_industry_sectors'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_address_country'); ?></div></header>
 			<div class="panel-body">
 				<input type="hidden" name="form[country_id]" value="<?php echo $entry_id; ?>">
 				<?php
@@ -116,7 +111,7 @@ if ($func == 'edit' || $func == 'add') {
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_address[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -135,8 +130,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $country->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $country->teaser, FALSE, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_address_country_name', "form[lang][". $rex_clang->getId() ."][name]", $country->name, $required, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>
@@ -144,18 +138,25 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_industry_sectors_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$country = new Country($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
+							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_industry_sectors_pic', 1, $country->pic, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_machinery_iso_lang_codes', 'form[iso_lang_codes]', 'online', $country->iso_lang_codes == "online", $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_iso_lang_codes_comma', "form[iso_lang_codes]", implode(',',$country->iso_lang_codes), FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', "form[maps_zoom]", $country->maps_zoom, FALSE, $readonly, "number");
+							d2u_addon_backend_helper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
+							$options_address_ids = [];
+							$addresses = Address::getAll(rex_config::get('d2u_helper', 'default_lang'), FALSE, FALSE);
+							foreach ($addresses as $address) {
+								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
+							}
+							d2u_addon_backend_helper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -179,16 +180,16 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT industry_sectors.country_id, name, iso_lang_codes '
-		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industry_sectors '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang '
-			. 'ON industry_sectors.country_id = lang.country_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+	$query = 'SELECT countries.country_id, name, iso_lang_codes '
+		. 'FROM '. rex::getTablePrefix() .'d2u_address_countries AS countries '
+		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
+			. 'ON countries.country_id = lang.country_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon fa-industry"></i>';
+    $tdIcon = '<i class="rex-icon fa-flag"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###country_id###']);
@@ -196,10 +197,12 @@ if ($func == '') {
     $list->setColumnLabel('country_id', rex_i18n::msg('id'));
     $list->setColumnLayout('country_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_industry_sectors_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_address_country_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###country_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->setColumnLabel('iso_lang_codes', rex_i18n::msg('d2u_address_iso_lang_codes'));
+
+	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###country_id###']);
 
@@ -208,14 +211,10 @@ if ($func == '') {
     $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###country_id###']);
     $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 
-	$list->removeColumn('iso_lang_codes');
-    $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###iso_lang_codes###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###country_id###"><i class="rex-icon rex-icon-###iso_lang_codes###"></i> ###iso_lang_codes###</a>');
-	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-
-	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_industry_sectors_no_industry_sectors_found'));
+	$list->setNoRowsMessage(rex_i18n::msg('d2u_address_countries_no_countries_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_industry_sectors'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_address_countries'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

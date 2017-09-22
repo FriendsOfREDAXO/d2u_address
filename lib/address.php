@@ -9,6 +9,11 @@ class Address {
 	var $address_id = 0;
 	
 	/**
+	 * @var int Redaxo language ID
+	 */
+	var $clang_id = 0;
+	
+	/**
 	 * @var string Company Name
 	 */
 	var $company = "";
@@ -44,9 +49,9 @@ class Address {
 	var $city = "";
 	
 	/**
-	 * @var int Country ID
+	 * @var Country Country
 	 */
-	var $country_id = 0;
+	var $country;
 	
 	/**
 	 * @var string Latitude
@@ -106,8 +111,9 @@ class Address {
 	/**
 	 * Constructor.
 	 * @param int $address_id Address ID
+	 * @param int $clang_id Redaxo Language ID
 	 */
-	 public function __construct($address_id) {
+	 public function __construct($address_id, $clang_id) {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_address "
 				."WHERE address_id = ". $address_id;
 		$result = rex_sql::factory();
@@ -115,6 +121,7 @@ class Address {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
+			$this->clang_id = $clang_id;
 			$this->address_id = $result->getValue("address_id");
 			$this->company = $result->getValue("company");
 			$this->company_appendix = $result->getValue("company_appendix");
@@ -123,7 +130,7 @@ class Address {
 			$this->additional_address = $result->getValue("additional_address");
 			$this->zip_code = $result->getValue("zip_code");
 			$this->city = $result->getValue("city");
-			$this->country_id = $result->getValue("country_id");
+			$this->country = new Country($result->getValue("country_id"), $clang_id);
 			$this->latitude = $result->getValue("latitude");
 			$this->longitude = $result->getValue("longitude");
 			$this->email = $result->getValue("email");
@@ -149,34 +156,148 @@ class Address {
 			}
 		}
 	}
+
+	/**
+	 * Changes the status of a property
+	 */
+	public function changeStatus() {
+		if($this->online_status == "online") {
+			if($this->address_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_address_address "
+					."SET online_status = 'offline' "
+					."WHERE address_id = ". $this->address_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "offline";
+		}
+		else {
+			if($this->address_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_address_address "
+					."SET online_status = 'online' "
+					."WHERE address_id = ". $this->address_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "online";
+		}
+	}
 	
 	/**
-	 * Returns address for zip code
-	 * @param int $zip_code ZIP Code.
-	 * @param AdressType $address_type Address type
-	 * @param int $clang_id Redaxo language ID
-	 * @return Address[] Fitting addresses
+	 * Deletes the object.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
 	 */
-	static public function getAddressesForZipcode($zip_code, $address_type, $clang_id = 0) {
-		$query = 'SELECT address_ids FROM '. rex::getTablePrefix() .'d2u_address_zipcodes '
-				.'WHERE range_from <= '. $zip_code .' AND range_to >= '. $zip_code;
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address_lang "
+				."WHERE address_id = ". $this->address_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address "
+				."WHERE address_id = ". $this->address_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address_lang "
+				."WHERE address_id = ". $this->address_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
+	}
+	
+	/**
+	 * Returns addresses
+	 * @param int $clang_id Redaxo Language ID
+	 * @param AddressType $address_type Address type, default: FALSE (all)
+	 * @param boolean $online_only return only online adresses
+	 * @return Address[] Addresses
+	 */
+	static public function getAll($clang_id, $address_type = FALSE, $online_only = TRUE) {
+		$query = 'SELECT address_id FROM '. rex::getTablePrefix() .'d2u_address_address ';
+		$where = [];
+		if($address_type !== FALSE) {
+			$where[] = 'address_type_ids LIKE "%|'. $address_type->address_type_id .'|%"';
+		}
+		if($online_only) {
+			$where[] = 'online_status = "online"';
+		}
+		if(count($where) > 0) {
+			$query .= 'WHERE '. implode(' AND ', $where);
+		}
+		$query .= ' ORDER BY company, priority';
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 
 		$addresses = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
-			foreach($address_ids as $address_id) {
-				$address = new Address($address_id);
-				if(in_array($address_type->address_type_id, $address->address_type_ids) && $address->online_status == "online") {
-					$addresses[$address->priority ."-". $address->address_id] = $address;
-				}
-			}
+			$addresses[] = new Address($result->getValue("address_id"), $clang_id);
+			$result->next();
+		}
+		return $addresses;
+	}
+
+	/**
+	 * Returns address types reffering address
+	 * @return AddressType[] AddressType objects
+	 */
+	public function getReferringAddressTypes() {
+		$query = 'SELECT address_type_id FROM '. rex::getTablePrefix() .'d2u_address_types '
+			.'WHERE default_address_id = '. $this->address_id .' '
+			.'ORDER BY name';
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		$address_types = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$address_types[] = new AddressType($result->getValue("address_type_id"), $this->clang_id);
+			$result->next();
+		}
+		return $address_types;
+	}
+	
+	/**
+	 * Returns countries reffering address
+	 * @return Country[] Country objects
+	 */
+	public function getReferringCountries() {
+		$query = 'SELECT countries.country_id, name FROM '. rex::getTablePrefix() .'d2u_address_countries AS countries '
+			.'LEFT JOIN '. rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
+				.'ON countries.country_id = lang.country_id '
+			.'WHERE clang_id = '. $this->clang_id .' AND address_ids LIKE "%|'. $this->address_id .'|%" '
+			.'ORDER BY name';
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		$countries = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$countries[] = new Country($result->getValue("country_id"), $this->clang_id);
 			$result->next();
 		}
 		
-		ksort($addresses);
-		return $addresses;
+		return $countries;
+	}
+	
+	/**
+	 * Returns zip codes reffering address
+	 * @return ZipCode[] ZipCode objects
+	 */
+	public function getReferringZipCodes() {
+		$query = 'SELECT zipcode_id FROM '. rex::getTablePrefix() .'d2u_address_zipcodes '
+			.'WHERE address_ids LIKE "%|'. $this->address_id .'|%" '
+			.'ORDER BY range_from';
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		$zip_codes = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$zip_codes[] = new ZipCode($result->getValue("zipcode_id"), $this->clang_id);
+			$result->next();
+		}
+		
+		return $zip_codes;
 	}
 
 	/**
@@ -194,7 +315,7 @@ class Address {
 				."additional_address = '". $this->additional_address ."', "
 				."zip_code = '". $this->zip_code ."', "
 				."city = '". $this->city ."', "
-				."country_id = ". $this->country_id .", "
+				."country_id = ". $this->country->country_id .", "
 				."latitude = ". $this->latitude .", "
 				."longitude = ". $this->longitude .", "
 				."email = '". $this->email ."', "

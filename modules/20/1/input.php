@@ -1,5 +1,5 @@
 <?php 
-$address_types = AddressType::getAll();
+$address_types = AddressType::getAll(rex_clang::getCurrentId());
 
 if(count($address_types) > 0) {
 	print 'Welche Kontaktart soll in diesem Artikel angezeigt werden? <select name="VALUE[1]">';

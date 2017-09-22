@@ -9,6 +9,11 @@ class Country {
 	var $country_id = 0;
 	
 	/**
+	 * @var int Redaxo language ID
+	 */
+	var $clang_id = 0;
+	
+	/**
 	 * @var string Name
 	 */
 	var $name = "";
@@ -50,6 +55,7 @@ class Country {
 
 		if ($num_rows > 0) {
 			$this->country_id = $result->getValue("country_id");
+			$this->clang_id = $clang_id;
 			$this->iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower($result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
 			if($result->getValue("maps_zoom") != "") {
 				$this->maps_zoom = $result->getValue("maps_zoom");
@@ -63,12 +69,37 @@ class Country {
 	}
 	
 	/**
+	 * Deletes the object.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
+	 */
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_countries_lang "
+				."WHERE country_id = ". $this->country_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_countries "
+				."WHERE country_id = ". $this->country_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_countries_lang "
+				."WHERE country_id = ". $this->country_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
+	}
+
+	/**
 	 * Returns addresses for country.
-	 * @param AddressType $address_type Address type
+	 * @param AddressType $address_type Address type, FALSE if all address types should be used
 	 * @param boolean $online_only True if only online addresses should be returned
 	 * @return Address[] Found addresses
 	 */
-	public function getAddresses($address_type, $online_only = TRUE) {
+	public function getAddresses($address_type = FALSE, $online_only = TRUE) {
 		$query = "SELECT address_ids FROM ". rex::getTablePrefix() ."d2u_address_countries "
 			."WHERE country_id = ". $this->country_id ." ";
 		$result = rex_sql::factory();
@@ -78,8 +109,8 @@ class Country {
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
 			foreach($address_ids as $address_id) {
-				$address = new Address($address_id);
-				if(in_array($address_type->address_type_id, $address->address_type_ids) && ($online_only && $address->online_status == "online")) {
+				$address = new Address($address_id, $this->clang_id);
+				if($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids) && ($online_only && $address->online_status == "online")) {
 					$addresses[$address->priority ."-". $address->address_id] = $address;
 				}
 			}
@@ -91,26 +122,34 @@ class Country {
 	}
 
 	/**
+	 * Returns zipcode objects for country.
+	 * @return ZipCode[] Found zipcodes
+	 */
+	public function getZipCodes() {
+		$query = "SELECT zipcode_id FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
+			."WHERE country_id = ". $this->country_id ." "
+			."ORDER BY range_from";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		$zipcodes = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$zipcodes[] = new ZipCode($result->getValue('zipcode_id'), $this->clang_id);
+			$result->next();
+		}
+		return $zipcodes;
+	}
+	
+	/**
 	 * Gets all countries.
 	 * @param int $clang_id Redaxo language ID
 	 * @param int $address_type_id AddressType ID
-	 * @return Country[] Array mit Land Objekten.
+	 * @return Country[] Array with country objects.
 	 */
-	public static function getAll($clang_id = 0, $address_type_id = 0) {
-		$query = 'SELECT country_id, name FROM '. rex::getTablePrefix() .'d2u_address_countries_lang '
+	public static function getAll($clang_id = 0) {
+		$query = 'SELECT country_id FROM '. rex::getTablePrefix() .'d2u_address_countries_lang '
 				."WHERE clang_id = ". ($clang_id == 0 ? rex_clang::getCurrentId() : $clang_id) ." "
 				.'ORDER BY name';
-		if($address_type_id > 0) {
-			// get only countries wich differ from default country for address type - exception: country the address resides in
-			$address_type = new AddressType($address_type_id);
-	
-			$query = 'SELECT address.country_id, country_lang.name FROM '. rex::getTablePrefix() .'d2u_address_address AS address '
-				. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_address_countries_lang AS country_lang '
-					.'ON address.country_id = country_lang.country_id AND country_lang.clang_id = '. ($clang_id == 0 ? rex_clang::getCurrentId() : $clang_id) .' '
-				.'GROUP BY country_id, name '
-				.'ORDER BY country_lang.name';
-			//FIXME Adressen müssen aus country Tabelle geholt werden !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 
@@ -129,7 +168,7 @@ class Country {
 	 * @param int $clang_id Redaxo language ID
 	 * @return Country[] Array with fitting countries.
 	 */
-	static public function getCountriesByLangCode($iso_lang_code, $clang_id = 0) {
+	static public function getByLangCode($iso_lang_code, $clang_id = 0) {
 		$query = 'SELECT country_id FROM '. rex::getTablePrefix() .'d2u_address_countries '
 				.'WHERE iso_lang_codes LIKE "%'. substr($iso_lang_code, 0, 2) .'%" ';
 		$result = rex_sql::factory();
@@ -161,8 +200,8 @@ class Country {
 		if($this->country_id == 0 || $pre_save_country != $this) {
 			$query = rex::getTablePrefix() ."d2u_address_countries SET "
 					."iso_lang_codes = '". $this->iso_lang_codes ."', "
-					."maps_zoom = ". maps_zoom .", "
-					."adress_ids = '". implode('|', $this->adress_ids) ."' ";
+					."maps_zoom = ". $this->maps_zoom .", "
+					."address_ids = '|". implode('|', $this->address_ids) ."|' ";
 
 			if($this->country_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -170,7 +209,6 @@ class Country {
 			else {
 				$query = "UPDATE ". $query ." WHERE country_id = ". $this->country_id;
 			}
-
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 			if($this->country_id == 0) {
