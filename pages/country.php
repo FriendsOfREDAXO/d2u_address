@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($country === FALSE) {
 			$country = new Country($country_id, $rex_clang->getId());
+			$country->country_id = $country_id; // Ensure correct ID in case first language has no object
 			$country->iso_lang_codes = $form['iso_lang_codes'];
 			$country->maps_zoom = $form['maps_zoom'];
 			$country->address_ids = isset($form['address_ids']) ? $form['address_ids'] : [];
