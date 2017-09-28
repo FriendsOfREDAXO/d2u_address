@@ -185,27 +185,12 @@ class Address {
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
-		if($delete_all) {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address_lang "
-				."WHERE address_id = ". $this->address_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address "
-				."WHERE address_id = ". $this->address_id;
-			$result = rex_sql::factory();
-			$result->setQuery($query);
-		}
-		else {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address_lang "
-				."WHERE address_id = ". $this->address_id ." AND clang_id = ". $this->clang_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-		}
+	public function delete() {
+		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_address "
+			."WHERE address_id = ". $this->address_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
 	}
 	
 	/**

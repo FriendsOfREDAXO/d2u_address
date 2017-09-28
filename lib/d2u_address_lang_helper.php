@@ -293,12 +293,17 @@ class d2u_address_lang_helper {
 
 	/**
 	 * Uninstalls the replacement table for this addon.
+	 * @param int $clang_id Redaxo language ID, if 0, replacements of all languages
+	 * will be deleted. Otherwise only one specified language will be deleted.
 	 */
-	public function uninstall() {
+	public function uninstall($clang_id = 0) {
 		foreach($this->replacements_english as $key => $value) {
 			if(rex_addon::get('sprog')->isAvailable()) {
 				// Delete 
 				$query = "DELETE FROM ". rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."'";
+				if($clang_id > 0) {
+					$query .= " AND clang_id = ". $clang_id;
+				}
 				$select = rex_sql::factory();
 				$select->setQuery($query);
 			}

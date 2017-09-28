@@ -54,6 +54,17 @@ class ZipCode {
 		}
 	}
 
+	
+	/**
+	 * Deletes the object.
+	 */
+	public function delete() {
+		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
+			."WHERE zipcode_id = ". $this->zipcode_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+	}
+
 	/**
 	 * Get all zip codes
 	 * @param Country $country Country
@@ -111,6 +122,21 @@ class ZipCode {
 		return $addresses;
 	}
 
+	/**
+	 * Proves whether the object has addresses and in case it has, are these online?
+	 * @return boolean TRUE if there are online addresses for the object.
+	 */
+	public function isOnline() {
+		foreach ($this->address_ids as $address_id) {
+			$address = new Address($address_id, $this->clang_id);
+			if($address->online_status == 'online') {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+    }
+	
 	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if error occured

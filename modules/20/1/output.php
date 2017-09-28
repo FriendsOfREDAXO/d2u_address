@@ -90,13 +90,23 @@ else {
 		print '</select>';
 		print '</div>';
 
-		if($country !== FALSE && count($country->getZipCodes()) > 0) {
-			print '<div class="medium-6 small-12 columns end">';
-			print '<div class="h10 show-for-small"></div>';
-			$placeholder = $zip_code === FALSE ? $tag_open .'d2u_address_zip_code'. $tag_close : rex_request('zip_code', 'int');
-			print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'" class="w80p darkerFocus fl-left">';
-			print '<input type="submit" value="»" class="w20p fl-left">';
-			print '</div>';
+		$country_zip_codes = $country->getZipCodes();
+		if($country !== FALSE && count($country_zip_codes) > 0) {
+			$show_zip_code_field = FALSE;
+			foreach($country_zip_codes as $country_zip_code) {
+				if($country_zip_code->isOnline()) {
+					$show_zip_code_field = TRUE;
+					break;
+				}
+			}
+			if($show_zip_code_field) {
+				print '<div class="medium-6 small-12 columns end">';
+				print '<div class="h10 show-for-small"></div>';
+				$placeholder = $zip_code === FALSE ? $tag_open .'d2u_address_zip_code'. $tag_close : rex_request('zip_code', 'int');
+				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'" class="w80p darkerFocus fl-left">';
+				print '<input type="submit" value="»" class="w20p fl-left">';
+				print '</div>';
+			}
 		}
 
 		print '</div>';
