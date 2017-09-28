@@ -64,23 +64,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$country_id = $form['country_id'];
 	}
 	$country = new Country($country_id, rex_config::get("d2u_helper", "default_lang"));
+	$country->country_id = $country_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_addresses = $country->getAddresses(FALSE, FALSE);
 
 	// If not used, delete
 	if(count($reffering_addresses) == 0 && rex_config::get("d2u_address", "default_country_id") != $country->country_id) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($country === FALSE) {
-				$country = new Country($country_id, $rex_clang->getId());
-				// If object is not found in language, set country_id anyway to be able to delete
-				$country->country_id = $country_id;
-			}
-			else {
-				$country->clang_id = $rex_clang->getId();
-			}
-			$country->delete();
-		}
+		$country->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

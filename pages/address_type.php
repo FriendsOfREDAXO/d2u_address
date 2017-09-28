@@ -45,20 +45,19 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$address_type_id = $form['address_type_id'];
 	}
-	$address_type = new AddressType($address_type_id);
+	$address_type = new AddressType($address_type_id, rex_config::get('d2u_helper', 'default_lang'));
 	
 	// Check if category is used
 	$uses_addresses = $address_type->getAddresses();
 	
 	// If not used, delete
 	if(count($uses_addresses) == 0) {
-		$address_type = new AddressType($address_type_id);
 		$address_type->delete();
 	}
 	else {
 		$message = '<ul>';
 		foreach($uses_addresses as $uses_address) {
-			$message .= '<li><a href="index.php?page=d2u_address/address&func=edit&entry_id='. $uses_address->property_id .'">'. $uses_address->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_address/address&func=edit&entry_id='. $uses_address->address_id .'">'. $uses_address->company . ($uses_address->contact_name != "" ? ' ('. $uses_address->contact_name .')' : '') .'</a></li>';
 		}
 		$message .= '</ul>';
 
