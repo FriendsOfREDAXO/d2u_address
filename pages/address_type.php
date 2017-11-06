@@ -94,7 +94,7 @@ if ($func == 'edit' || $func == 'add') {
 								$options_address_id[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_address_article', '1', $address_type->article_id, rex_config::get("d2u_helper", "default_lang"));
+							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, rex_config::get("d2u_helper", "default_lang"));
 						?>
 					</div>
 				</fieldset>
@@ -148,10 +148,12 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###address_type_id###']);
 
-    $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
-    $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###address_type_id###']);
-    $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
+	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
+		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###address_type_id###']);
+		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
+	}
 
     $list->setNoRowsMessage(rex_i18n::msg('d2u_address_no_address_types_found'));
 

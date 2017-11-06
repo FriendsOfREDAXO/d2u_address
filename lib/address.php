@@ -114,6 +114,7 @@ class Address {
 	 * @param int $clang_id Redaxo Language ID
 	 */
 	 public function __construct($address_id, $clang_id) {
+		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_address "
 				."WHERE address_id = ". $address_id;
 		$result = rex_sql::factory();
@@ -121,7 +122,6 @@ class Address {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->clang_id = $clang_id;
 			$this->address_id = $result->getValue("address_id");
 			$this->company = $result->getValue("company");
 			$this->company_appendix = $result->getValue("company_appendix");

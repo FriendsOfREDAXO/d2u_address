@@ -35,7 +35,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$address->address_type_ids = isset($form['address_type_ids']) ? $form['address_type_ids'] : [];
 	$address->article_id = $link_ids["REX_INPUT_LINK"][1];
 	$address->priority = $form['priority'];
-	$address->online_status = $form['online_status'];
+	$address->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 
 	// message output
 	$message = 'form_save_error';
@@ -136,18 +136,18 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, TRUE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_fax', 'form[fax]', $address->fax, FALSE, $readonly);
-							d2u_addon_backend_helper::form_mediafield('d2u_address_pic', '1', $address->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $address->picture, $readonly);
 							$adress_types = AddressType::getAll(rex_config::get('d2u_helper', 'default_lang'));
 							$options_address_types = [];
 							foreach ($adress_types as $adress_type) {
 								$options_address_types[$adress_type->address_type_id] = $adress_type->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, TRUE, $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_address_article', '1', $address->article_id, rex_config::get("d2u_helper", "default_lang"));
+							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, rex_config::get("d2u_helper", "default_lang"));
 							d2u_addon_backend_helper::form_input('d2u_address_priority', 'form[priority]', $address->priority, TRUE, $readonly, 'number');
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
-							d2u_addon_backend_helper::form_select('d2u_address_status', 'form[online_status]', $options_status, [$address->online_status], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $address->online_status == "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -201,19 +201,21 @@ if ($func == '') {
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
- 	$list->removeColumn('online_status');
-    $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###address_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
-	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###address_id###']);
 
-    $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
-    $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###address_id###']);
-    $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
+	$list->removeColumn('online_status');
+	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###address_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
+		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
+		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###address_id###']);
+		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
+	}
+	
     $list->setNoRowsMessage(rex_i18n::msg('d2u_address_no_address_found'));
 
     $fragment = new rex_fragment();

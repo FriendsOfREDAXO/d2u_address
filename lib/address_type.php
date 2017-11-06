@@ -49,13 +49,13 @@ class AddressType {
 	 * @param int $clang_id Redaxo language ID.
 	 */
 	 public function __construct($address_type_id, $clang_id) {
+		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_types "
 				."WHERE address_type_id = ". $address_type_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
-			$this->clang_id = $clang_id;
 			$this->address_type_id = $result->getValue("address_type_id");
 			$this->name = $result->getValue("name");
 			$this->show_address_details = $result->getValue("show_address_details");

@@ -44,6 +44,7 @@ class Country {
 	 * @param int $clang_id. Redaxo language ID
 	 */
 	 public function __construct($country_id, $clang_id = 0) {
+		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_countries_lang AS lang "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_address_countries AS countries "
 					."ON lang.country_id = countries.country_id "
@@ -55,7 +56,6 @@ class Country {
 
 		if ($num_rows > 0) {
 			$this->country_id = $result->getValue("country_id");
-			$this->clang_id = $clang_id;
 			$this->iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower($result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
 			if($result->getValue("maps_zoom") != "") {
 				$this->maps_zoom = $result->getValue("maps_zoom");

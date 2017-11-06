@@ -39,13 +39,13 @@ class ZipCode {
 	 * @param int $clang_id Redaxo language ID.
 	 */
 	 public function __construct($zipcode_id, $clang_id) {
+		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
 				."WHERE zipcode_id = ". $zipcode_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
-			$this->clang_id = $clang_id;
 			$this->zipcode_id = $result->getValue("zipcode_id");
 			$this->address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
 			$this->range_from = $result->getValue("range_from");

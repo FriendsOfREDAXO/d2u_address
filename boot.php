@@ -49,14 +49,14 @@ function rex_d2u_address_media_is_in_use(rex_extension_point $ep) {
 
 	// References
 	$sql_address = rex_sql::factory();
-	$sql_address->setQuery('SELECT address_id, name, company FROM `' . rex::getTablePrefix() . 'd2u_address_address`'
+	$sql_address->setQuery('SELECT address_id, contact_name, company FROM `' . rex::getTablePrefix() . 'd2u_address_address`'
 		.'WHERE picture = "'. $filename .'"');  
 
 	// Prepare warnings
 	// Address pics
 	for($i = 0; $i < $sql_address->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_address/adress&func=edit&entry_id='.
-			$sql_address->getValue('address_id') .'\')">'. rex_i18n::msg('d2u_address_rights') ." - ". rex_i18n::msg('d2u_address_address') .': '. $sql_address->getValue('name') .' ('. $sql_address->getValue('company') .'</a>';
+			$sql_address->getValue('address_id') .'\')">'. rex_i18n::msg('d2u_address_rights') ." - ". rex_i18n::msg('d2u_address_address') .': '. $sql_address->getValue('contact_name') .' ('. $sql_address->getValue('company') .'</a>';
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
