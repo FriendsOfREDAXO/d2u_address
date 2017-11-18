@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Address;
+
 /**
  * Zip code object
  */
@@ -40,9 +42,9 @@ class ZipCode {
 	 */
 	 public function __construct($zipcode_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_address_zipcodes "
 				."WHERE zipcode_id = ". $zipcode_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
@@ -59,9 +61,9 @@ class ZipCode {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_zipcodes "
 			."WHERE zipcode_id = ". $this->zipcode_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 	}
 
@@ -72,9 +74,9 @@ class ZipCode {
 	 * @return ZipCode[] Array with all zip codes for a country
 	 */
 	public static function get($country, $zip_code) {
-		$query = 'SELECT zipcode_id FROM '. rex::getTablePrefix() .'d2u_address_zipcodes '
+		$query = 'SELECT zipcode_id FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes '
 			.'WHERE range_from <= '. $zip_code .' AND range_to >= '. $zip_code .' AND country_id = '. $country->country_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		if($result->getRows() > 0) {
@@ -90,9 +92,9 @@ class ZipCode {
 	 * @return ZipCode[] Array with all zip codes for a country
 	 */
 	public static function getAll($country_id) {
-		$query = 'SELECT zipcode_id FROM '. rex::getTablePrefix() .'d2u_address_zipcodes '
+		$query = 'SELECT zipcode_id FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes '
 			.'WHERE country_id  = '. $country_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$zip_codes = [];
@@ -144,7 +146,7 @@ class ZipCode {
 	public function save() {
 		$error = 0;
 
-		$query = rex::getTablePrefix() ."d2u_address_zipcodes SET "
+		$query = \rex::getTablePrefix() ."d2u_address_zipcodes SET "
 				."address_ids = '|". implode('|', $this->address_ids) ."|', "
 				."range_from = '". $this->range_from ."', "
 				."range_to = '". $this->range_to ."', "
@@ -156,7 +158,7 @@ class ZipCode {
 			$query = "UPDATE ". $query ." WHERE zipcode_id = ". $this->zipcode_id;
 		}
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		if($this->zipcode_id == 0) {
 			$this->zipcode_id = $result->getLastId();

@@ -15,7 +15,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
 
-	$address_type = new AddressType($form['address_type_id']);
+	$address_type = new D2U_Address\AddressType($form['address_type_id']);
 	$address_type->name = $form['name'];
 	$address_type->show_address_details = array_key_exists('show_address_details', $form);
 	$address_type->show_country_select = array_key_exists('show_country_select', $form);
@@ -45,7 +45,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$address_type_id = $form['address_type_id'];
 	}
-	$address_type = new AddressType($address_type_id, rex_config::get('d2u_helper', 'default_lang'));
+	$address_type = new D2U_Address\AddressType($address_type_id, rex_config::get('d2u_helper', 'default_lang'));
 	
 	// Check if category is used
 	$uses_addresses = $address_type->getAddresses();
@@ -79,9 +79,9 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_address_address_type'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$address_type = new AddressType($entry_id, rex_config::get('d2u_helper', 'default_lang'));
+							$address_type = new D2U_Address\AddressType($entry_id, rex_config::get('d2u_helper', 'default_lang'));
 							$readonly = TRUE;
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								$readonly = FALSE;
 							}
 							
@@ -89,7 +89,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, TRUE, $readonly, 'number');
-							$addresses = Address::getAll(rex_config::get('d2u_helper', 'default_lang'), FALSE, FALSE);
+							$addresses = D2U_Address\Address::getAll(rex_config::get('d2u_helper', 'default_lang'), FALSE, FALSE);
 							foreach ($addresses as $address) {
 								$options_address_id[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
@@ -106,7 +106,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'add') {
 
 if ($func == '') {
 	$query = 'SELECT address_type_id, name '
-		. 'FROM '. rex::getTablePrefix() .'d2u_address_types '
+		. 'FROM '. \rex::getTablePrefix() .'d2u_address_types '
 		. 'ORDER BY name';
     $list = rex_list::factory($query);
 
@@ -152,7 +152,7 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###address_type_id###']);
 
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###address_type_id###']);

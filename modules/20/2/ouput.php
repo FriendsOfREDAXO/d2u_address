@@ -5,9 +5,9 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 	
 $address_type_id = "REX_VALUE[1]";
-$address_type = new AddressType($address_type_id);
+$address_type = new D2U_Address\AddressType($address_type_id);
 $adress_id = "REX_VALUE[2]";
-$address = new Address($adress_id);
+$address = new D2U_Address\Address($adress_id);
 ?>
 <div class="large-4 columns">
 	<div class="sp sections hide-for-large-up"></div>

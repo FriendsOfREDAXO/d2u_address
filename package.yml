@@ -20,5 +20,5 @@ requires:
     php:
         version: '>=5.6'
     packages:
-        d2u_helper: '>=1.2.4'
+        d2u_helper: '>=1.2.5'
         sprog: '>=1.0.0'

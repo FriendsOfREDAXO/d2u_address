@@ -1,8 +1,8 @@
 <?php
 $address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
-$address_type = new AddressType($address_type_id, rex_clang::getCurrentId());
+$address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	// BACKEND
 	print '<h1 style="font-size: 1.5em;">Adressliste</h1>';
 	print "Adressart: ". $address_type->name;
@@ -14,8 +14,8 @@ else {
 	$tag_open = $sprog->getConfig('wildcard_open_tag');
 	$tag_close = $sprog->getConfig('wildcard_close_tag');
 
-	$country = rex_request('country_id', 'int') > 0 ? new Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : FALSE;
-	$zip_code = rex_request('zip_code', 'int') > 0 ? ZipCode::get($country, rex_request('zip_code', 'int')) : FALSE;
+	$country = rex_request('country_id', 'int') > 0 ? new D2U_Address\Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : FALSE;
+	$zip_code = rex_request('zip_code', 'int') > 0 ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : FALSE;
 
 	$d2u_address = rex_addon::get('d2u_address');
 	$default_country_id = $d2u_address->hasConfig('default_country_id') ? $d2u_address->getConfig('default_country_id') : 0;
@@ -34,9 +34,9 @@ else {
 		else {
 			$accepted_lang = explode(";", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			$accepted_lang = explode(",", $accepted_lang[0]);
-			$countries = Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
+			$countries = D2U_Address\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
 			if(count($countries) > 0) {
-				$country = new Country($countries[0]->country_id, rex_clang::getCurrentId());
+				$country = new D2U_Address\Country($countries[0]->country_id, rex_clang::getCurrentId());
 				foreach ($countries as $cur_country) {
 					// show all addresses with this ISO lang code
 					$countries_addresses = $cur_country->getAddresses($address_type, TRUE);
@@ -54,7 +54,7 @@ else {
 
 	// Fallback if no address was found, there should be at least one address
 	if(count($addresses) == 0) {
-		$country = new Country($default_country_id, rex_clang::getCurrentId());
+		$country = new D2U_Address\Country($default_country_id, rex_clang::getCurrentId());
 		$addresses = $country->getAddresses($address_type, TRUE);
 		$maps_zoom = $country->maps_zoom;
 	}

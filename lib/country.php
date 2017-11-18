@@ -1,8 +1,10 @@
 <?php
+namespace D2U_Address;
+
 /**
  * Data of country.
  */
-class Country {
+class Country implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int ID 
 	 */
@@ -45,12 +47,12 @@ class Country {
 	 */
 	 public function __construct($country_id, $clang_id = 0) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_countries_lang AS lang "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_address_countries AS countries "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_address_countries_lang AS lang "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_address_countries AS countries "
 					."ON lang.country_id = countries.country_id "
 				."WHERE lang.country_id = ". $country_id ." "
 					."AND clang_id = ". $clang_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -74,21 +76,21 @@ class Country {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_countries_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries_lang "
 			."WHERE country_id = ". $this->country_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_countries_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_address_countries_lang "
 			."WHERE country_id = ". $this->country_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_countries "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries "
 				."WHERE country_id = ". $this->country_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -100,9 +102,9 @@ class Country {
 	 * @return Address[] Found addresses
 	 */
 	public function getAddresses($address_type = FALSE, $online_only = TRUE) {
-		$query = "SELECT address_ids FROM ". rex::getTablePrefix() ."d2u_address_countries "
+		$query = "SELECT address_ids FROM ". \rex::getTablePrefix() ."d2u_address_countries "
 			."WHERE country_id = ". $this->country_id ." ";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$addresses = [];
@@ -126,10 +128,10 @@ class Country {
 	 * @return ZipCode[] Found zipcodes
 	 */
 	public function getZipCodes() {
-		$query = "SELECT zipcode_id FROM ". rex::getTablePrefix() ."d2u_address_zipcodes "
+		$query = "SELECT zipcode_id FROM ". \rex::getTablePrefix() ."d2u_address_zipcodes "
 			."WHERE country_id = ". $this->country_id ." "
 			."ORDER BY range_from";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$zipcodes = [];
@@ -147,10 +149,10 @@ class Country {
 	 * @return Country[] Array with country objects.
 	 */
 	public static function getAll($clang_id = 0) {
-		$query = 'SELECT country_id FROM '. rex::getTablePrefix() .'d2u_address_countries_lang '
-				."WHERE clang_id = ". ($clang_id == 0 ? rex_clang::getCurrentId() : $clang_id) ." "
+		$query = 'SELECT country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries_lang '
+				."WHERE clang_id = ". ($clang_id == 0 ? \rex_clang::getCurrentId() : $clang_id) ." "
 				.'ORDER BY name';
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$countries = [];
@@ -169,9 +171,9 @@ class Country {
 	 * @return Country[] Array with fitting countries.
 	 */
 	static public function getByLangCode($iso_lang_code, $clang_id = 0) {
-		$query = 'SELECT country_id FROM '. rex::getTablePrefix() .'d2u_address_countries '
+		$query = 'SELECT country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries '
 				.'WHERE iso_lang_codes LIKE "%'. substr($iso_lang_code, 0, 2) .'%" ';
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$countries = [];
@@ -188,6 +190,38 @@ class Country {
 	}
 	
 	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Country[] Array with country objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT country.country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries AS country '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS target_lang '
+						.'ON country.country_id = target_lang.country_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS default_lang '
+						.'ON country.country_id = default_lang.country_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.country_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$countries = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$countries[] = new Country($result->getValue("country_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $countries;
+    }
+
+	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if error occured
 	 */
@@ -198,7 +232,7 @@ class Country {
 		$pre_save_country = new Country($this->country_id, $this->clang_id);
 	
 		if($this->country_id == 0 || $pre_save_country != $this) {
-			$query = rex::getTablePrefix() ."d2u_address_countries SET "
+			$query = \rex::getTablePrefix() ."d2u_address_countries SET "
 					."iso_lang_codes = '". $this->iso_lang_codes ."', "
 					."maps_zoom = ". $this->maps_zoom .", "
 					."address_ids = '|". implode('|', $this->address_ids) ."|' ";
@@ -209,7 +243,7 @@ class Country {
 			else {
 				$query = "UPDATE ". $query ." WHERE country_id = ". $this->country_id;
 			}
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->country_id == 0) {
 				$this->country_id = $result->getLastId();
@@ -221,11 +255,11 @@ class Country {
 			// Save the language specific part
 			$pre_save_country = new Country($this->country_id, $this->clang_id);
 			if($pre_save_country != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_address_countries_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_address_countries_lang SET "
 						."name = '". $this->name ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

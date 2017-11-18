@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Address;
+
 /**
  * Address type
  */
@@ -50,9 +52,9 @@ class AddressType {
 	 */
 	 public function __construct($address_type_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_address_types "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_address_types "
 				."WHERE address_type_id = ". $address_type_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
@@ -72,9 +74,9 @@ class AddressType {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_address_types "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_types "
 			."WHERE address_type_id = ". $this->address_type_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 	}
 	
@@ -84,8 +86,8 @@ class AddressType {
 	 * @return AddressTypes[] Array with all address types
 	 */
 	public static function getAll($clang_id) {
-		$query = 'SELECT address_type_id FROM '. rex::getTablePrefix() .'d2u_address_types';
-		$result = rex_sql::factory();
+		$query = 'SELECT address_type_id FROM '. \rex::getTablePrefix() .'d2u_address_types';
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$address_types = [];
@@ -103,13 +105,13 @@ class AddressType {
 	 * @return Address[] Found addresses.
 	 */
 	public function getAddresses($online_only = TRUE) {
-		$query = "SELECT address_id FROM ". rex::getTablePrefix() ."d2u_address_address "
+		$query = "SELECT address_id FROM ". \rex::getTablePrefix() ."d2u_address_address "
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
 		if($online_only) {
 			$query .= "AND online_status = 'online' ";
 		}
 		$query .= "ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -127,9 +129,9 @@ class AddressType {
 	 * @return Country[] Array with country objects
 	 */
 	public function getCountries() {
-		$query = 'SELECT address_id FROM '. rex::getTablePrefix() .'d2u_address_address '
+		$query = 'SELECT address_id FROM '. \rex::getTablePrefix() .'d2u_address_address '
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$countries = [];
@@ -156,7 +158,7 @@ class AddressType {
 	public function save() {
 		$error = 0;
 
-		$query = rex::getTablePrefix() ."d2u_address_types SET "
+		$query = \rex::getTablePrefix() ."d2u_address_types SET "
 				."name = '". $this->name ."', "
 				."show_address_details = '". ($this->show_address_details ? "yes" : "no") ."', "
 				."show_country_select = '". ($this->show_country_select ? "yes" : "no") ."', "
@@ -170,7 +172,7 @@ class AddressType {
 			$query = "UPDATE ". $query ." WHERE address_type_id = ". $this->address_type_id;
 		}
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		if($this->address_type_id == 0) {
 			$this->address_type_id = $result->getLastId();

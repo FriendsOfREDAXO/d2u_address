@@ -17,7 +17,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$country_id = $form['country_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($country === FALSE) {
-			$country = new Country($country_id, $rex_clang->getId());
+			$country = new D2U_Address\Country($country_id, $rex_clang->getId());
 			$country->country_id = $country_id; // Ensure correct ID in case first language has no object
 			$country->iso_lang_codes = $form['iso_lang_codes'];
 			$country->maps_zoom = $form['maps_zoom'];
@@ -63,7 +63,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$country_id = $form['country_id'];
 	}
-	$country = new Country($country_id, rex_config::get("d2u_helper", "default_lang"));
+	$country = new D2U_Address\Country($country_id, rex_config::get("d2u_helper", "default_lang"));
 	$country->country_id = $country_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
@@ -99,11 +99,11 @@ if ($func == 'edit' || $func == 'add') {
 				<input type="hidden" name="form[country_id]" value="<?php echo $entry_id; ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$country = new Country($entry_id, $rex_clang->getId());
+						$country = new D2U_Address\Country($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_address[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_address[edit_lang]') && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -134,9 +134,9 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$country = new Country($entry_id, rex_config::get("d2u_helper", "default_lang"));
+							$country = new D2U_Address\Country($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								$readonly = FALSE;
 							}
 
@@ -144,7 +144,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', "form[maps_zoom]", $country->maps_zoom, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
 							$options_address_ids = [];
-							$addresses = Address::getAll(rex_config::get('d2u_helper', 'default_lang'), FALSE, FALSE);
+							$addresses = D2U_Address\Address::getAll(rex_config::get('d2u_helper', 'default_lang'), FALSE, FALSE);
 							foreach ($addresses as $address) {
 								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
@@ -160,7 +160,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -177,8 +177,8 @@ if ($func == 'edit' || $func == 'add') {
 
 if ($func == '') {
 	$query = 'SELECT countries.country_id, name, iso_lang_codes '
-		. 'FROM '. rex::getTablePrefix() .'d2u_address_countries AS countries '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
+		. 'FROM '. \rex::getTablePrefix() .'d2u_address_countries AS countries '
+		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
 			. 'ON countries.country_id = lang.country_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
@@ -187,7 +187,7 @@ if ($func == '') {
 
     $tdIcon = '<i class="rex-icon fa-flag"></i>';
   	$thIcon = "";
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 		$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
 	$list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
@@ -205,7 +205,7 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###country_id###']);
 
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_address[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###country_id###']);

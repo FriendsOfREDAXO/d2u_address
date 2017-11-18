@@ -243,15 +243,15 @@ class d2u_address_lang_helper {
 				}
 				
 				if(rex_addon::get('sprog')->isAvailable()) {
-					$select_pid_query = "SELECT pid FROM ". rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."' AND clang_id = ". $clang_id;
+					$select_pid_query = "SELECT pid FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."' AND clang_id = ". $clang_id;
 					$select_pid_sql = rex_sql::factory();
 					$select_pid_sql->setQuery($select_pid_query);
 					if($select_pid_sql->getRows() > 0) {
 						// Update
-						$query = "UPDATE ". rex::getTablePrefix() ."sprog_wildcard SET "
+						$query = "UPDATE ". \rex::getTablePrefix() ."sprog_wildcard SET "
 							."`replace` = '". addslashes($value) ."', "
 							."updatedate = '". rex_sql::datetime() ."', "
-							."updateuser = '". rex::getUser()->getValue('login') ."' "
+							."updateuser = '". \rex::getUser()->getValue('login') ."' "
 							."WHERE pid = ". $select_pid_sql->getValue('pid');
 						$sql = rex_sql::factory();
 						$sql->setQuery($query);						
@@ -259,14 +259,14 @@ class d2u_address_lang_helper {
 					else {
 						$id = 1;
 						// Before inserting: id (not pid) must be same in all langs
-						$select_id_query = "SELECT id FROM ". rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."' AND id > 0";
+						$select_id_query = "SELECT id FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."' AND id > 0";
 						$select_id_sql = rex_sql::factory();
 						$select_id_sql->setQuery($select_id_query);
 						if($select_id_sql->getRows() > 0) {
 							$id = $select_id_sql->getValue('id');
 						}
 						else {
-							$select_id_query = "SELECT MAX(id) + 1 AS max_id FROM ". rex::getTablePrefix() ."sprog_wildcard";
+							$select_id_query = "SELECT MAX(id) + 1 AS max_id FROM ". \rex::getTablePrefix() ."sprog_wildcard";
 							$select_id_sql = rex_sql::factory();
 							$select_id_sql->setQuery($select_id_query);
 							if($select_id_sql->getValue('max_id') != NULL) {
@@ -274,15 +274,15 @@ class d2u_address_lang_helper {
 							}
 						}
 						// Save
-						$query = "INSERT INTO ". rex::getTablePrefix() ."sprog_wildcard SET "
+						$query = "INSERT INTO ". \rex::getTablePrefix() ."sprog_wildcard SET "
 							."id = ". $id .", "
 							."clang_id = ". $clang_id .", "
 							."wildcard = '". $key ."', "
 							."`replace` = '". addslashes($value) ."', "
 							."createdate = '". rex_sql::datetime() ."', "
-							."createuser = '". rex::getUser()->getValue('login') ."', "
+							."createuser = '". \rex::getUser()->getValue('login') ."', "
 							."updatedate = '". rex_sql::datetime() ."', "
-							."updateuser = '". rex::getUser()->getValue('login') ."'";
+							."updateuser = '". \rex::getUser()->getValue('login') ."'";
 						$sql = rex_sql::factory();
 						$sql->setQuery($query);
 					}
@@ -300,7 +300,7 @@ class d2u_address_lang_helper {
 		foreach($this->replacements_english as $key => $value) {
 			if(rex_addon::get('sprog')->isAvailable()) {
 				// Delete 
-				$query = "DELETE FROM ". rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."'";
+				$query = "DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."'";
 				if($clang_id > 0) {
 					$query .= " AND clang_id = ". $clang_id;
 				}

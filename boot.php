@@ -1,12 +1,12 @@
 <?php
-if(rex::isBackend() && is_object(rex::getUser())) {
+if(\rex::isBackend() && is_object(\rex::getUser())) {
 	rex_perm::register('d2u_address[]', rex_i18n::msg('d2u_address_rights'));
 	rex_perm::register('d2u_address[edit_data]', rex_i18n::msg('d2u_address_rights_edit_data'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_address[edit_lang]', rex_i18n::msg('d2u_address_rights_edit_lang'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_address[settings]', rex_i18n::msg('d2u_address_rights_settings'), rex_perm::OPTIONS);
 }
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_address_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_address_media_is_in_use');
 }
@@ -22,7 +22,7 @@ function rex_d2u_address_clang_deleted(rex_extension_point $ep) {
 	$clang_id = $params['id'];
 
 	// Delete
-	$countries = Country::getAll($clang_id);
+	$countries = D2U_Address\Country::getAll($clang_id);
 	foreach ($countries as $country) {
 		$country->delete(FALSE);
 	}
@@ -49,7 +49,7 @@ function rex_d2u_address_media_is_in_use(rex_extension_point $ep) {
 
 	// References
 	$sql_address = rex_sql::factory();
-	$sql_address->setQuery('SELECT address_id, contact_name, company FROM `' . rex::getTablePrefix() . 'd2u_address_address`'
+	$sql_address->setQuery('SELECT address_id, contact_name, company FROM `' . \rex::getTablePrefix() . 'd2u_address_address`'
 		.'WHERE picture = "'. $filename .'"');  
 
 	// Prepare warnings

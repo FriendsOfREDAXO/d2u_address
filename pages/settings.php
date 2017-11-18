@@ -28,7 +28,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						$country_options = [];
-						$countries = Country::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+						$countries = D2U_Address\Country::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						foreach($countries as $country) {
 							$country_options[$country->country_id] = $country->name;
 						}

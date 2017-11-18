@@ -1,7 +1,7 @@
 <?php
 $sql = rex_sql::factory();
 // Install database
-$sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_address_address` (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_address` (
     `address_id` INT(11) NOT NULL AUTO_INCREMENT,
     `company` varchar(255) collate utf8_general_ci NOT NULL default '',
     `company_appendix` varchar(255) collate utf8_general_ci NOT NULL default '',
@@ -25,7 +25,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_addre
     PRIMARY KEY (`address_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
-$sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_address_types` (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_types` (
     `address_type_id` int(11) NOT NULL auto_increment,
     `name` varchar(255) collate utf8_general_ci NOT NULL default '',
     `show_address_details` varchar(5) collate utf8_general_ci NOT NULL default 'no',
@@ -36,14 +36,14 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_addre
     PRIMARY KEY (`address_type_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
-$sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_address_countries` (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_countries` (
     `country_id` int(11) NOT NULL AUTO_INCREMENT,
     `iso_lang_codes` varchar(255) collate utf8_general_ci default NULL,
     `maps_zoom` tinyint(2) NULL DEFAULT '5',
     `address_ids` varchar(50) collate utf8_general_ci NOT NULL default '',
     PRIMARY KEY (`country_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_address_countries_lang` (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_countries_lang` (
     `country_id` int(10) NOT NULL,
     `clang_id` int(10) NOT NULL,
     `name` varchar(255) collate utf8_general_ci default NULL,
@@ -51,7 +51,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_addre
     PRIMARY KEY (`country_id`, `clang_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
-$sql->setQuery("CREATE TABLE IF NOT EXISTS `". rex::getTablePrefix() ."d2u_address_zipcodes` (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_zipcodes` (
     `zipcode_id` int(11) NOT NULL auto_increment,
     `range_from` varchar(10) NULL default NULL,
     `range_to` varchar(10) NULL default NULL,
