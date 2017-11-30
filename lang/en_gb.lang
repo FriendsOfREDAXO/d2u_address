@@ -1,0 +1,43 @@
+d2u_address_default_country_id = Default country
+
+d2u_address = D2U Address
+d2u_address_address = Addresses
+d2u_address_address_type = Address type
+d2u_address_address_types = Address types
+d2u_address_additional_address = Additional address
+d2u_address_city = City
+d2u_address_company = Company
+d2u_address_company_appendix = Comany appendix
+d2u_address_contact_name = Contact
+d2u_address_country = Country
+d2u_address_country_name = Name
+d2u_address_countries = Countries
+d2u_address_countries_no_countries_found = No countries found.
+d2u_address_default_address = Default address
+d2u_address_fax = Fax
+d2u_address_email = E-mail
+d2u_address_hint_address_select = Default addresses. In case you rather want to use a default country, leave following field blank. In case the selected addresses do not cover all address types, default address defined in addon settings is used as fallback.
+d2u_address_hint_geocoding = In case Google Maps does not encode location correctly, you can define longitude and latitude. Go to <a href="http://www.linkr.de/2009/03/24/mit-google-maps-laengen-breitengrade-ermitteln-freies-geocoding-skript/" target="_blank" style="color: blue">longitude and latitude calculator</a>.
+d2u_address_iso_lang_codes = ISO language codes
+d2u_address_iso_lang_codes_comma = ISO language codes (comma separeted)
+d2u_address_latitude = Latitude
+d2u_address_longitude = Longitude
+d2u_address_maps_zoom = Google Maps zoom level
+d2u_address_name = Name
+d2u_address_no_address_found = No addresses found.
+d2u_address_no_address_types_found = No address types found.
+d2u_address_phone = Phone
+d2u_address_priority = Priority
+d2u_address_range_from = ZIP code from ...
+d2u_address_range_to = to ...
+d2u_address_show_address_details = Show complete address?
+d2u_address_show_country_select = Show country select field on website?
+d2u_address_street = Street, No.
+d2u_address_url = Internet URL (incl. https://)
+d2u_address_zip_codes = ZIP code
+d2u_address_zip_codes_no_zipcodes_found = No ZIP codes found.
+
+d2u_address_rights = D2U address addon
+d2u_address_rights_edit_data = D2U address addon: edit rights for data
+d2u_address_rights_edit_lang = D2U address addon: edit rights for translations (languages set in user roles apply)
+d2u_address_rights_settings = D2U address addon: settings

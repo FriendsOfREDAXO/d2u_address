@@ -200,11 +200,11 @@ class Country implements \D2U_Helper\ITranslationHelper {
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
 		if($type == 'missing') {
-			$query = 'SELECT country.country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries AS country '
+			$query = 'SELECT main.country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS target_lang '
-						.'ON country.country_id = target_lang.country_id AND target_lang.clang_id = '. $clang_id .' '
+						.'ON main.country_id = target_lang.country_id AND target_lang.clang_id = '. $clang_id .' '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS default_lang '
-						.'ON country.country_id = default_lang.country_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+						.'ON main.country_id = default_lang.country_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.country_id IS NULL "
 					.'ORDER BY default_lang.name';
 			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
@@ -212,13 +212,13 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
-		$countries = [];
+		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$countries[] = new Country($result->getValue("country_id"), $clang_id);
+			$objects[] = new Country($result->getValue("country_id"), $clang_id);
 			$result->next();
 		}
 		
-		return $countries;
+		return $objects;
     }
 
 	/**
