@@ -243,6 +243,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			else {
 				$query = "UPDATE ". $query ." WHERE country_id = ". $this->country_id;
 			}
+
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->country_id == 0) {
@@ -256,9 +257,10 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			$pre_save_country = new Country($this->country_id, $this->clang_id);
 			if($pre_save_country != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_address_countries_lang SET "
+						."country_id = ". $this->country_id .", "
+						."clang_id = ". $this->clang_id .", "
 						."name = '". $this->name ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
-
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();

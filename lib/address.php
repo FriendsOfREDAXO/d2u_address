@@ -58,12 +58,12 @@ class Address {
 	/**
 	 * @var string Latitude
 	 */
-	var $latitude = "";
+	var $latitude = 0;
 	
 	/**
 	 * @var string Longitude
 	 */
-	var $longitude = "";
+	var $longitude = 0;
 	
 	/**
 	 * @var string E-Mailadresse der Address.
@@ -93,7 +93,7 @@ class Address {
 	/**
 	 * @var int Redaxo article ID with detailed information
 	 */
-	var $article_id = "";
+	var $article_id = 0;
 	
 	/**
 	 * @var string URL for detailed information
@@ -303,15 +303,15 @@ class Address {
 				."zip_code = '". $this->zip_code ."', "
 				."city = '". $this->city ."', "
 				."country_id = ". $this->country->country_id .", "
-				."latitude = ". $this->latitude .", "
-				."longitude = ". $this->longitude .", "
+				."latitude = ". ($this->latitude > 0 ? $this->latitude : 0) .", "
+				."longitude = ". ($this->longitude > 0 ? $this->longitude : 0) .", "
 				."email = '". $this->email ."', "
 				."url = '". $this->url ."', "
 				."phone = '". $this->phone ."', "
 				."fax = '". $this->fax ."', "
 				."picture = '". $this->picture ."', "
 				."address_type_ids = '". implode("|", $this->address_type_ids) ."', "
-				."article_id = ". $this->article_id .", "
+				."article_id = ". ($this->article_id > 0 ? $this->article_id : 0) .", "
 				."priority = ". $this->priority .", "
 				."online_status = '". $this->online_status ."' ";
 		if($this->address_id == 0) {

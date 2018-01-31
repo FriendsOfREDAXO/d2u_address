@@ -15,7 +15,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
 
-	$address_type = new D2U_Address\AddressType($form['address_type_id']);
+	$address_type = new D2U_Address\AddressType($form['address_type_id'], rex_config::get('d2u_helper', 'default_lang'));
 	$address_type->name = $form['name'];
 	$address_type->show_address_details = array_key_exists('show_address_details', $form);
 	$address_type->show_country_select = array_key_exists('show_country_select', $form);
@@ -148,7 +148,7 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_address_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###address_type_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###address_type_id###']);
 

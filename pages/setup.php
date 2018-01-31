@@ -26,6 +26,7 @@ $d2u_module_manager->showManagerList();
 <p>1.0.2 (NEXT):</p>
 <ul>
 	<li>Englische Backend Übersetzung hinzugefügt.</li>
+	<li>Bugfix beim anlegen neuer Länder.</li>
 </ul>
 <p>1.0.1:</p>
 <ul>
