@@ -23,10 +23,11 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.2 (NEXT):</p>
+<p>1.0.2-DEV:</p>
 <ul>
 	<li>Englische Backend Übersetzung hinzugefügt.</li>
-	<li>Bugfix beim anlegen neuer Länder.</li>
+	<li>Bugfix beim Anlegen neuer Länder.</li>
+	<li>Bugfix beim Speichern der AdressTyp Zuordnung von Adressen.</li>
 </ul>
 <p>1.0.1:</p>
 <ul>

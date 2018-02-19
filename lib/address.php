@@ -310,7 +310,7 @@ class Address {
 				."phone = '". $this->phone ."', "
 				."fax = '". $this->fax ."', "
 				."picture = '". $this->picture ."', "
-				."address_type_ids = '". implode("|", $this->address_type_ids) ."', "
+				."address_type_ids = '|". implode("|", $this->address_type_ids) ."|', "
 				."article_id = ". ($this->article_id > 0 ? $this->article_id : 0) .", "
 				."priority = ". $this->priority .", "
 				."online_status = '". $this->online_status ."' ";
