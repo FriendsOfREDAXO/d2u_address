@@ -25,6 +25,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.2-DEV:</p>
 <ul>
+	<li>Module auf Bootstrap 4 umgestellt.</li>
 	<li>Englische Backend Übersetzung hinzugefügt.</li>
 	<li>Bugfix beim Anlegen neuer Länder.</li>
 	<li>Bugfix beim Speichern der AdressTyp Zuordnung von Adressen.</li>

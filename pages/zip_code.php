@@ -137,7 +137,7 @@ if ($func == '') {
     $list->setColumnLabel('range_to', rex_i18n::msg('d2u_address_range_to'));
     $list->setColumnParams('range_to', ['func' => 'edit', 'entry_id' => '###zipcode_id###']);
 
-	$list->setColumnLabel('name', rex_i18n::msg('d2u_address_country_name'));
+	$list->setColumnLabel('name', rex_i18n::msg('d2u_address_country'));
 
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

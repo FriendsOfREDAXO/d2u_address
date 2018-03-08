@@ -163,8 +163,8 @@ class AddressType {
 				."show_address_details = '". ($this->show_address_details ? "yes" : "no") ."', "
 				."show_country_select = '". ($this->show_country_select ? "yes" : "no") ."', "
 				."maps_zoom = ". $this->maps_zoom .", "
-				."default_address_id = ". $this->default_address_id .", "
-				."article_id = ". $this->article_id ." ";
+				."default_address_id = ". ($this->default_address_id == "" ? 0 : $this->default_address_id) .", "
+				."article_id = ". ($this->article_id == "" ? 0 : $this->article_id) ." ";
 		if($this->address_type_id == 0) {
 			$query = "INSERT INTO ". $query;
 		}

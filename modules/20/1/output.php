@@ -62,16 +62,16 @@ else {
 	// Output
 	if($address_type->show_country_select == "yes") {
 		// Only if coutry selection should be available
-		print '<div class="large-12 columns">';
+		print '<div class="col-12">';
 		print '<h1>'. $tag_open .'d2u_address_local_servicepartner'. $tag_close .'</h1>';
-		print '<div class="finden-text">'. $tag_open .'d2u_address_specialists'. $tag_close .'</div>';
+		print '<p>'. $tag_open .'d2u_address_specialists'. $tag_close .'</p>';
 		print '<br />';
 
 		print '<div class="box-grey">';
 		print '<form method="post">';
 		print '<div class="row">';
-		print '<div class="medium-6 small-12 columns">';
-		print '<select name="country_id" class="white darkerHover w100p" onChange="this.form.submit()">';
+		print '<div class="col-12 col-md-6">';
+		print '<select name="country_id" onChange="this.form.submit()">';
 		$countries = $address_type->getCountries();
 		$already_selected = FALSE;
 		foreach($countries as $cur_country) {
@@ -100,11 +100,10 @@ else {
 				}
 			}
 			if($show_zip_code_field) {
-				print '<div class="medium-6 small-12 columns end">';
-				print '<div class="h10 show-for-small"></div>';
+				print '<div class="col-12 col-md-6">';
 				$placeholder = $zip_code === FALSE ? $tag_open .'d2u_address_zip_code'. $tag_close : rex_request('zip_code', 'int');
 				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'" class="w80p darkerFocus fl-left">';
-				print '<input type="submit" value="»" class="w20p fl-left">';
+				print '<input type="submit" value="»" class="zip_code">';
 				print '</div>';
 			}
 		}
@@ -119,13 +118,13 @@ else {
 	if(count($addresses) > 0) {
 		if($address_type->show_country_select == "yes") {
 			// Only if coutry selection should be available
-			print '<div class="large-12 columns"><h4>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h4></div>';
+			print '<div class="col-12"><h4>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h4></div>';
 		}
 		foreach($addresses as $address) {
-			print '<div class="medium-6 columns end">';
-			print '<div class="box-grey with-text hyphens" data-height-watch>';
+			print '<div class="col-12 col-md-6">';
+			print '<div class="box-grey" data-height-watch>';
 			print '<div class="row">';
-			print '<div class="large-3 small-3 columns">';
+			print '<div class="col-3">';
 			$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
 			$a_href_close = $address->article_id > 0 ? '</a>' : '';
 			if($address->picture != "") {
@@ -133,7 +132,7 @@ else {
 						.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
 			}
 			print '</div>';
-			print '<div class="large-9 small-9 columns">';
+			print '<div class="col-9">';
 			if($address->contact_name != "") {
 				print $a_href_open .'<h3>'. $address->contact_name .'</h3>'. $a_href_close;
 				print $address->company .'<br>';
@@ -163,7 +162,7 @@ else {
 	}
 	?>
 	<div class="row">
-		<div class="large-12 columns">
+		<div class="col-12">
 		<?php
 		$adressen_js_array = [];
 		$infotext_js_array = [];

@@ -9,8 +9,7 @@ $address_type = new D2U_Address\AddressType($address_type_id);
 $adress_id = "REX_VALUE[2]";
 $address = new D2U_Address\Address($adress_id);
 ?>
-<div class="large-4 columns">
-	<div class="sp sections hide-for-large-up"></div>
+<div class="col-12 col-lg-4 columns">
 	<h1><?php print $tag_open .'d2u_address_contact'. $tag_close; ?></h1>
 	<div class="box-grey">
 		<?php
