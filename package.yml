@@ -16,9 +16,6 @@ page:
         setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, perm: d2u_address[settings] }
 
 requires:
-    redaxo: '>=5.3.0'
-    php:
-        version: '>=5.6'
     packages:
         d2u_helper: '>=1.3.0'
         sprog: '>=1.0.0'

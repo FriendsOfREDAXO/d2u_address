@@ -83,7 +83,7 @@ class Address {
 	/**
 	 * @var string Bild der Address.
 	 */
-	var $picture = "noavatar.jpg";
+	var $picture = "";
 	
 	/**
 	 * @var AdressType[] Adress types
@@ -141,9 +141,6 @@ class Address {
 			$this->fax = $result->getValue("fax");
 			if($result->getValue("picture") != "") {
 				$this->picture = $result->getValue("picture");
-			}
-			else {
-				$this->picture = \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg");
 			}
 			$this->address_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_type_ids")), PREG_GREP_INVERT);
 			$this->article_id = $result->getValue("article_id");

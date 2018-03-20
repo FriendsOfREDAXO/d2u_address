@@ -25,6 +25,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.2-DEV:</p>
 <ul>
+	<li>Bugfix Module: Auswahl wurde nicht gespeichert.</li>
 	<li>Module auf Bootstrap 4 umgestellt.</li>
 	<li>Englische Backend Übersetzung hinzugefügt.</li>
 	<li>Bugfix beim Anlegen neuer Länder.</li>

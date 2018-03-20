@@ -2,7 +2,7 @@
 $address_types = D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
 
 if(count($address_types) > 0) {
-	print 'Welche Kontaktart soll in diesem Artikel angezeigt werden? <select name="VALUE[1]">';
+	print 'Welche Kontaktart soll in diesem Artikel angezeigt werden? <select name="REX_INPUT_VALUE[1]">';
 	foreach ($address_types as $address_type) {
 		echo '<option value="'. $address_type->address_type_id .'" ';
 

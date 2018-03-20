@@ -2,7 +2,7 @@
 $address_types = D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
 
 if(count($address_types) > 0) {
-	print 'Welche Kontaktart soll in diesem Artikel angezeigt werden? <select name="VALUE[1]">';
+	print 'Welche Kontaktart soll in diesem Artikel angezeigt werden? <select name="REX_INPUT_VALUE[1]">';
 	foreach ($address_types as $address_type) {
 		echo '<option value="'. $address_type->address_type_id .'" ';
 
@@ -19,7 +19,7 @@ print "<br />";
 $addresses = D2U_Address\Address::getAll(TRUE);
 
 if(count($addresses) > 0) {
-	print 'Die eMailadresse welches Kontakts soll direkt angezeigt werden? <select name="VALUE[2]">';
+	print 'Die eMailadresse welches Kontakts soll direkt angezeigt werden? <select name="REX_INPUT_VALUE[2]">';
 	foreach($addresses as $address) {
 		echo '<option value="'. $address->address_id .'" ';
 

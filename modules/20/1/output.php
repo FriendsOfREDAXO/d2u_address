@@ -67,7 +67,7 @@ else {
 		print '<p>'. $tag_open .'d2u_address_specialists'. $tag_close .'</p>';
 		print '<br />';
 
-		print '<div class="box-grey">';
+		print '<div class="country-box">';
 		print '<form method="post">';
 		print '<div class="row">';
 		print '<div class="col-12 col-md-6">';
@@ -118,19 +118,18 @@ else {
 	if(count($addresses) > 0) {
 		if($address_type->show_country_select == "yes") {
 			// Only if coutry selection should be available
-			print '<div class="col-12"><h4>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h4></div>';
+			print '<div class="col-12"><br><br><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
 		}
 		foreach($addresses as $address) {
 			print '<div class="col-12 col-md-6">';
-			print '<div class="box-grey" data-height-watch>';
+			print '<div class="country-box" data-height-watch>';
 			print '<div class="row">';
 			print '<div class="col-3">';
 			$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
 			$a_href_close = $address->article_id > 0 ? '</a>' : '';
-			if($address->picture != "") {
-				print $a_href_open .'<img src="index.php?rex_media_type=120x150&rex_media_file='. $address->picture
-						.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
-			}
+			print $a_href_open .'<img src="'.
+				($address->picture != "" ? 'index.php?rex_media_type=d2u_address_120x150&rex_media_file='. $address->picture : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
+				.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
 			print '</div>';
 			print '<div class="col-9">';
 			if($address->contact_name != "") {
@@ -161,9 +160,9 @@ else {
 		print '<br />';
 	}
 	?>
-	<div class="row">
-		<div class="col-12">
-		<?php
+
+	<div class="col-12">
+	<?php
 		$adressen_js_array = [];
 		$infotext_js_array = [];
 		foreach($addresses as $address) {
@@ -177,11 +176,11 @@ else {
 		}
 
 		$d2u_helper = rex_addon::get("d2u_helper");
-		$api_key = "";
+		$api_key = "?sensor=false";
 		if($d2u_helper->hasConfig("maps_key")) {
-			$api_key = 'key='.$d2u_helper->getConfig("maps_key");
+			$api_key = '?key='.$d2u_helper->getConfig("maps_key");
 		}
-		?>
+	?>
 
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
 		<div id="map_canvas" style="display: block; width: 100%; height: 500px;"></div> 
@@ -243,8 +242,7 @@ else {
 
 			initialize();
 		</script>
-		</div>
 	</div>
 <?php
-}
+	}
 ?>
