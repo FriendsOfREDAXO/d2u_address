@@ -183,7 +183,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT address_id, company, contact_name, priority, online_status '
+	$query = 'SELECT address_id, company, contact_name, city, priority, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_address '
 		. 'ORDER BY priority';
     $list = rex_list::factory($query);
@@ -202,6 +202,8 @@ if ($func == '') {
     $list->setColumnParams('company', ['func' => 'edit', 'entry_id' => '###address_id###']);
 
     $list->setColumnLabel('contact_name', rex_i18n::msg('d2u_address_contact_name'));
+
+    $list->setColumnLabel('city', rex_i18n::msg('d2u_address_city'));
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
