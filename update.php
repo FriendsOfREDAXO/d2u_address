@@ -15,6 +15,7 @@ if(class_exists(D2UModuleManager)) {
 	$d2u_module_manager->autoupdate();
 }
 
+$sql = rex_sql::factory();
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_address_120x150'");
 if($sql->getRows() == 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
