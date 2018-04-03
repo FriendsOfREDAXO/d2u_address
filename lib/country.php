@@ -63,7 +63,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 				$this->maps_zoom = $result->getValue("maps_zoom");
 			}
 			$this->address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
@@ -259,7 +259,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_address_countries_lang SET "
 						."country_id = ". $this->country_id .", "
 						."clang_id = ". $this->clang_id .", "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

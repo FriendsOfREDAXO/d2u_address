@@ -59,7 +59,7 @@ class AddressType {
 
 		if ($result->getRows() > 0) {
 			$this->address_type_id = $result->getValue("address_type_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->show_address_details = $result->getValue("show_address_details");
 			$this->show_country_select = $result->getValue("show_country_select");
 			if($result->getValue("maps_zoom") != "") {
@@ -159,7 +159,7 @@ class AddressType {
 		$error = 0;
 
 		$query = \rex::getTablePrefix() ."d2u_address_types SET "
-				."name = '". $this->name ."', "
+				."name = '". addslashes($this->name) ."', "
 				."show_address_details = '". ($this->show_address_details ? "yes" : "no") ."', "
 				."show_country_select = '". ($this->show_country_select ? "yes" : "no") ."', "
 				."maps_zoom = ". $this->maps_zoom .", "
