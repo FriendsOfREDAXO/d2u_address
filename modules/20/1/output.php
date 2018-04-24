@@ -102,7 +102,7 @@ else {
 			if($show_zip_code_field) {
 				print '<div class="col-12 col-md-6">';
 				$placeholder = $zip_code === FALSE ? $tag_open .'d2u_address_zip_code'. $tag_close : rex_request('zip_code', 'int');
-				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'" class="w80p darkerFocus fl-left">';
+				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
 				print '<input type="submit" value="»" class="zip_code">';
 				print '</div>';
 			}
@@ -118,7 +118,7 @@ else {
 	if(count($addresses) > 0) {
 		if($address_type->show_country_select == "yes") {
 			// Only if coutry selection should be available
-			print '<div class="col-12"><br><br><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
+			print '<div class="col-12"><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
 		}
 		foreach($addresses as $address) {
 			print '<div class="col-12 col-md-6">';
@@ -156,7 +156,6 @@ else {
 			print '</div>';
 			print '</div>';
 		}
-		print '</div>';
 		print '<br />';
 	}
 	?>

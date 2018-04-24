@@ -3,10 +3,6 @@
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', []);
 
-	// Linkmap Link and media needs special treatment
-	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
-//	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
-
 	// Save settings
 	if(rex_config::set("d2u_address", $settings)) {
 		echo rex_view::success(rex_i18n::msg('form_saved'));
