@@ -122,7 +122,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_address_country_name', "form[lang][". $rex_clang->getId() ."][name]", $country->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $country->name, $required, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>
@@ -196,7 +196,7 @@ if ($func == '') {
     $list->setColumnLabel('country_id', rex_i18n::msg('id'));
     $list->setColumnLayout('country_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_address_country_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###country_id###']);
 
     $list->setColumnLabel('iso_lang_codes', rex_i18n::msg('d2u_address_iso_lang_codes'));

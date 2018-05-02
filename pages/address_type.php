@@ -85,7 +85,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 							
-							d2u_addon_backend_helper::form_input('d2u_address_name', 'form[name]', $address_type->name, TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $address_type->name, TRUE, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, TRUE, $readonly, 'number');
@@ -145,7 +145,7 @@ if ($func == '') {
     $list->setColumnLabel('address_type_id', rex_i18n::msg('id'));
     $list->setColumnLayout('address_type_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_address_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###address_type_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
