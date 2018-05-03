@@ -138,14 +138,14 @@ class AddressType {
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$address = new Address($result->getValue("address_id"), $this->clang_id);
 			foreach ($address->getReferringCountries() as $country) {
-				if(!key_exists($country->name, $countries)) {
-					$countries[$country->name] = $country;
+				if(!key_exists(Country::normalizeCountryName($country->name), $countries)) {
+					$countries[Country::normalizeCountryName($country->name)] = $country;
 				}
 			}
 			$result->next();
 		}
 		$default_address = new Address($this->default_address_id, $this->clang_id);
-		$countries[$default_address->country->name] = $default_address->country;
+		$countries[Country::normalizeCountryName($default_address->country->name)] = $default_address->country;
 		ksort($countries);
 		
 		return $countries;
