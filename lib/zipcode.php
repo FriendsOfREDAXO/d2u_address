@@ -144,8 +144,6 @@ class ZipCode {
 	 * @return boolean TRUE if error occured
 	 */
 	public function save() {
-		$error = 0;
-
 		$query = \rex::getTablePrefix() ."d2u_address_zipcodes SET "
 				."address_ids = '|". implode('|', $this->address_ids) ."|', "
 				."range_from = '". $this->range_from ."', "
@@ -162,9 +160,8 @@ class ZipCode {
 		$result->setQuery($query);
 		if($this->zipcode_id == 0) {
 			$this->zipcode_id = $result->getLastId();
-			$error = $result->hasError();
 		}
 
-		return $error;
+		return $result->hasError();
 	}
 }

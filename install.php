@@ -26,7 +26,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_addr
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_types` (
-    `address_type_id` int(11) NOT NULL auto_increment,
+    `address_type_id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) collate utf8_general_ci NOT NULL default '',
     `show_address_details` varchar(5) collate utf8_general_ci NOT NULL default 'no',
     `show_country_select` varchar(5) collate utf8_general_ci NOT NULL default 'yes',
@@ -52,7 +52,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_addr
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_address_zipcodes` (
-    `zipcode_id` int(11) NOT NULL auto_increment,
+    `zipcode_id` int(11) NOT NULL AUTO_INCREMENT,
     `range_from` varchar(10) NULL default NULL,
     `range_to` varchar(10) NULL default NULL,
     `country_id` int(10) default NULL,

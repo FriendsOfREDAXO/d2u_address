@@ -176,7 +176,7 @@ else {
 
 		$d2u_helper = rex_addon::get("d2u_helper");
 		$api_key = "?sensor=false";
-		if($d2u_helper->hasConfig("maps_key")) {
+		if($d2u_helper->getConfig("maps_key", "")) {
 			$api_key = '?key='.$d2u_helper->getConfig("maps_key");
 		}
 	?>
