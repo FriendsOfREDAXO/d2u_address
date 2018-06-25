@@ -7,7 +7,7 @@ if(class_exists(D2UModuleManager)) {
 	$modules = [];
 	$modules[] = new D2UModule("20-1",
 		"D2U Adressen - Adressausgabe",
-		3);
+		4);
 	$modules[] = new D2UModule("20-2",
 		"D2U Adressen - Kontaktbox",
 		2);

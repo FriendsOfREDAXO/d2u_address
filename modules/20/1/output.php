@@ -1,11 +1,13 @@
 <?php
 $address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
+$show_fax = "REX_VALUE[2]" == 'true' ? TRUE : FALSE;
 
 if(\rex::isBackend()) {
 	// BACKEND
 	print '<h1 style="font-size: 1.5em;">Adressliste</h1>';
-	print "Adressart: ". $address_type->name;
+	print "Adressart: ". $address_type->name ."<br>";
+	print "Faxnummer anzeigen: ". ($show_fax ? "Ja" : "Nein") ."<br>";
 }
 else {
 	// FRONTEND
@@ -149,6 +151,9 @@ else {
 			print '<br />';
 			if($address->phone != "") {
 				print $tag_open .'d2u_address_phone'. $tag_close .' '. $address->phone .'<br>';
+			}
+			if($show_fax && $address->fax != "") {
+				print $tag_open .'d2u_address_fax'. $tag_close .' '. $address->fax .'<br>';
 			}
 			print '<a href="mailto:'. $address->email .'">'. $address->email .'</a>';
 			print '</div>';

@@ -25,6 +25,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.3-DEV:</p>
 <ul>
+	<li>Beispielmodul jetzt optional mit Faxanzeige.</li>
 	<li>Postleitzahlen können jetzt geklont werden.</li>
 	<li>Bugfix: Sortierung bei Ländern mit Umlauten wie Ägypten war nicht korrekt.</li>
 	<li>Modul Detailverbesserungen.</li>
