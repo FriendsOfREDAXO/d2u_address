@@ -253,7 +253,7 @@ class d2u_address_lang_helper {
 					$value = $this->replacements_english[$key];
 				}
 				
-				if(rex_addon::get('sprog')->isAvailable()) {
+				if(\rex_addon::get('sprog')->isAvailable()) {
 					$select_pid_query = "SELECT pid FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."' AND clang_id = ". $clang_id;
 					$select_pid_sql = rex_sql::factory();
 					$select_pid_sql->setQuery($select_pid_query);
@@ -309,7 +309,7 @@ class d2u_address_lang_helper {
 	 */
 	public function uninstall($clang_id = 0) {
 		foreach($this->replacements_english as $key => $value) {
-			if(rex_addon::get('sprog')->isAvailable()) {
+			if(\rex_addon::get('sprog')->isAvailable()) {
 				// Delete 
 				$query = "DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE wildcard = '". $key ."'";
 				if($clang_id > 0) {
