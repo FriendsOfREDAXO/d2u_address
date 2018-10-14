@@ -186,9 +186,9 @@ else {
 		}
 	?>
 
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
+		<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
 		<div id="map_canvas" style="display: block; width: 100%; height: 500px;"></div> 
-		<script type="text/javascript">
+		<script>
 			var geocoder;
 			var map;
 			var infowindow = new google.maps.InfoWindow();

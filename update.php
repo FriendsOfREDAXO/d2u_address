@@ -3,7 +3,7 @@
 d2u_address_lang_helper::factory()->install();
 
 // Update modules
-if(class_exists(D2UModuleManager)) {
+if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("20-1",
 		"D2U Adressen - Adressausgabe",
