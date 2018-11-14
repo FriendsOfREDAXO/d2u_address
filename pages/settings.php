@@ -3,6 +3,10 @@
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', []);
 
+	// Checkbox also need special treatment if empty
+	$settings['analytics_emailevent_activate'] = array_key_exists('analytics_emailevent_activate', $settings) ? "true" : "false";
+	$settings['lang_wildcard_overwrite'] = array_key_exists('lang_wildcard_overwrite', $settings) ? "true" : "false";
+
 	// Save settings
 	if(rex_config::set("d2u_address", $settings)) {
 		echo rex_view::success(rex_i18n::msg('form_saved'));
@@ -36,6 +40,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_lang_replacements'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', $this->getConfig('lang_wildcard_overwrite') == 'true');
 						foreach(rex_clang::getAll() as $rex_clang) {
 							print '<dl class="rex-form-group form-group">';
 							print '<dt><label>'. $rex_clang->getName() .'</label></dt>';
@@ -62,6 +67,35 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							print '</dl>';
 						}
 					?>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><small><i class="rex-icon fa-google"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_analytics'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_address_settings_analytics_emailevent_activate', 'settings[analytics_emailevent_activate]', 'true', $this->getConfig('analytics_emailevent_activate') == 'true');
+						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_category', 'settings[analytics_emailevent_category]', $this->getConfig('analytics_emailevent_category'), FALSE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_action', 'settings[analytics_emailevent_action]', $this->getConfig('analytics_emailevent_action'), FALSE, FALSE, 'text');
+					?>
+					<script>
+						function changeType() {
+							if($('input[name="settings\\[analytics_emailevent_activate\\]"]').is(':checked')) {
+								$('#settings\\[analytics_emailevent_category\\]').fadeIn();
+								$('#settings\\[analytics_emailevent_action\\]').fadeIn();
+							}
+							else {
+								$('#settings\\[analytics_emailevent_category\\]').hide();
+								$('#settings\\[analytics_emailevent_action\\]').hide();
+							}
+						}
+
+						// On init
+						changeType();
+						// On change
+						$('input[name="settings\\[analytics_emailevent_activate\\]"]').on('change', function() {
+							changeType();
+						});
+					</script>
 				</div>
 			</fieldset>
 		</div>

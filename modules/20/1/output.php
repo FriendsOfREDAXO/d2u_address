@@ -155,7 +155,15 @@ else {
 			if($show_fax && $address->fax != "") {
 				print $tag_open .'d2u_address_fax'. $tag_close .' '. $address->fax .'<br>';
 			}
-			print '<a href="mailto:'. $address->email .'">'. $address->email .'</a>';
+			
+			// Google Analytics Event
+			$google_analytics = "";
+			if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&
+					rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
+					rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '') {
+				$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
+			}
+			print '<a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a>';
 			print '</div>';
 			print '</div>';
 			print '</div>';

@@ -35,6 +35,10 @@ d2u_address_url = Internet URL (inkl. https://)
 d2u_address_zip_codes = PLZ
 d2u_address_zip_codes_no_zipcodes_found = Es wurden noch keine Postleitzahlen angelegt.
 
+d2u_address_settings_analytics_emailevent_action = Name Eventaktion
+d2u_address_settings_analytics_emailevent_activate = Beim Klick auf eine E-Mailadresse ein Analytics Event senden
+d2u_address_settings_analytics_emailevent_category = Name Eventkategorie
+
 d2u_address_rights = D2U Adressen Addon
 d2u_address_rights_edit_data = D2U Adressen Addon: Editierrechte für Daten und sprachübergreifende Inhalte
 d2u_address_rights_edit_lang = D2U Adressen Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)

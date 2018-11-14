@@ -35,6 +35,10 @@ d2u_address_url = Internet URL (incl. https://)
 d2u_address_zip_codes = ZIP code
 d2u_address_zip_codes_no_zipcodes_found = No ZIP codes found.
 
+d2u_address_settings_analytics_emailevent_action = Name event action
+d2u_address_settings_analytics_emailevent_activate = Send an Analytics event when clicking on an email address
+d2u_address_settings_analytics_emailevent_category = Name event category
+
 d2u_address_rights = D2U address addon
 d2u_address_rights_edit_data = D2U address addon: edit rights for data
 d2u_address_rights_edit_lang = D2U address addon: edit rights for translations (languages set in user roles apply)

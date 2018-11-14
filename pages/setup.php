@@ -25,6 +25,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.3-DEV:</p>
 <ul>
+	<li>In den Einstellungen gibt es jetzt eine Option, eigene Übersetzungen in SProg dauerhaft zu erhalten.</li>
+	<li>Es können nun Google Analytics Events beim Klick auf E-Mails gesendet werden. Details hierzu in den Einstellungen.</li>
 	<li>Adressen lassen sich jetzt klonen.</li>
 	<li>Beispielmodul jetzt optional mit Faxanzeige.</li>
 	<li>Postleitzahlen können jetzt geklont werden.</li>

@@ -32,7 +32,14 @@ $address = new D2U_Address\Address($adress_id);
 			if($address->adress_id > 0) {
 				print '<br><br>';
 				print '<h4>'. $tag_open .'d2u_address_email'. $tag_close .'</h4>';
-				print '<a href="mailto:'. $address->email .'">'. $address->email .'</a>';
+				// Google Analytics Event
+				$google_analytics = "";
+				if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&
+						rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
+						rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '') {
+					$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
+				}
+				print '<a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a>';
 			}
 		?>
 	</div>
