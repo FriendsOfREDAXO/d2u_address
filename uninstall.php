@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Delete views
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_url_referencs');
@@ -22,4 +22,8 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_reference
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_references_lang');
 
 // Delete language replacements
-d2u_references_lang_helper::factory()->uninstall();
+if(!class_exists('d2u_address_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_address_lang_helper.php';
+}
+d2u_address_lang_helper::factory()->uninstall();
