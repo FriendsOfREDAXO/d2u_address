@@ -16,7 +16,6 @@ d2u_address_default_address = Standard Adresse
 d2u_address_fax = Fax
 d2u_address_email = E-Mail
 d2u_address_hint_address_select = Wenn Sie auf das Standardland aus den Einstellungen zurückgreifen wollen, wählen Sie bitte nachfolgend keine Adresse aus. Sollten mit den gewählten Adressen nicht alle Adresstypen abgedeckt werden, wird für die fehlenden Adresstypen auf die Standardadresse der Einstellungen zurück gegriffen.
-d2u_address_hint_geocoding = Wenn Google Maps die Adresse dieses Ortes nicht korrekt geocodiert, k&ouml;nnen optional die L&auml;ngen- und Breitengrade eingegeben werden. Hier geht es zum <a href="http://www.linkr.de/2009/03/24/mit-google-maps-laengen-breitengrade-ermitteln-freies-geocoding-skript/" target="_blank" style="color: blue">L&auml;ngen- und Breitengradrechner</a>.
 d2u_address_iso_lang_codes = ISO Sprachcodes
 d2u_address_iso_lang_codes_comma = ISO Sprachcodes (Kommasepariert)
 d2u_address_latitude = Breitengrad

@@ -16,7 +16,6 @@ d2u_address_default_address = Default address
 d2u_address_fax = Fax
 d2u_address_email = E-mail
 d2u_address_hint_address_select = Default addresses. In case you rather want to use a default country, leave following field blank. In case the selected addresses do not cover all address types, default address defined in addon settings is used as fallback.
-d2u_address_hint_geocoding = In case Google Maps does not encode location correctly, you can define longitude and latitude. Go to <a href="http://www.linkr.de/2009/03/24/mit-google-maps-laengen-breitengrade-ermitteln-freies-geocoding-skript/" target="_blank" style="color: blue">longitude and latitude calculator</a>.
 d2u_address_iso_lang_codes = ISO language codes
 d2u_address_iso_lang_codes_comma = ISO language codes (comma separeted)
 d2u_address_latitude = Latitude
