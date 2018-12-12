@@ -19,6 +19,8 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Adressen Addon: <a href="https://www.kaltenbach.com/de/unternehmen/kontakt/" target="_blank">
 		Kaltenbach GmbH + Co KG</a>.</li>
+	<li>Adressen Addon: <a href="https://www.inotec-gmbh.com/kontakt/unser-service-netz/" target="_blank">
+		Inotec GmbH</a>.</li>
 </ul>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
@@ -26,6 +28,7 @@ $d2u_module_manager->showManagerList();
 <p>1.0.4-DEV:</p>
 <ul>
 	<li>Hinweis Geocoding entfernt, da Link nicht mehr existiert.</li>
+	<li>Bugfix: Längen- und Breitengrad konnte nicht gespeichert werden.</li>
 </ul>
 <p>1.0.3:</p>
 <ul>

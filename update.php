@@ -1,4 +1,9 @@
 <?php
+$sql = rex_sql::factory();
+// Update database to 1.0.4
+$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `latitude` `latitude` decimal(10,6) NULL DEFAULT NULL");
+$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `longitude` `longitude` decimal(10,6) NULL DEFAULT NULL");
+
 // Update language replacements
 if(!class_exists('d2u_address_lang_helper')) {
 	// Load class in case addon is deactivated
@@ -19,7 +24,6 @@ if(class_exists('D2UModuleManager')) {
 	$d2u_module_manager->autoupdate();
 }
 
-$sql = rex_sql::factory();
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_address_120x150'");
 if($sql->getRows() == 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
