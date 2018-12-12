@@ -174,82 +174,117 @@ else {
 	?>
 
 	<div class="col-12">
-	<?php
-		$adressen_js_array = [];
-		$infotext_js_array = [];
-		foreach($addresses as $address) {
-			$adressen_js_array[] = '"'. $address->street .', '. $address->zip_code .' '. $address->city .'"';
-			$infotext = '"'. $address->company .'<br />';
-			if($address->contact_name != "") {
-				$infotext .= $address->contact_name .'<br />';			
-			}
-			$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
-			$infotext_js_array[] = $infotext;
-		}
-
+		<?php
 		$d2u_helper = rex_addon::get("d2u_helper");
-		$api_key = "?sensor=false";
-		if($d2u_helper->getConfig("maps_key", "")) {
-			$api_key = '?key='.$d2u_helper->getConfig("maps_key");
+		$api_key = "";
+		if($d2u_helper->hasConfig("maps_key")) {
+			$api_key = '?key='. $d2u_helper->getConfig("maps_key");
 		}
-	?>
+		?>
 
 		<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
 		<div id="map_canvas" style="display: block; width: 100%; height: 500px;"></div> 
 		<script>
-			var geocoder;
 			var map;
 			var infowindow = new google.maps.InfoWindow();
-			var places = [];
-			var popup_content = [<?php print implode(", ",$infotext_js_array)?>];
-			var address = [<?php print implode(", ", $adressen_js_array)?>];
+			var address = [<?php
+				foreach($addresses as $address) {
+					print "[";
+					// Address for Geocoder
+					print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
+					// Infotext
+					$infotext = '"'. $address->company .'<br />';
+					if($address->contact_name != "") {
+						$infotext .= $address->contact_name .'<br />';			
+					}
+					$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
+					print $infotext .", ";
+					// Latitude and Longitude
+					if($address->latitude != 0 && $address->longitude != 0) {
+						print $address->latitude .', '. $address->longitude;
+					}
+					else {
+						print '0, 0';
+					}
+					print "],". PHP_EOL;
+				}	
+			?>];
 			var address_position = 0;
 			var timeout = 100;
 			var center = true;
-				function initialize() {
-				geocoder = new google.maps.Geocoder();
+			
+			/**
+			 * Initialize map
+			 */
+			function initialize() {
+				// Default center of map
 				var latlng = new google.maps.LatLng(47.6242,7.67378);
+				// Map settings
 				var myOptions = {
 				  zoom: <?php print $maps_zoom; ?>,
 				  center: latlng,
 				  mapTypeId: 'hybrid'
 				};
+				// create map
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-				addMarker(address_position);
+				
+				// Address position
+				calcPosition(address_position);
 			}
 
-			function addMarker(position) {
-				geocoder.geocode({'address': address[position]}, function(results, status) {
-					if (status === google.maps.GeocoderStatus.OK) {
-						if(center === true) {
-							map.setCenter(results[0].geometry.location);
-							center = false;
+			/**
+			 * Calculate address map position
+			 * @param {int} position address array position
+			 */
+			function calcPosition(position) {
+				if(address[position][2] > 0 && address[position][3] > 0) {
+					// Use given latitude and longitude
+					addMarker(new google.maps.LatLng(address[position][2], address[position][3]), position);
+				}
+				else {
+					// Geocode
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode({'address': address[position][0]}, function(results, status) {
+						if (status === google.maps.GeocoderStatus.OK) {
+							addMarker(results[0].geometry.location, position);
 						}
-						places[position] = results[0].geometry.location;
-
-						var marker = new google.maps.Marker({
-							position: places[position],
-							map: map
-						});
-
-						google.maps.event.addListener(marker, 'click', function() {
-							if (!infowindow) {
-								infowindow = new google.maps.InfoWindow();
+						else {
+							if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+								// Too many queries, just wait a while and then retry geocoding again
+								setTimeout(function() { calcPosition(position); }, (timeout * 3));
 							}
-							infowindow.setContent('<div id="infoWindow" style="white-space: nowrap;">' + popup_content[position] + '</div>');
-							infowindow.open(map, marker);
-						});
-					}
-					else {
-						if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-							setTimeout(function() { addMarker(position); }, (timeout * 3));
 						}
-					}
-					address_position++;
-					if (address_position < address.length) {
-						setTimeout(function() { addMarker(address_position); }, (timeout));
-					}
+					});
+				}
+				
+				// Go to next address
+				address_position++;
+				if (address_position < address.length) {
+					setTimeout(function() { calcPosition(address_position); }, (timeout));
+				}
+			}
+			
+			/**
+			 * Add marker with infowindow on map
+			 * @param {google.maps.LatLng} location
+			 * @param {int} position address array position
+			 */
+			function addMarker(location, position) {
+				// Create marker
+				var marker = new google.maps.Marker({
+					position: location,
+					map: map
 				});
+				// Show info window
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.setContent('<div id="infoWindow" style="white-space: nowrap;">' + address[position][1] + '</div>');
+					infowindow.open(map, marker);
+				});
+				// Set map center on first address
+				if(center === true) {
+					map.setCenter(location);
+					center = false;
+				}
 			}
 
 			initialize();

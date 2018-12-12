@@ -129,6 +129,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								$options_countries[$country->country_id] = $country->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$address->country->country_id], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_infotext('d2u_address_hint_geocoding', 'hint_geocoding');
 							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);

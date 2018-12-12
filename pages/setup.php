@@ -27,7 +27,9 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.4-DEV:</p>
 <ul>
-	<li>Hinweis Geocoding entfernt, da Link nicht mehr existiert.</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Wenn Längen und Breitengrade eingegeben sind, wird kein Geocoder mehr verwendet.</li>
+	<li>Moduleingabe nun im Redaxo Stil.</li>
+	<li>Hinweis Geocoding erneuert.</li>
 	<li>Bugfix: Längen- und Breitengrad konnte nicht gespeichert werden.</li>
 </ul>
 <p>1.0.3:</p>

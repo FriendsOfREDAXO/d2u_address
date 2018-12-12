@@ -5,7 +5,7 @@
 			$address_types = \D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
 
 			if(count($address_types) > 0) {
-				print ' <select name="REX_INPUT_VALUE[1]">';
+				print ' <select name="REX_INPUT_VALUE[1]" class="form-control">';
 				foreach ($address_types as $address_type) {
 					echo '<option value="'. $address_type->address_type_id .'" ';
 
