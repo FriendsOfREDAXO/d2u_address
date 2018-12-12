@@ -25,7 +25,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.4-DEV:</p>
+<p>1.0.4:</p>
 <ul>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Wenn Längen und Breitengrade eingegeben sind, wird kein Geocoder mehr verwendet.</li>
 	<li>Moduleingabe nun im Redaxo Stil.</li>
