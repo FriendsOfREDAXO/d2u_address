@@ -213,15 +213,15 @@ else {
 				  zoom: <?php print $maps_zoom; ?>,
 				  center: latlng,
 				  mapTypeId: 'hybrid'
-				}
+				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 				addMarker(address_position);
 			}
 
 			function addMarker(position) {
 				geocoder.geocode({'address': address[position]}, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						if(center == true) {
+					if (status === google.maps.GeocoderStatus.OK) {
+						if(center === true) {
 							map.setCenter(results[0].geometry.location);
 							center = false;
 						}
@@ -241,7 +241,7 @@ else {
 						});
 					}
 					else {
-						if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+						if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
 							setTimeout(function() { addMarker(position); }, (timeout * 3));
 						}
 					}
