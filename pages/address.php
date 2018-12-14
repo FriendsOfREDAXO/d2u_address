@@ -151,7 +151,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 										$("input[name='form[latitude]']").val(results[0].geometry.location.lat);
 										$("input[name='form[longitude]']").val(results[0].geometry.location.lng);
 										// Show check geolocation button and set link to button
-										$("#check_geocode").attr('href', "http://maps.google.com/?q=" + $("input[name='form[latitude]']").val() + "," + $("input[name='form[longitude]']").val() + "&z=17");
+										$("#check_geocode").attr('href', "https://maps.google.com/?q=" + $("input[name='form[latitude]']").val() + "," + $("input[name='form[longitude]']").val() + "&z=17");
 										$("#check_geocode").parent().show();
 									}
 									else {
