@@ -129,6 +129,49 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								$options_countries[$country->country_id] = $country->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$address->country->country_id], 1, FALSE, $readonly);
+							
+							$d2u_helper = rex_addon::get("d2u_helper");
+							$api_key = "";
+							if($d2u_helper->hasConfig("maps_key")) {
+								$api_key = '?key='. $d2u_helper->getConfig("maps_key");
+
+						?>
+						<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
+						<script>
+							function geocode() {
+								if($("input[name='form[street]']").val() === "" || $("input[name='form[city]']").val() === "") {
+									alert("<?php echo rex_i18n::msg('d2u_address_geocode_fields'); ?>");
+									return;
+								}
+								
+								// Geocode
+								var geocoder = new google.maps.Geocoder();
+								geocoder.geocode({'address': $("input[name='form[street]']").val() + ", " + $("input[name='form[zip_code]']").val() + " " + $("input[name='form[city]']").val()}, function(results, status) {
+									if (status === google.maps.GeocoderStatus.OK) {
+										$("input[name='form[latitude]']").val(results[0].geometry.location.lat);
+										$("input[name='form[longitude]']").val(results[0].geometry.location.lng);
+										// Show check geolocation button and set link to button
+										$("#check_geocode").attr('href', "http://maps.google.com/?q=" + $("input[name='form[latitude]']").val() + "," + $("input[name='form[longitude]']").val() + "&z=17");
+										$("#check_geocode").parent().show();
+									}
+									else {
+										alert("<?php echo rex_i18n::msg('d2u_address_geocode_failure'); ?>");
+									}
+								});
+							}
+						</script>
+						<?php
+							}
+
+							print '<dl class="rex-form-group form-group" id="geocode">';
+							print '<dt><label></label></dt>';
+							print '<dd><input type="submit" value="'. rex_i18n::msg('d2u_address_geocode') .'" onclick="geocode(); return false;" class="btn btn-save">'
+								. ' <div class="btn btn-abort"><a href="https://maps.google.com/?q='. $address->latitude .','. $address->longitude .'&z=17" id="check_geocode" target="_blank">'. rex_i18n::msg('d2u_address_geocode_check') .'</a></div>'
+								. '</dd>';
+							print '</dl>';
+							if($address->latitude == 0 && $address->longitude == 0) {
+								print '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
+							}
 							d2u_addon_backend_helper::form_infotext('d2u_address_hint_geocoding', 'hint_geocoding');
 							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, FALSE, $readonly);
@@ -169,7 +212,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 		</div>
 	</form>
 	<br>
-	<script type='text/javascript'>
+	<script>
 		jQuery(document).ready(function($) {
 			$('legend').each(function() {
 				$(this).addClass('open');

@@ -1,8 +1,8 @@
 <?php
 $sql = rex_sql::factory();
 // Update database to 1.0.4
-$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `latitude` `latitude` decimal(10,6) NULL DEFAULT NULL");
-$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `longitude` `longitude` decimal(10,6) NULL DEFAULT NULL");
+$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `latitude` `latitude` decimal(14,10) NULL DEFAULT NULL");
+$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_address_address CHANGE `longitude` `longitude` decimal(14,10) NULL DEFAULT NULL");
 
 // Update language replacements
 if(!class_exists('d2u_address_lang_helper')) {

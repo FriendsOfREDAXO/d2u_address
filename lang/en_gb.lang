@@ -15,8 +15,12 @@ d2u_address_countries_no_countries_found = No countries found.
 d2u_address_default_address = Default address
 d2u_address_fax = Fax
 d2u_address_email = E-mail
+d2u_address_geocode = Geocode address
+d2u_address_geocode_check = Check geolocation
+d2u_address_geocode_failure = Geocoding failed.
+d2u_address_geocode_fields = Street, zip code and city need to be filled in for geocoding.
 d2u_address_hint_address_select = Default addresses. In case you rather want to use a default country, leave following field blank. In case the selected addresses do not cover all address types, default address defined in addon settings is used as fallback.
-d2u_address_hint_geocoding = In case Google Maps does not encode location correctly, you can define longitude and latitude. Go to <a href="https://wiki.opennet-initiative.de/wiki/Koordinaten_Bestimmung" target="_blank" style="color: blue">coordinate tool</a>.
+d2u_address_hint_geocoding = In case Google Maps does not geocode location correctly, you can define longitude and latitude manually. (<a href="https://wiki.opennet-initiative.de/wiki/Koordinaten_Bestimmung" target="_blank" style="color: blue">coordinate tool</a>)
 d2u_address_iso_lang_codes = ISO language codes
 d2u_address_iso_lang_codes_comma = ISO language codes (comma separeted)
 d2u_address_latitude = Latitude
