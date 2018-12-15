@@ -27,7 +27,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.5-DEV:</p>
 <ul>
-	<li>Bei der Eingabe einer Adresse gibt es jetzt die Möglichkeit eine Adresse direkt zu geocodieren. Geocodierte Adressen werden auf der Karte schneller geladen.</li>
+	<li>Bei der Eingabe einer Adresse gibt es jetzt die Möglichkeit eine Adresse direkt zu geocodieren wenn im D2U Helper Addon ein Google Maps API Key mit Zugriff auf die Geocoding API hinterlegt ist.
+		Geocodierte Adressen werden auf der Karte schneller geladen.</li>
 </ul>
 <p>1.0.4:</p>
 <ul>
