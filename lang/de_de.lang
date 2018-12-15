@@ -15,12 +15,7 @@ d2u_address_countries_no_countries_found = Es wurden noch keine Länder angelegt
 d2u_address_default_address = Standard Adresse
 d2u_address_fax = Fax
 d2u_address_email = E-Mail
-d2u_address_geocode = Adresse geocodieren
-d2u_address_geocode_check = Geocodierung prüfen
-d2u_address_geocode_failure = Geocoding schlug fehl.
-d2u_address_geocode_fields = Für eine Geocodierung müssen die Strasse, die PLZ und der Ort ausgefüllt sein.
 d2u_address_hint_address_select = Wenn Sie auf das Standardland aus den Einstellungen zurückgreifen wollen, wählen Sie bitte nachfolgend keine Adresse aus. Sollten mit den gewählten Adressen nicht alle Adresstypen abgedeckt werden, wird für die fehlenden Adresstypen auf die Standardadresse der Einstellungen zurück gegriffen.
-d2u_address_hint_geocoding = Wenn Google Maps die Adresse dieses Ortes nicht korrekt geocodiert, k&ouml;nnen optional die L&auml;ngen- und Breitengrade manuell eingegeben werden. (<a href="https://wiki.opennet-initiative.de/wiki/Koordinaten_Bestimmung" target="_blank" style="color: blue">Koordinaten Bestimmung</a>)
 d2u_address_iso_lang_codes = ISO Sprachcodes
 d2u_address_iso_lang_codes_comma = ISO Sprachcodes (Kommasepariert)
 d2u_address_latitude = Breitengrad

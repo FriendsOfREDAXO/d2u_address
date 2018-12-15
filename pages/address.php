@@ -140,7 +140,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 						<script>
 							function geocode() {
 								if($("input[name='form[street]']").val() === "" || $("input[name='form[city]']").val() === "") {
-									alert("<?php echo rex_i18n::msg('d2u_address_geocode_fields'); ?>");
+									alert("<?php echo rex_i18n::msg('d2u_helper_geocode_fields'); ?>");
 									return;
 								}
 								
@@ -155,7 +155,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 										$("#check_geocode").parent().show();
 									}
 									else {
-										alert("<?php echo rex_i18n::msg('d2u_address_geocode_failure'); ?>");
+										alert("<?php echo rex_i18n::msg('d2u_helper_geocode_failure'); ?>");
 									}
 								});
 							}
@@ -165,14 +165,14 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 
 							print '<dl class="rex-form-group form-group" id="geocode">';
 							print '<dt><label></label></dt>';
-							print '<dd><input type="submit" value="'. rex_i18n::msg('d2u_address_geocode') .'" onclick="geocode(); return false;" class="btn btn-save">'
-								. ' <div class="btn btn-abort"><a href="https://maps.google.com/?q='. $address->latitude .','. $address->longitude .'&z=17" id="check_geocode" target="_blank">'. rex_i18n::msg('d2u_address_geocode_check') .'</a></div>'
+							print '<dd><input type="submit" value="'. rex_i18n::msg('d2u_helper_geocode') .'" onclick="geocode(); return false;" class="btn btn-save">'
+								. ' <div class="btn btn-abort"><a href="https://maps.google.com/?q='. $address->latitude .','. $address->longitude .'&z=17" id="check_geocode" target="_blank">'. rex_i18n::msg('d2u_helper_geocode_check') .'</a></div>'
 								. '</dd>';
 							print '</dl>';
 							if($address->latitude == 0 && $address->longitude == 0) {
 								print '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
 							}
-							d2u_addon_backend_helper::form_infotext('d2u_address_hint_geocoding', 'hint_geocoding');
+							d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
 							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);
