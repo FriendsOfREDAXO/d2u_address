@@ -36,6 +36,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$address->article_id = $link_ids["REX_INPUT_LINK"][1];
 	$address->priority = $form['priority'];
 	$address->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
+	$address->country_ids = isset($form['country_ids']) ? $form['country_ids'] : [];
 
 	// message output
 	$message = 'form_save_error';
@@ -190,6 +191,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $address->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_address', 'form[country_ids][]', $options_countries, $address->country_ids, 15, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>

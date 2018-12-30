@@ -43,7 +43,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Constructor.
 	 * @param int $country_id Country ID.
-	 * @param int $clang_id. Redaxo language ID
+	 * @param int $clang_id Redaxo language ID
 	 */
 	 public function __construct($country_id, $clang_id = 0) {
 		$this->clang_id = $clang_id;
@@ -62,11 +62,13 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			if($result->getValue("maps_zoom") != "") {
 				$this->maps_zoom = $result->getValue("maps_zoom");
 			}
-			$this->address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
 			$this->name = stripslashes($result->getValue("name"));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
+			
+			// Get address IDs
+			$this->address_ids = $this->getAddressIDs(FALSE);
 		}
 	}
 	
@@ -88,10 +90,13 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries "
-				."WHERE country_id = ". $this->country_id;
 			$result = \rex_sql::factory();
-			$result->setQuery($query);
+			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries "
+				."WHERE country_id = ". $this->country_id);
+			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_zipcodes "
+				."WHERE country_id = ". $this->country_id);
+			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_2_countries "
+				."WHERE country_id = ". $this->country_id);
 		}
 	}
 
@@ -102,27 +107,46 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	 * @return Address[] Found addresses
 	 */
 	public function getAddresses($address_type = FALSE, $online_only = TRUE) {
-		$query = "SELECT address_ids FROM ". \rex::getTablePrefix() ."d2u_address_countries "
-			."WHERE country_id = ". $this->country_id ." ";
-		$result = \rex_sql::factory();
-		$result->setQuery($query);
-
 		$addresses = [];
-		for($i = 0; $i < $result->getRows(); $i++) {
-			$address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
-			foreach($address_ids as $address_id) {
-				$address = new Address($address_id, $this->clang_id);
-				if($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids) && ($online_only && $address->online_status == "online")) {
-					$addresses[$address->priority ."-". $address->address_id] = $address;
-				}
+		$address_ids = $this->getAddressIDs($online_only);
+		foreach($address_ids as $address_id) {
+			$address = new Address($address_id, $this->clang_id);
+			if($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids)) {
+				$addresses[$address->priority ."-". $address->address_id] = $address;
 			}
-			$result->next();
 		}
 
 		ksort($addresses);
 		return $addresses;
 	}
+	
+	/**
+	 * Returns address IDs for country.
+	 * @param boolean $online_only True if only online addresses should be returned
+	 * @return int[] address IDs
+	 */
+	private function getAddressIDs($online_only = TRUE) {
+		$query = "SELECT a2c.country_id, a2c.address_id FROM ". \rex::getTablePrefix() ."d2u_address_2_countries AS a2c ";
+		if($online_only) {
+			$query .= "LEFT JOIN ". \rex::getTablePrefix() ."d2u_address_address AS address ON a2c.address_id = address.address_id ";
+		}
+		$query .= "WHERE a2c.country_id = ". $this->country_id ." ";
+		if($online_only) {
+			$query .= "AND address.online_status = 'online'";
+		}
 
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$address_ids = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$address_ids[] = $result->getValue("address_id");
+			$result->next();
+		}
+
+		return $address_ids;
+	}
+	
 	/**
 	 * Returns zipcode objects for country.
 	 * @return ZipCode[] Found zipcodes
@@ -244,11 +268,11 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		// Save the not language specific part
 		$pre_save_country = new Country($this->country_id, $this->clang_id);
 	
+		$result = \rex_sql::factory();
 		if($this->country_id == 0 || $pre_save_country != $this) {
 			$query = \rex::getTablePrefix() ."d2u_address_countries SET "
 					."iso_lang_codes = '". $this->iso_lang_codes ."', "
-					."maps_zoom = ". $this->maps_zoom .", "
-					."address_ids = '|". implode('|', $this->address_ids) ."|' ";
+					."maps_zoom = ". $this->maps_zoom ." ";
 
 			if($this->country_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -257,10 +281,19 @@ class Country implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE country_id = ". $this->country_id;
 			}
 
-			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->country_id == 0) {
 				$this->country_id = $result->getLastId();
+				$error = $result->hasError();
+			}
+			
+			// Update assigned addresses
+			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_2_countries WHERE country_id = ". $this->country_id);
+			foreach($this->address_ids as $address_id) {
+				$query = "INSERT INTO ". \rex::getTablePrefix() ."d2u_address_2_countries SET "
+						."country_id = ". $this->country_id .", "
+						."address_id = ". $address_id;
+				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
@@ -274,7 +307,6 @@ class Country implements \D2U_Helper\ITranslationHelper {
 						."clang_id = ". $this->clang_id .", "
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
-				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

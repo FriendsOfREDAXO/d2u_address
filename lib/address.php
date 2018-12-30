@@ -56,6 +56,11 @@ class Address {
 	var $country;
 	
 	/**
+	 * @var int IDs of assigned countries
+	 */
+	var $country_ids = [];
+	
+	/**
 	 * @var string Latitude
 	 */
 	var $latitude = 0;
@@ -153,6 +158,8 @@ class Address {
 			if(strlen($this->url) > 3 && substr($this->url, 0, 4) != "http") {
 				$this->url = "http://". $this->url;
 			}
+			
+			$this->country_ids = $this->getAssignedCountryIDs();
 		}
 	}
 
@@ -186,10 +193,11 @@ class Address {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_address "
-			."WHERE address_id = ". $this->address_id;
 		$result = \rex_sql::factory();
-		$result->setQuery($query);
+		$result->setQuery($query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_address "
+			."WHERE address_id = ". $this->address_id);
+		$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_2_countries "
+			."WHERE address_id = ". $this->address_id);
 	}
 	
 	/**
@@ -224,6 +232,28 @@ class Address {
 	}
 
 	/**
+	 * Returns country ids of countries this address is assigned to.
+	 * @return int[] country IDs
+	 */
+	private function getAssignedCountryIDs() {
+		$query = 'SELECT a2c.country_id FROM '. \rex::getTablePrefix() .'d2u_address_2_countries AS a2c '
+			.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
+				.'ON a2c.country_id = lang.country_id AND lang.clang_id = '. $this->clang_id .' '
+			.'WHERE a2c.address_id = '. $this->address_id .' '
+			.'ORDER BY name';
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$country_ids = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$country_ids[] = $result->getValue("country_id");
+			$result->next();
+		}
+		
+		return $country_ids;
+	}
+	
+	/**
 	 * Returns address types reffering address
 	 * @return AddressType[] AddressType objects
 	 */
@@ -244,26 +274,17 @@ class Address {
 	
 	/**
 	 * Returns countries reffering address
-	 * @return Country[] Country objects
+	 * @return Country[] Country objects, country ID is key
 	 */
 	public function getReferringCountries() {
-		$query = 'SELECT countries.country_id, name FROM '. \rex::getTablePrefix() .'d2u_address_countries AS countries '
-			.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
-				.'ON countries.country_id = lang.country_id '
-			.'WHERE clang_id = '. $this->clang_id .' AND address_ids LIKE "%|'. $this->address_id .'|%" '
-			.'ORDER BY name';
-		$result = \rex_sql::factory();
-		$result->setQuery($query);
-
 		$countries = [];
-		for($i = 0; $i < $result->getRows(); $i++) {
-			$countries[] = new Country($result->getValue("country_id"), $this->clang_id);
-			$result->next();
+		foreach($this->country_ids as $country_id) {
+			$countries[$country_id] = new Country($country_id, $this->clang_id);
 		}
 		
 		return $countries;
 	}
-	
+
 	/**
 	 * Returns zip codes reffering address
 	 * @return ZipCode[] ZipCode objects
@@ -324,6 +345,16 @@ class Address {
 			$this->address_id = $result->getLastId();
 			$error = $result->hasError();
 		}
+		
+		// Update assigned countries
+		$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_2_countries WHERE address_id = ". $this->address_id);
+		foreach($this->country_ids as $country_id) {
+			$result->setQuery("INSERT INTO ". \rex::getTablePrefix() ."d2u_address_2_countries SET "
+					."country_id = ". $country_id .", "
+					."address_id = ". $this->address_id);
+			$error = $result->hasError();
+		}
+
 
 		return $error;
 	}
