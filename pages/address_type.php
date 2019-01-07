@@ -116,7 +116,7 @@ if ($func == 'edit' || $func == 'add') {
 		</div>
 	</form>
 	<br>
-	<script type='text/javascript'>
+	<script>
 		jQuery(document).ready(function($) {
 			$('legend').each(function() {
 				$(this).addClass('open');

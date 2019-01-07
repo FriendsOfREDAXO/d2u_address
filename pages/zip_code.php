@@ -100,7 +100,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		</div>
 	</form>
 	<br>
-	<script type='text/javascript'>
+	<script>
 		jQuery(document).ready(function($) {
 			$('legend').each(function() {
 				$(this).addClass('open');
