@@ -27,6 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.1-DEV:</p>
 <ul>
+	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
 	<li>Bugfix: Es wurden nur positive Werte bei den Geokoordinaten gespeichert.</li>
 </ul>
 <p>1.1.0:</p>
