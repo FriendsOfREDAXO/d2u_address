@@ -129,7 +129,7 @@ if ($func == 'edit' || $func == 'add') {
 								});
 
 								// Hide on selection change
-								$("select[name='form[lang][1][translation_needs_update]']").on('change', function(e) {
+								$("select[name='form[lang][<?php print $rex_clang->getId(); ?>][translation_needs_update]']").on('change', function(e) {
 									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
 								});
 							</script>
