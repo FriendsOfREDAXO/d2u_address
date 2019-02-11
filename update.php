@@ -39,7 +39,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_addr
     `country_id` int(11) NOT NULL,
     `address_id` int(11) NOT NULL,
     PRIMARY KEY (`country_id`, `address_id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_address_countries LIKE 'address_ids';");
 if($sql->getRows() == 1) {
 	$sql->setQuery("SELECT country_id, address_ids FROM `". \rex::getTablePrefix() ."d2u_address_countries` WHERE address_ids != '';");
@@ -53,3 +53,11 @@ if($sql->getRows() == 1) {
 	}
     $sql->setQuery('ALTER TABLE `' . rex::getTablePrefix() . 'd2u_address_countries` DROP `address_ids`;');
 }
+
+// Update database to 1.1.1
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_address` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_types` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_countries` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_countries_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_2_countries` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_zipcodes` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
