@@ -126,11 +126,15 @@ class AddressType {
 
 	/**
 	 * Gets all countries used by this object.
+	 * @param boolean $online_only If TRUE only online objects are returned
 	 * @return Country[] Array with country objects
 	 */
-	public function getCountries() {
+	public function getCountries($online_only = TRUE) {
 		$query = 'SELECT address_id FROM '. \rex::getTablePrefix() .'d2u_address_address '
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
+		if($online_only) {
+			$query .= "AND online_status = 'online'";
+		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
