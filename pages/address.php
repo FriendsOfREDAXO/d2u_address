@@ -230,7 +230,7 @@ if ($func == '') {
 	$query = 'SELECT address_id, company, contact_name, city, priority, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_address '
 		. 'ORDER BY priority';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

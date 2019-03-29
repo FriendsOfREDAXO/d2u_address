@@ -133,7 +133,7 @@ if ($func == '') {
 	$query = 'SELECT address_type_id, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_types '
 		. 'ORDER BY name';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

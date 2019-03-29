@@ -119,7 +119,7 @@ if ($func == '') {
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS country '
 			. 'ON zipcodes.country_id = country.country_id AND country.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name, range_from ASC';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
