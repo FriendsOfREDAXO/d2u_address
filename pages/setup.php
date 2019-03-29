@@ -27,6 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.1-DEV:</p>
 <ul>
+	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Funktion address_type::getCountries() gibt jetzt standardmäßig nur noch Länder zurück, die auch eine online Adresse haben.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
