@@ -191,7 +191,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $address->online_status == "online", $readonly);
-							d2u_addon_backend_helper::form_select('d2u_address_address', 'form[country_ids][]', $options_countries, $address->country_ids, 15, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_countries_assigned', 'form[country_ids][]', $options_countries, $address->country_ids, 15, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>
