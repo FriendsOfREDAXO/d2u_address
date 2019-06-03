@@ -31,7 +31,6 @@ $d2u_module_manager->showManagerList();
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Funktion address_type::getCountries() gibt jetzt standardmäßig nur noch Länder zurück, die auch eine online Adresse haben.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
-	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
 	<li>Bugfix: Es wurden nur positive Werte bei den Geokoordinaten gespeichert.</li>
 </ul>
