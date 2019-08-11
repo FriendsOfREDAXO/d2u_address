@@ -146,13 +146,13 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	protected $replacements_russian = [
 		'd2u_address_contact' => 'контакт',
 		'd2u_address_email' => 'Электронная почта',
-		'd2u_address_failure_country' => 'Пожалуйста, введите Вашу страну.',
+		'd2u_address_failure_country' => 'Пожалуйста, введите название страны.',
 		'd2u_address_fax' => 'факс',
-		'd2u_address_local_servicepartner' => 'Ваш региональный партнер',
-		'd2u_address_nearby' => 'Близко к вам',
+		'd2u_address_local_servicepartner' => 'Ваш региональный сервисный партнер',
+		'd2u_address_nearby' => 'Ближайший сервисный центр',
 		'd2u_address_other_countries' => 'Другие страны',
 		'd2u_address_phone' => 'Телефон',
-		'd2u_address_specialists' => 'Наши специалисты доступны по всему миру по телефону и будут рады сообщить вам о ваших индивидуальных требованиях.',
+		'd2u_address_specialists' => 'Наши специалисты доступны по всему миру по телефону и всегда готовы проконсультировать Вас по техническим вопросам.',
 		'd2u_address_zip_code' => 'Почтовый код'
 	];
 
