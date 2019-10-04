@@ -10,6 +10,7 @@ d2u_address_company = Firma
 d2u_address_company_appendix = Firmenzusatz
 d2u_address_contact_name = Kontakt
 d2u_address_country = Land
+d2u_address_countries = Länder
 d2u_address_countries_assigned = Anzeigen in ausgewählten Ländern
 d2u_address_countries_no_countries_found = Es wurden noch keine Länder angelegt.
 d2u_address_default_address = Standard Adresse
