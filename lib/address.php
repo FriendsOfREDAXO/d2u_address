@@ -130,13 +130,13 @@ class Address {
 
 		if ($num_rows > 0) {
 			$this->address_id = $result->getValue("address_id");
-			$this->company = $result->getValue("company");
-			$this->company_appendix = $result->getValue("company_appendix");
-			$this->contact_name = $result->getValue("contact_name");
-			$this->street = $result->getValue("street");
-			$this->additional_address = $result->getValue("additional_address");
+			$this->company = stripslashes($result->getValue("company"));
+			$this->company_appendix = stripslashes($result->getValue("company_appendix"));
+			$this->contact_name = stripslashes($result->getValue("contact_name"));
+			$this->street = stripslashes($result->getValue("street"));
+			$this->additional_address = stripslashes($result->getValue("additional_address"));
 			$this->zip_code = $result->getValue("zip_code");
-			$this->city = $result->getValue("city");
+			$this->city = stripslashes($result->getValue("city"));
 			$this->country = new Country($result->getValue("country_id"), $clang_id);
 			$this->latitude = $result->getValue("latitude");
 			$this->longitude = $result->getValue("longitude");
@@ -313,13 +313,13 @@ class Address {
 		$error = 0;
 
 		$query = \rex::getTablePrefix() ."d2u_address_address SET "
-				."company = '". $this->company ."', "
-				."company_appendix = '". $this->company_appendix ."', "
-				."contact_name = '". $this->contact_name ."', "
-				."street = '". $this->street ."', "
-				."additional_address = '". $this->additional_address ."', "
+				."company = '". addslashes($this->company) ."', "
+				."company_appendix = '". addslashes($this->company_appendix) ."', "
+				."contact_name = '". addslashes($this->contact_name) ."', "
+				."street = '". addslashes($this->street) ."', "
+				."additional_address = '". addslashes($this->additional_address) ."', "
 				."zip_code = '". $this->zip_code ."', "
-				."city = '". $this->city ."', "
+				."city = '". addslashes($this->city) ."', "
 				."country_id = ". $this->country->country_id .", "
 				."latitude = ". $this->latitude .", "
 				."longitude = ". $this->longitude .", "

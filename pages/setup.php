@@ -27,7 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix beim Speichern von Straßennamen mit einfachem Anführungszeichen.</li>
 </ul>
 <p>1.1.1:</p>
 <ul>
