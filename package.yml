@@ -12,8 +12,8 @@ page:
         address_type: { title: 'translate:d2u_address_address_types', icon: rex-icon fa-address-book, perm: d2u_address[edit_data] }
         country: { title: 'translate:d2u_address_countries', icon: rex-icon fa-flag }
         zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road, perm: d2u_address[edit_data] }
-        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, perm: d2u_address[settings] }
-        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, perm: d2u_address[settings] }
+        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemclass: pull-right, perm: d2u_address[settings] }
+        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemclass: pull-right, perm: d2u_address[settings] }
 
 requires:
     packages:

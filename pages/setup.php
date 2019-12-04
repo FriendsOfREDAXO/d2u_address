@@ -27,6 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.2-DEV:</p>
 <ul>
+	<li>Backend: Einstellungen und Setup Tabs rechts eingeordnet um sie vom Inhalt besser zu unterscheiden.</li>
 	<li>Bugfix beim Speichern von Straßennamen mit einfachem Anführungszeichen.</li>
 </ul>
 <p>1.1.1:</p>
