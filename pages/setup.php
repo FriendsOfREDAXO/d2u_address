@@ -29,6 +29,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Backend: Einstellungen und Setup Tabs rechts eingeordnet um sie vom Inhalt besser zu unterscheiden.</li>
 	<li>Bugfix beim Speichern von Straßennamen mit einfachem Anführungszeichen.</li>
+	<li>Alle Module: wenn Google Analytics in den Einstellungen aktiviert ist wird der Google Code nicht ausgegeben, wenn search_it die Seite zur Indexierung aufruft.</li>
 </ul>
 <p>1.1.1:</p>
 <ul>

@@ -13,10 +13,10 @@ class D2UAddressModules {
 		$modules = [];
 		$modules[] = new D2UModule("20-1",
 			"D2U Adressen - Adressausgabe",
-			5);
+			6);
 		$modules[] = new D2UModule("20-2",
 			"D2U Adressen - Kontaktbox",
-			3);
+			4);
 		return $modules;
 	}
 }
