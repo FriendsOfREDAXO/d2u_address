@@ -64,7 +64,7 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 		'd2u_address_failure_country' => 'Por favor, introduzca su país.',
 		'd2u_address_fax' => 'Fax',
 		'd2u_address_local_servicepartner' => 'Su interlocutor local',
-		'd2u_address_nearby' => 'Cerca de ti',
+		'd2u_address_nearby' => 'Cerca de usted',
 		'd2u_address_other_countries' => 'Otros países',
 		'd2u_address_phone' => 'Teléfono',
 		'd2u_address_specialists' => 'Nuestros especialistas están disponibles en todo el mundo por teléfono y estarán encantados de asesorarle en sus necesidades individuales.',
