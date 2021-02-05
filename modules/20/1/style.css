@@ -18,3 +18,14 @@
 	border: 1px solid white;
 	padding: 0.5em;
 }
+.country-box .zip_code {
+	float: right;
+	position: absolute;
+	width: 40px;
+	right: 15px;
+}
+@media (max-width: 767px) {
+	.country-box .country_select {
+		margin-bottom: 15px;
+	}	
+}

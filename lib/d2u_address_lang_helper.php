@@ -9,7 +9,7 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	 */
 	protected $replacements_english = [
 		'd2u_address_contact' => 'Contact',
-		'd2u_address_email' => 'E-Mail',
+		'd2u_address_email' => 'E-mail',
 		'd2u_address_failure_country' => 'Please enter your country.',
 		'd2u_address_fax' => 'Fax',
 		'd2u_address_local_servicepartner' => 'Your local Service partner',

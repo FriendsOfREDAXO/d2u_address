@@ -27,7 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.3-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": CSS Fehler bei PLZ Eingabe behoben.</li>
 </ul>
 <p>1.1.2:</p>
 <ul>

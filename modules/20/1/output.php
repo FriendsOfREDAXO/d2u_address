@@ -73,7 +73,7 @@ else {
 		print '<form method="post">';
 		print '<div class="row">';
 		print '<div class="col-12 col-md-6">';
-		print '<select name="country_id" onChange="this.form.submit()">';
+		print '<select name="country_id" class="country_select" onChange="this.form.submit()">';
 		$countries = $address_type->getCountries();
 		$already_selected = FALSE;
 		foreach($countries as $cur_country) {
