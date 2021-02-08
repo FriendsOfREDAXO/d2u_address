@@ -61,3 +61,8 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_countries` C
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_countries_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_2_countries` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_zipcodes` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_address_address'))
+    ->ensureColumn(new \rex_sql_column('mobile', 'varchar(50)', TRUE))
+    ->alter();

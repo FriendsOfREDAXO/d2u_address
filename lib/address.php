@@ -81,6 +81,11 @@ class Address {
 	var $phone = "";
 	
 	/**
+	 * @var string Mobile phone number
+	 */
+	var $mobile = "";
+	
+	/**
 	 * @var string Fax number
 	 */
 	var $fax = "";
@@ -143,6 +148,7 @@ class Address {
 			$this->email = $result->getValue("email");
 			$this->url = $result->getValue("url");
 			$this->phone = $result->getValue("phone");
+			$this->mobile = $result->getValue("mobile");
 			$this->fax = $result->getValue("fax");
 			if($result->getValue("picture") != "") {
 				$this->picture = $result->getValue("picture");
@@ -326,6 +332,7 @@ class Address {
 				."email = '". $this->email ."', "
 				."url = '". $this->url ."', "
 				."phone = '". $this->phone ."', "
+				."mobile = '". $this->mobile ."', "
 				."fax = '". $this->fax ."', "
 				."picture = '". $this->picture ."', "
 				."address_type_ids = '|". implode("|", $this->address_type_ids) ."|', "

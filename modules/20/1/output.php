@@ -145,10 +145,14 @@ else {
 				print $address->company_appendix .'<br>';
 			}
 			if($address_type->show_address_details == "yes") {
+				print ($address->additional_address != "" ? $address->additional_address .'<br>' : '');
 				print $address->street .'<br>';
 				print $address->zip_code .' '. $address->city .'<br>';
 			}
 			print '<br />';
+			if($address->mobile != "") {
+				print $tag_open .'d2u_address_mobile'. $tag_close .' '. $address->mobile .'<br>';
+			}
 			if($address->phone != "") {
 				print $tag_open .'d2u_address_phone'. $tag_close .' '. $address->phone .'<br>';
 			}

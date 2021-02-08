@@ -30,6 +30,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$address->email = $form['email'];
 	$address->url = $form['url'];
 	$address->phone = $form['phone'];
+	$address->mobile = $form['mobile'];
 	$address->fax = $form['fax'];
 	$address->picture = $input_media[1];
 	$address->address_type_ids = isset($form['address_type_ids']) ? $form['address_type_ids'] : [];
@@ -177,7 +178,8 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_mobile', 'form[mobile]', $address->mobile, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_fax', 'form[fax]', $address->fax, FALSE, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $address->picture, $readonly);
 							$adress_types = D2U_Address\AddressType::getAll(rex_config::get('d2u_helper', 'default_lang'));

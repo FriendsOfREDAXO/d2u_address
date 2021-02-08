@@ -22,6 +22,7 @@ d2u_address_iso_lang_codes_comma = ISO language codes (comma separeted)
 d2u_address_latitude = Latitude
 d2u_address_longitude = Longitude
 d2u_address_maps_zoom = Google Maps zoom level
+d2u_address_mobile = Mobile
 d2u_address_no_address_found = No addresses found.
 d2u_address_no_address_types_found = No address types found.
 d2u_address_phone = Phone
