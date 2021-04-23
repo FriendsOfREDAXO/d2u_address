@@ -2,6 +2,7 @@
 $address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
 $show_fax = "REX_VALUE[2]" == 'true' ? TRUE : FALSE;
+$map_type = "REX_VALUE[3]" == '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility
 
 if(\rex::isBackend()) {
 	// BACKEND
@@ -180,11 +181,12 @@ else {
 
 	<div class="col-12">
 		<?php
-		$d2u_helper = rex_addon::get("d2u_helper");
-		$api_key = "";
-		if($d2u_helper->getConfig("maps_key", "") != "" ) {
-			$api_key = '?key='. $d2u_helper->getConfig("maps_key");
-		}
+			if($map_type == "google") {
+				$d2u_helper = rex_addon::get("d2u_helper");
+				$api_key = "";
+				if($d2u_helper->getConfig("maps_key", "") != "" ) {
+					$api_key = '?key='. $d2u_helper->getConfig("maps_key");
+				}
 		?>
 
 		<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
@@ -294,7 +296,64 @@ else {
 
 			initialize();
 		</script>
+		<?php
+			}
+			else {
+				$map_id = rand();
+
+				$leaflet_js_file = 'modules/04-2/leaflet.js';
+				print '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
+		?>
+		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 500px"></div>
+		<script type="text/javascript" async="async">
+			<?php
+				$latitude = 0;
+				$longitude = 0;
+				$address_counter = 0;
+				foreach($addresses as $address) {
+					if($address->latitude != 0 && $address->longitude != 0) {
+						$latitude += $address->latitude;
+						$longitude += $address->longitude;
+						$address_counter++;
+					}
+				}
+				print "var map = L.map('map-". $map_id ."').setView([". ($latitude / $address_counter) .", ". ($longitude / $address_counter) ."], ". $maps_zoom .");";
+			?>
+			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
+				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map);
+			map.scrollWheelZoom.disable();
+			var myIcon = L.icon({
+				iconUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'); ?>',
+				shadowUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'); ?>',
+
+				iconSize:     [25, 41], // size of the icon
+				shadowSize:   [41, 41], // size of the shadow
+				iconAnchor:   [12, 40], // point of the icon which will correspond to marker's location
+				shadowAnchor: [13, 40], // the same for the shadow
+				popupAnchor:  [0, -41]  // point from which the popup should open relative to the iconAnchor
+			});
+
+			<?php
+				foreach($addresses as $address) {
+					if($address->latitude != 0 && $address->longitude != 0) {
+						$infotext = '"'. $address->company .'<br />';
+						if($address->contact_name != "") {
+							$infotext .= $address->contact_name .'<br />';			
+						}
+						$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
+
+						print "var marker = L.marker([". $address->latitude .", ". $address->longitude ."], {"
+								."draggable: false,"
+								."icon: myIcon"
+								."}).addTo(map).bindPopup('". addslashes($infotext) ."');";
+					}
+				}
+			?>
+		</script>
+		<?php
+			}
+		?>
 	</div>
 <?php
 	}
-?>

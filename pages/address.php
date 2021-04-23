@@ -174,8 +174,8 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
-							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, TRUE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, FALSE, $readonly);

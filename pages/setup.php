@@ -29,6 +29,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Neues Feld Mobilfunknummer hinzugefügt.</li>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": CSS Fehler bei PLZ Eingabe behoben.</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kartenart kann nun auch OpenStreetMap ausgewählt werden (Addon OSM proxy wird benötigt).</li>
 </ul>
 <p>1.1.2:</p>
 <ul>
