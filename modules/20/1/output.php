@@ -34,7 +34,7 @@ else {
 		else if($country !== FALSE) {
 			$addresses = $country->getAddresses($address_type, TRUE);
 		}
-		else {
+		else if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 			$accepted_lang = explode(";", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			$accepted_lang = explode(",", $accepted_lang[0]);
 			$countries = D2U_Address\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
