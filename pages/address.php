@@ -130,7 +130,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 							foreach ($countries as $country) {
 								$options_countries[$country->country_id] = $country->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$address->country->country_id], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [isset($address->country) ? $address->country->country_id : ''], 1, FALSE, $readonly);
 							
 							$d2u_helper = rex_addon::get("d2u_helper");
 							$api_key = "";
@@ -174,8 +174,8 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
-							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', $address->latitude, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', $address->longitude, TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', ($address->latitude <> 0 ? $address->latitude : ''), TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', ($address->longitude <> 0 ? $address->longitude : ''), TRUE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, FALSE, $readonly);
