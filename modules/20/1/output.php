@@ -49,7 +49,9 @@ else {
 				}
 			}
 		}
-		$maps_zoom = $country->maps_zoom;
+		if($country !== FALSE) {
+			$maps_zoom = $country->maps_zoom;
+		}
 	}
 	else {
 		$addresses = $address_type->getAddresses(TRUE);

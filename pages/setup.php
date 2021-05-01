@@ -27,7 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.4-DEV:</p>
 <ul>
-	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnung entfernt.</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnungen entfernt.</li>
 </ul>
 <p>1.1.3:</p>
 <ul>
