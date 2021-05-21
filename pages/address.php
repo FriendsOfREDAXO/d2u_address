@@ -82,7 +82,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 			$message .= '<li><a href="index.php?page=d2u_address/country&func=edit&entry_id='. $country->country_id .'">'. $country->name .'</a></li>';
 		}
 		foreach($zip_codes as $zip_code) {
-			$message .= '<li><a href="index.php?page=d2u_address/address_type&func=edit&entry_id='. $zip_code->zipcode_id .'">'. $zip_code->range_from .' - '. $zip_code->range_to .'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_address/zip_code&func=edit&entry_id='. $zip_code->zipcode_id .'">'. $zip_code->range_from .' - '. $zip_code->range_to .'</a></li>';
 		}
 		$message .= '</ul>';
 

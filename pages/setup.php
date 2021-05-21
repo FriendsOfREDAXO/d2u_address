@@ -27,6 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.4-DEV:</p>
 <ul>
+	<li>Bugfix: beim löschen der Adresse wurde in der Fehlermeldung der Link zur PLZ nicht korrekt gesetzt.</li>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnungen entfernt.</li>
 </ul>
 <p>1.1.3:</p>
