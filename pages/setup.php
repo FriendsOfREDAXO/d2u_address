@@ -25,8 +25,9 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.1.4-DEV:</p>
+<p>1.2-DEV:</p>
 <ul>
+	<li>Kontinente hinzugefügt. Ländern können Kontinenten zugeordnet werden.</li>
 	<li>Bugfix: beim löschen der Adresse wurde in der Fehlermeldung der Link zur PLZ nicht korrekt gesetzt.</li>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnungen entfernt.</li>
 </ul>

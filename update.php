@@ -66,3 +66,16 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_address_zipcodes` CO
     \rex::getTable('d2u_address_address'))
     ->ensureColumn(new \rex_sql_column('mobile', 'varchar(50)', TRUE))
     ->alter();
+
+\rex_sql_table::get(\rex::getTable('d2u_address_continents'))
+	->ensureColumn(new rex_sql_column('continent_id', 'int(10) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('continent_id')
+	->ensureColumn(new \rex_sql_column('country_ids', 'VARCHAR(1000)', true))
+	->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_address_continents_lang'))
+	->ensureColumn(new rex_sql_column('continent_id', 'int(10) unsigned', false, null, 'auto_increment'))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->setPrimaryKey(['continent_id', 'clang_id'])
+	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+	->ensure();

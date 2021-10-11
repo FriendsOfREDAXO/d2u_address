@@ -66,6 +66,19 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS `". \rex::getTablePrefix() ."d2u_addr
     PRIMARY KEY (`zipcode_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
+\rex_sql_table::get(\rex::getTable('d2u_address_continents'))
+	->ensureColumn(new rex_sql_column('continent_id', 'int(10) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('continent_id')
+	->ensureColumn(new \rex_sql_column('country_ids', 'VARCHAR(1000)', true))
+	->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_address_continents_lang'))
+	->ensureColumn(new rex_sql_column('continent_id', 'int(10) unsigned', false, null, 'auto_increment'))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->setPrimaryKey(['continent_id', 'clang_id'])
+	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+	->ensure();
+
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_address_120x150'");
 if($sql->getRows() == 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
