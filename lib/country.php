@@ -148,6 +148,26 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * Returns continent IDs for country.
+	 * @return int[] address IDs
+	 */
+	public function getContinentIDs() {
+		$query = "SELECT continent_id FROM ". \rex::getTablePrefix() ."d2u_address_continents "
+			."WHERE country_ids LIKE '%|". $this->country_id ."|%' ";
+
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$continent_ids = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$continent_ids[] = $result->getValue("continent_id");
+			$result->next();
+		}
+
+		return $continent_ids;
+	}
+
+	/**
 	 * Returns zipcode objects for country.
 	 * @return ZipCode[] Found zipcodes
 	 */
