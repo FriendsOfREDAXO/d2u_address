@@ -318,6 +318,13 @@ class Address {
 	public function save() {
 		$error = 0;
 
+		$pre_save_object = new self($this->address_id, $this->clang_id);
+
+		// save priority, but only if new or changed
+		if($this->priority != $pre_save_object->priority || $this->property_id == 0) {
+			$this->setPriority();
+		}
+
 		$query = \rex::getTablePrefix() ."d2u_address_address SET "
 				."company = '". addslashes($this->company) ."', "
 				."company_appendix = '". addslashes($this->company_appendix) ."', "
@@ -364,5 +371,43 @@ class Address {
 
 
 		return $error;
+	}
+		
+	/**
+	 * Reassigns priorities in database.
+	 * @param boolean $delete Reorder priority after deletion
+	 */
+	private function setPriority($delete = FALSE) {
+		// Pull prios from database
+		$query = "SELECT address_id, priority FROM ". \rex::getTablePrefix() ."d2u_address_address "
+			."WHERE address_id <> ". $this->address_id ." ORDER BY priority";
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+		
+		// When priority is too small, set at beginning
+		if($this->priority <= 0) {
+			$this->priority = 1;
+		}
+		
+		// When prio is too high or was deleted, simply add at end 
+		if($this->priority > $result->getRows() || $delete) {
+			$this->priority = $result->getRows() + 1;
+		}
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[$result->getValue("priority")] = $result->getValue("address_id");
+			$result->next();
+		}
+		array_splice($objects, ($this->priority - 1), 0, [$this->address_id]);
+
+		// Save all prios
+		foreach($objects as $prio => $address_id) {
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_address_address "
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."WHERE address_id = ". $address_id;
+			$result = \rex_sql::factory();
+			$result->setQuery($query);
+		}
 	}
 }

@@ -229,7 +229,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT address_id, company, contact_name, city, priority, online_status '
+	$query = 'SELECT address_id, company, contact_name, city, address_type_ids, priority, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_address '
 		. 'ORDER BY priority';
     $list = rex_list::factory($query, 1000);
@@ -250,6 +250,17 @@ if ($func == '') {
     $list->setColumnLabel('contact_name', rex_i18n::msg('d2u_address_contact_name'));
 
     $list->setColumnLabel('city', rex_i18n::msg('d2u_address_city'));
+
+	$list->setColumnLabel('address_type_ids', rex_i18n::msg('d2u_address_address_types'));
+	$list->setColumnFormat('address_type_ids', 'custom', function ($params) {
+		$list_params = $params['list'];
+		$address_type_names = [];
+		foreach(preg_grep('/^\s*$/s', explode("|", $list_params->getValue('address_type_ids')), PREG_GREP_INVERT) as $address_type_id) {
+			$address_type = new \D2U_Address\AddressType($address_type_id, rex_config::get("d2u_helper", "default_lang"));
+			$address_type_names[] = $address_type->address_type_id ? $address_type->name : '';
+		}
+		return implode(', ', $address_type_names);
+	});
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
