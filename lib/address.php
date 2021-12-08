@@ -170,7 +170,7 @@ class Address {
 	}
 
 	/**
-	 * Changes the status of a property
+	 * Changes the status of the object
 	 */
 	public function changeStatus() {
 		if($this->online_status == "online") {
@@ -321,7 +321,7 @@ class Address {
 		$pre_save_object = new self($this->address_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->property_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->address_id == 0) {
 			$this->setPriority();
 		}
 
