@@ -29,6 +29,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Kontinente hinzugefügt. Ländern können Kontinenten zugeordnet werden.</li>
 	<li>Bugfix: beim Löschen der Adresse wurde in der Fehlermeldung der Link zur PLZ nicht korrekt gesetzt.</li>
+	<li>Bugfix: bei Adressarten wurden die beiden Checkbo Felder nicht korrekt aus der Datenbank ausgelesen.</li>
 	<li>Bugfix: beim Ändern einer Priorität einer Adresse wurden die anderen Prioritäten nicht korrekt angepasst.</li>
 	<li>Notice entfernt.</li>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnungen entfernt.</li>

@@ -60,8 +60,8 @@ class AddressType {
 		if ($result->getRows() > 0) {
 			$this->address_type_id = $result->getValue("address_type_id");
 			$this->name = stripslashes($result->getValue("name"));
-			$this->show_address_details = $result->getValue("show_address_details");
-			$this->show_country_select = $result->getValue("show_country_select");
+			$this->show_address_details = $result->getValue("show_address_details") == "yes" ? true : false;
+			$this->show_country_select = $result->getValue("show_country_select") == "yes" ? true : false;
 			if($result->getValue("maps_zoom") != "") {
 				$this->maps_zoom = $result->getValue("maps_zoom");
 			}
