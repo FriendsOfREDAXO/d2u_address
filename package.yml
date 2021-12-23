@@ -18,5 +18,5 @@ page:
 
 requires:
     packages:
-        d2u_helper: '>=1.8.4'
+        d2u_helper: '>=1.8.8'
         sprog: '>=1.0.0'

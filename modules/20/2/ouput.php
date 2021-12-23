@@ -31,7 +31,7 @@ $address = new D2U_Address\Address($adress_id);
 			}
 			if($address->adress_id > 0) {
 				print '<br><br>';
-				print '<h4>'. $tag_open .'d2u_address_email'. $tag_close .'</h4>';
+				print '<h4>'. $tag_open .'d2u_helper_module_form_email'. $tag_close .'</h4>';
 				// Google Analytics Event
 				$google_analytics = "";
 				if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&

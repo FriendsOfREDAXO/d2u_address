@@ -3,11 +3,13 @@ $address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
 $show_fax = "REX_VALUE[2]" == 'true' ? TRUE : FALSE;
 $map_type = "REX_VALUE[3]" == '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility
+$default_contact = "REX_VALUE[4]" > 0 ? new D2U_Address\Address("REX_VALUE[4]", rex_clang::getCurrentId()) : false;
 
 if(\rex::isBackend()) {
 	// BACKEND
 	print '<h1 style="font-size: 1.5em;">Adressliste</h1>';
 	print "Adressart: ". $address_type->name ."<br>";
+	print "Standardkontakt: ". ($default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0 ? $default_contact->company .' - '. $default_contact->contact_name : "Adressen des Standardlandes aus den Einstellungen anzeigen") ."<br>";
 	print "Faxnummer anzeigen: ". ($show_fax ? "Ja" : "Nein") ."<br>";
 }
 else {
@@ -28,7 +30,10 @@ else {
 	// Form selections
 	$addresses = [];
 	if($address_type->show_country_select == "yes") {
-		if($zip_code !== FALSE) {
+		if(rex_request('country_id', 'int') == -1 && $default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0) {
+			$addresses[] = $default_contact;
+		}
+		else if($zip_code !== FALSE) {
 			$addresses = $zip_code->getAdresses(TRUE);
 		}
 		else if($country !== FALSE) {
@@ -78,38 +83,34 @@ else {
 		print '<div class="col-12 col-md-6">';
 		print '<select name="country_id" class="country_select" onChange="this.form.submit()">';
 		$countries = $address_type->getCountries();
-		$already_selected = FALSE;
 		foreach($countries as $cur_country) {
 			$selected = "";
-			if($country->country_id == $cur_country->country_id) {
+			if(rex_request('country_id', 'int') > -1 && ($country->country_id == $cur_country->country_id || ($country === FALSE && $cur_country->country_id == $default_country_id))) {
 				$selected = ' selected="selected"';
-				$already_selected = TRUE;
-			}
-			else if($country === FALSE && $cur_country->country_id == $default_country_id) {
-				$selected = ' selected="selected"';
-				$already_selected = TRUE;
 			}
 			print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
 		}
-		print '<option value="-1" '. ($already_selected ? '' : 'selected="selected"') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
+		print '<option value="-1" '. (rex_request('country_id', 'int') == -1 ? 'selected="selected"' : '') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
 		print '</select>';
 		print '</div>';
 
-		$country_zip_codes = $country->getZipCodes();
-		if($country !== FALSE && count($country_zip_codes) > 0) {
-			$show_zip_code_field = FALSE;
-			foreach($country_zip_codes as $country_zip_code) {
-				if($country_zip_code->isOnline()) {
-					$show_zip_code_field = TRUE;
-					break;
+		if(rex_request('country_id', 'int') > -1 && $country !== FALSE) {
+			$country_zip_codes = $country->getZipCodes();
+			if(count($country_zip_codes) > 0) {
+				$show_zip_code_field = FALSE;
+				foreach($country_zip_codes as $country_zip_code) {
+					if($country_zip_code->isOnline()) {
+						$show_zip_code_field = TRUE;
+						break;
+					}
 				}
-			}
-			if($show_zip_code_field) {
-				print '<div class="col-12 col-md-6">';
-				$placeholder = $zip_code === FALSE ? $tag_open .'d2u_address_zip_code'. $tag_close : rex_request('zip_code', 'int');
-				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
-				print '<input type="submit" value="»" class="zip_code">';
-				print '</div>';
+				if($show_zip_code_field) {
+					print '<div class="col-12 col-md-6">';
+					$placeholder = $zip_code === FALSE ? $tag_open .'d2u_helper_module_form_zip'. $tag_close : rex_request('zip_code', 'int');
+					print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
+					print '<input type="submit" value="»" class="zip_code">';
+					print '</div>';
+				}
 			}
 		}
 
@@ -157,7 +158,7 @@ else {
 				print $tag_open .'d2u_address_mobile'. $tag_close .' '. $address->mobile .'<br>';
 			}
 			if($address->phone != "") {
-				print $tag_open .'d2u_address_phone'. $tag_close .' '. $address->phone .'<br>';
+				print $tag_open .'d2u_helper_module_form_phone'. $tag_close .' '. $address->phone .'<br>';
 			}
 			if($show_fax && $address->fax != "") {
 				print $tag_open .'d2u_address_fax'. $tag_close .' '. $address->fax .'<br>';

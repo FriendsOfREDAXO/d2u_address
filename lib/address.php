@@ -225,7 +225,7 @@ class Address {
 		if(count($where) > 0) {
 			$query .= 'WHERE '. implode(' AND ', $where);
 		}
-		$query .= ' ORDER BY company, priority';
+		$query .= ' ORDER BY company, contact_name, priority';
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 

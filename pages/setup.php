@@ -25,14 +25,15 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2-DEV:</p>
+<p>1.2:</p>
 <ul>
-	<li>Kontinente hinzugefügt. Ländern können Kontinenten zugeordnet werden.</li>
+	<li>Kontinente hinzugefügt. Ländern können Kontinenten zugeordnet werden (nicht im Beispielmodul verfügbar).</li>
+	<li>Einige Frontendübersetzungen ins D2U Helper Addon umgezogen.</li>
 	<li>Bugfix: beim Löschen der Adresse wurde in der Fehlermeldung der Link zur PLZ nicht korrekt gesetzt.</li>
-	<li>Bugfix: bei Adressarten wurden die beiden Checkbo Felder nicht korrekt aus der Datenbank ausgelesen.</li>
+	<li>Bugfix: bei Adressarten wurden die beiden Checkbox Felder nicht korrekt aus der Datenbank ausgelesen.</li>
 	<li>Bugfix: beim Ändern einer Priorität einer Adresse wurden die anderen Prioritäten nicht korrekt angepasst.</li>
 	<li>Notice entfernt.</li>
-	<li>Modul 20-1 "D2U Adressen - Adressausgabe": PHP Warnungen entfernt.</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Adresse für Option "Weitere Länder" wählbar und PHP Warnungen entfernt.</li>
 </ul>
 <p>1.1.3:</p>
 <ul>
