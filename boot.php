@@ -60,6 +60,7 @@ function rex_d2u_address_media_is_in_use(rex_extension_point $ep) {
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_address->next();
     }
 
 	return $warning;

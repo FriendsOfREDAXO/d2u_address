@@ -27,7 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 </ul>
 <p>1.2:</p>
 <ul>
