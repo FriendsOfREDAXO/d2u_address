@@ -214,7 +214,7 @@ class Address {
 	 * @return Address[] Addresses
 	 */
 	static public function getAll($clang_id, $address_type = FALSE, $online_only = TRUE) {
-		$query = 'SELECT address_id FROM '. \rex::getTablePrefix() .'d2u_address_address ';
+		$query = 'SELECT address_id, priority FROM '. \rex::getTablePrefix() .'d2u_address_address ';
 		$where = [];
 		if($address_type !== FALSE) {
 			$where[] = 'address_type_ids LIKE "%|'. $address_type->address_type_id .'|%"';
@@ -231,9 +231,10 @@ class Address {
 
 		$addresses = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$addresses[] = new Address($result->getValue("address_id"), $clang_id);
+			$addresses[$result->getValue("priority")] = new Address($result->getValue("address_id"), $clang_id);
 			$result->next();
 		}
+		ksort($addresses);
 		return $addresses;
 	}
 

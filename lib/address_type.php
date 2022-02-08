@@ -105,7 +105,7 @@ class AddressType {
 	 * @return Address[] Found addresses.
 	 */
 	public function getAddresses($online_only = TRUE) {
-		$query = "SELECT address_id FROM ". \rex::getTablePrefix() ."d2u_address_address "
+		$query = "SELECT address_id, priority FROM ". \rex::getTablePrefix() ."d2u_address_address "
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
 		if($online_only) {
 			$query .= "AND online_status = 'online' ";
@@ -117,10 +117,11 @@ class AddressType {
 
 		$addresses = [];
 		for($i = 0; $i < $num_rows; $i++) {
-			$addresses[] = new Address($result->getValue("address_id"), $this->clang_id);
+			$addresses[$result->getValue("priority")] = new Address($result->getValue("address_id"), $this->clang_id);
 			$result->next();
 		}
 		
+		ksort($addresses);
 		return $addresses;
 	}
 

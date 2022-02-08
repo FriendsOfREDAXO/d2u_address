@@ -112,7 +112,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		foreach($address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
 			if($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids)) {
-				$addresses[$address->priority ."-". $address->address_id] = $address;
+				$addresses[$address->priority] = $address;
 			}
 		}
 
