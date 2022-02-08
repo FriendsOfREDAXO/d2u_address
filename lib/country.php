@@ -111,7 +111,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$address_ids = $this->getAddressIDs($online_only);
 		foreach($address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
-			if($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids)) {
+			if($address_type === FALSE || ($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids))) {
 				$addresses[$address->priority] = $address;
 			}
 		}

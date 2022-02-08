@@ -67,10 +67,9 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$address_types = $address->getReferringAddressTypes();
 	$countries = $address->getReferringCountries();
 	$zip_codes = $address->getReferringZipCodes();
-	
+
 	// If not used, delete
 	if(count($address_types) == 0 && count($countries) == 0 && count($zip_codes) == 0) {
-		$address = new D2U_Address\Address($address_id, rex_config::get('d2u_helper', 'default_lang'));
 		$address->delete();
 	}
 	else {

@@ -28,6 +28,7 @@ $d2u_module_manager->showManagerList();
 <p>1.2.1-DEV:</p>
 <ul>
 	<li>Sortiung der Adressen bei allen Methoden vereinheitlicht: Sortierung erfolgt ausschließlich nach Priorität.</li>
+	<li>Bugfix: Beim Löschen von Ländern wurde bei einer Warnmeldung der Name des Kontakts nicht korrekt angezeigt.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 </ul>
 <p>1.2:</p>
