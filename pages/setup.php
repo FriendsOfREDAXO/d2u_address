@@ -27,6 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.1-DEV:</p>
 <ul>
+	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Sortiung der Adressen bei allen Methoden vereinheitlicht: Sortierung erfolgt ausschließlich nach Priorität.</li>
 	<li>Bugfix: Beim Löschen von Ländern wurde bei einer Warnmeldung der Name des Kontakts nicht korrekt angezeigt.</li>
 	<li>Bugfix: Beim Löschen von Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>

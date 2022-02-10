@@ -5,16 +5,16 @@ supportpage: http://github.com/tobiaskrais/d2u_address
 
 page:
     title: 'translate:d2u_address'
-    perm: d2u_address[]
+    perm: 'd2u_address[]'
     icon: rex-icon fa-address-card
     subpages:
-        address: { title: 'translate:d2u_address_address', icon: rex-icon fa-address-card, perm: d2u_address[edit_data] }
-        address_type: { title: 'translate:d2u_address_address_types', icon: rex-icon fa-address-book, perm: d2u_address[edit_data] }
+        address: { title: 'translate:d2u_address_address', icon: rex-icon fa-address-card, perm: 'd2u_address[edit_data]' }
+        address_type: { title: 'translate:d2u_address_address_types', icon: rex-icon fa-address-book, perm: 'd2u_address[edit_data]' }
         country: { title: 'translate:d2u_address_countries', icon: rex-icon fa-flag }
         continent: { title: 'translate:d2u_address_continents', icon: rex-icon fa-globe }
-        zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road, perm: d2u_address[edit_data] }
-        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemclass: pull-right, perm: d2u_address[settings] }
-        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemclass: pull-right, perm: d2u_address[settings] }
+        zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road, perm: 'd2u_address[edit_data]' }
+        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemclass: pull-right, perm: 'd2u_address[settings]' }
+        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemclass: pull-right, perm: 'd2u_address[settings]' }
 
 requires:
     packages:
