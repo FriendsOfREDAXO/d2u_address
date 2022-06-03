@@ -20,3 +20,6 @@ requires:
     packages:
         d2u_helper: '>=1.8.8'
         sprog: '>=1.0.0'
+        
+installer_ignore:
+    - .github
