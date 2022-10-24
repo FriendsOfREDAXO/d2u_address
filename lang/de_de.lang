@@ -39,6 +39,7 @@ d2u_address_url = Internet URL (inkl. https://)
 d2u_address_zip_codes = PLZ
 d2u_address_zip_codes_no_zipcodes_found = Es wurden noch keine Postleitzahlen angelegt.
 
+d2u_address_settings_analytics = Google Analytics
 d2u_address_settings_analytics_emailevent_action = Name Eventaktion
 d2u_address_settings_analytics_emailevent_activate = Beim Klick auf eine E-Mailadresse ein Analytics Event senden
 d2u_address_settings_analytics_emailevent_category = Name Eventkategorie

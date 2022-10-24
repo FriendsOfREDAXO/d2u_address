@@ -48,16 +48,29 @@
 </div><div class="row">
 	<div class="col-xs-4">Art der Karte:</div>
 	<div class="col-xs-8">
-		<?php 
-			$map_types = ["osm" => "OpenStreetMap". (rex_addon::get('osmproxy')->isAvailable() ? "" : " (osmproxy Addon muss noch installiert werden)"), "google" => "Google Maps"];
+		<?php
+			$map_types = [];
+			if(rex_addon::get('geolocation')->isAvailable()) {
+				$map_types['geolocation'] = 'Geolocation Addon: Standardkarte';
+				$mapsets = \Geolocation\mapset::query()
+					->orderBy('title')
+					->findValues('title', 'id');
+				foreach($mapsets as $id => $name ){
+					$map_types[$id] = 'Geolocation Addon: '. $name;
+				}
+			}
+			else if(rex_addon::get('osmproxy')->isAvailable()) {
+				$map_types['osm'] = 'OSM Proxy Addon OpenStreetMap Karte';
+			}
+			$map_types['google'] = 'Google Maps';
 
 			if(count($map_types) > 0) {
-				print ' <select name="REX_INPUT_VALUE[3]" class="form-control">';
+				print '<select name="REX_INPUT_VALUE[3]" class="form-control">';
 				foreach ($map_types as $map_type_id => $map_type_name) {
-					echo '<option value="'. $map_type_id .'" ';
+					echo '<option value="'. $map_type_id .'"';
 
 					if ("REX_VALUE[3]" == $map_type_id) {
-						echo 'selected="selected" ';
+						echo ' selected="selected" ';
 					}
 					echo '>'. $map_type_name .'</option>';
 				}

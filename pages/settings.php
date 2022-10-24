@@ -70,7 +70,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><small><i class="rex-icon fa-google"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_analytics'); ?></legend>
+				<legend><small><i class="rex-icon fa-google"></i></small> <?php echo rex_i18n::msg('d2u_address_settings_analytics'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_address_settings_analytics_emailevent_activate', 'settings[analytics_emailevent_activate]', 'true', $this->getConfig('analytics_emailevent_activate') == 'true');

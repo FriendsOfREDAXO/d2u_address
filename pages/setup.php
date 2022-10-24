@@ -27,7 +27,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.3-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kann nun auch Karten des Geolocation Addons verwenden.</li>
+	<li>install.php und update.php auf Redaxo Stil umgeschrieben.</li>
 </ul>
 <p>1.2.2:</p>
 <ul>
