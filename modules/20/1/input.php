@@ -62,7 +62,7 @@
 			else if(rex_addon::get('osmproxy')->isAvailable()) {
 				$map_types['osm'] = 'OSM Proxy Addon OpenStreetMap Karte';
 			}
-			$map_types['google'] = 'Google Maps';
+			$map_types['google'] = 'Google Maps'. (rex_config::get('d2u_helper', 'maps_key', '') != '' ? "" : " (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)");
 
 			if(count($map_types) > 0) {
 				print '<select name="REX_INPUT_VALUE[3]" class="form-control">';
