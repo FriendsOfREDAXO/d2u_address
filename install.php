@@ -44,7 +44,7 @@
 	->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_address_countries_lang'))
 	->ensureColumn(new rex_sql_column('country_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, rex_clang::getStartId()))
 	->setPrimaryKey(['country_id', 'clang_id'])
 	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
 	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
@@ -72,7 +72,7 @@
 	->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_address_continents_lang'))
 	->ensureColumn(new rex_sql_column('continent_id', 'INT(10) unsigned', false, null, 'auto_increment'))
-	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, rex_clang::getStartId()))
 	->setPrimaryKey(['continent_id', 'clang_id'])
 	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
 	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
