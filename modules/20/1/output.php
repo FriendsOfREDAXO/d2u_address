@@ -436,9 +436,7 @@ if(count($addresses) > 0) {
 			$mapsetId = (int) 'REX_VALUE[9]';
 
 			$rex_map = \Geolocation\mapset::take($mapsetId)
-				->attributes('id', $mapsetId)
-				->attributes('style', 'height: '. $height . $height_unit .';width:100%;')
-				->dataset('position', [$latitude, $longitude]);
+				->attributes('id', $mapsetId);
 
 			$latitude = 0;
 			$longitude = 0;
