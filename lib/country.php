@@ -89,7 +89,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			."WHERE country_id = ". $this->country_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$result = \rex_sql::factory();
 			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries "
 				."WHERE country_id = ". $this->country_id);

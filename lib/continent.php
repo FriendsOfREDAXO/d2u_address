@@ -73,7 +73,7 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 			."WHERE continent_id = ". $this->continent_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$result = \rex_sql::factory();
 			$result->setQuery("DELETE FROM ". \rex::getTablePrefix() ."d2u_address_continents "
 				."WHERE continent_id = ". $this->continent_id);
