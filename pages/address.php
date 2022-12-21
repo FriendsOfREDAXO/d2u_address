@@ -92,7 +92,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$address = new D2U_Address\Address($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$address = new D2U_Address\Address($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$address->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -187,7 +187,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								$options_address_types[$adress_type->address_type_id] = $adress_type->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, TRUE, $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, rex_config::get("d2u_helper", "default_lang"));
+							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, intval(rex_config::get("d2u_helper", "default_lang")));
 							d2u_addon_backend_helper::form_input('d2u_address_priority', 'form[priority]', $address->priority, TRUE, $readonly, 'number');
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
@@ -255,7 +255,7 @@ if ($func == '') {
 		$list_params = $params['list'];
 		$address_type_names = [];
 		foreach(preg_grep('/^\s*$/s', explode("|", $list_params->getValue('address_type_ids')), PREG_GREP_INVERT) as $address_type_id) {
-			$address_type = new \D2U_Address\AddressType($address_type_id, rex_config::get("d2u_helper", "default_lang"));
+			$address_type = new \D2U_Address\AddressType($address_type_id, intval(rex_config::get("d2u_helper", "default_lang")));
 			$address_type_names[] = $address_type->address_type_id ? $address_type->name : '';
 		}
 		return implode(', ', $address_type_names);

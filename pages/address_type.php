@@ -94,7 +94,7 @@ if ($func == 'edit' || $func == 'add') {
 								$options_address_id[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, rex_config::get("d2u_helper", "default_lang"));
+							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, intval(rex_config::get("d2u_helper", "default_lang")));
 						?>
 					</div>
 				</fieldset>

@@ -40,7 +40,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$zipcode_id = $form['zipcode_id'];
 	}
-	$zipcode = new D2U_Address\ZipCode($zipcode_id, rex_config::get("d2u_helper", "default_lang"));
+	$zipcode = new D2U_Address\ZipCode($zipcode_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$zipcode->delete();
 	
 	$func = '';
@@ -59,7 +59,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$zipcode = new D2U_Address\ZipCode($entry_id, rex_config::get("d2u_helper", "default_lang"));
+							$zipcode = new D2U_Address\ZipCode($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 							$readonly = TRUE;
 							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]')) {
 								$readonly = FALSE;
@@ -117,7 +117,7 @@ if ($func == '') {
 	$query = 'SELECT zipcode_id, range_from, range_to, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes AS zipcodes '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS country '
-			. 'ON zipcodes.country_id = country.country_id AND country.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			. 'ON zipcodes.country_id = country.country_id AND country.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		. 'ORDER BY name, range_from ASC';
     $list = rex_list::factory($query, 1000);
 
