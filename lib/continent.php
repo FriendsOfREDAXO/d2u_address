@@ -58,10 +58,10 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_continents_lang "
 			."WHERE continent_id = ". $this->continent_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -112,7 +112,7 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT continent_id FROM '. \rex::getTablePrefix() .'d2u_address_continents_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.continent_id FROM '. \rex::getTablePrefix() .'d2u_address_continents AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_continents_lang AS target_lang '
 						.'ON main.continent_id = target_lang.continent_id AND target_lang.clang_id = '. $clang_id .' '
@@ -136,20 +136,20 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if error occured
+	 * @return boolean true if error occured
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_country = new Continent($this->continent_id, $this->clang_id);
 	
 		$result = \rex_sql::factory();
-		if($this->continent_id == 0 || $pre_save_country != $this) {
+		if($this->continent_id === 0 || $pre_save_country != $this) {
 			$query = \rex::getTablePrefix() ."d2u_address_continents SET "
 					."country_ids = '|". implode("|", $this->country_ids) ."|' ";
 
-			if($this->continent_id == 0) {
+			if($this->continent_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -157,8 +157,8 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 			}
 
 			$result->setQuery($query);
-			if($this->continent_id == 0) {
-				$this->continent_id = $result->getLastId();
+			if($this->continent_id === 0) {
+				$this->continent_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

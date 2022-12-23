@@ -101,10 +101,10 @@ class AddressType {
 
 	/**
 	 * Returns addresses for adress type
-	 * @param boolean $online_only TRUE to get only online addresses
+	 * @param boolean $online_only true to get only online addresses
 	 * @return Address[] Found addresses.
 	 */
-	public function getAddresses($online_only = TRUE) {
+	public function getAddresses($online_only = true) {
 		$query = "SELECT address_id, priority FROM ". \rex::getTablePrefix() ."d2u_address_address "
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
 		if($online_only) {
@@ -127,10 +127,10 @@ class AddressType {
 
 	/**
 	 * Gets all countries used by this object.
-	 * @param boolean $online_only If TRUE only online objects are returned
+	 * @param boolean $online_only If true only online objects are returned
 	 * @return Country[] Array with country objects
 	 */
-	public function getCountries($online_only = TRUE) {
+	public function getCountries($online_only = true) {
 		$query = 'SELECT address_id FROM '. \rex::getTablePrefix() .'d2u_address_address '
 				."WHERE address_type_ids LIKE '%|". $this->address_type_id ."|%' ";
 		if($online_only) {
@@ -158,7 +158,7 @@ class AddressType {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if error occured
+	 * @return boolean true if error occured
 	 */
 	public function save() {
 		$error = 0;
@@ -170,7 +170,7 @@ class AddressType {
 				."maps_zoom = ". $this->maps_zoom .", "
 				."default_address_id = ". ($this->default_address_id == "" ? 0 : $this->default_address_id) .", "
 				."article_id = ". ($this->article_id == "" ? 0 : $this->article_id) ." ";
-		if($this->address_type_id == 0) {
+		if($this->address_type_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -179,8 +179,8 @@ class AddressType {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->address_type_id == 0) {
-			$this->address_type_id = $result->getLastId();
+		if($this->address_type_id === 0) {
+			$this->address_type_id = intval($result->getLastId());
 			$error = $result->hasError();
 		}
 

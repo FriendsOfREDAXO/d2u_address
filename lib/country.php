@@ -68,16 +68,16 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Get address IDs
-			$this->address_ids = $this->getAddressIDs(FALSE);
+			$this->address_ids = $this->getAddressIDs(false);
 		}
 	}
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_countries_lang "
 			."WHERE country_id = ". $this->country_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -102,16 +102,16 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Returns addresses for country.
-	 * @param AddressType $address_type Address type, FALSE if all address types should be used
+	 * @param AddressType $address_type Address type, false if all address types should be used
 	 * @param boolean $online_only True if only online addresses should be returned
 	 * @return Address[] Found addresses
 	 */
-	public function getAddresses($address_type = FALSE, $online_only = TRUE) {
+	public function getAddresses($address_type = false, $online_only = true) {
 		$addresses = [];
 		$address_ids = $this->getAddressIDs($online_only);
 		foreach($address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
-			if($address_type === FALSE || ($address_type !== FALSE && in_array($address_type->address_type_id, $address->address_type_ids))) {
+			if($address_type === false || ($address_type !== false && in_array($address_type->address_type_id, $address->address_type_ids))) {
 				$addresses[$address->priority] = $address;
 			}
 		}
@@ -125,7 +125,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	 * @param boolean $online_only True if only online addresses should be returned
 	 * @return int[] address IDs
 	 */
-	private function getAddressIDs($online_only = TRUE) {
+	private function getAddressIDs($online_only = true) {
 		$query = "SELECT a2c.country_id, a2c.address_id FROM ". \rex::getTablePrefix() ."d2u_address_2_countries AS a2c ";
 		if($online_only) {
 			$query .= "LEFT JOIN ". \rex::getTablePrefix() ."d2u_address_address AS address ON a2c.address_id = address.address_id ";
@@ -243,7 +243,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS target_lang '
 						.'ON main.country_id = target_lang.country_id AND target_lang.clang_id = '. $clang_id .' '
@@ -280,21 +280,21 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if error occured
+	 * @return boolean true if error occured
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_country = new Country($this->country_id, $this->clang_id);
 	
 		$result = \rex_sql::factory();
-		if($this->country_id == 0 || $pre_save_country != $this) {
+		if($this->country_id === 0 || $pre_save_country != $this) {
 			$query = \rex::getTablePrefix() ."d2u_address_countries SET "
 					."iso_lang_codes = '". $this->iso_lang_codes ."', "
 					."maps_zoom = ". $this->maps_zoom ." ";
 
-			if($this->country_id == 0) {
+			if($this->country_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -302,8 +302,8 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			}
 
 			$result->setQuery($query);
-			if($this->country_id == 0) {
-				$this->country_id = $result->getLastId();
+			if($this->country_id === 0) {
+				$this->country_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 			

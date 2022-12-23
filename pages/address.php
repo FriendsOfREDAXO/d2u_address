@@ -10,11 +10,11 @@ if($message != "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$address = new D2U_Address\Address($form['address_id'], rex_config::get('d2u_helper', 'default_lang'));
 	$address->company = $form['company'];
@@ -46,19 +46,19 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $address !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$address->address_id, "func"=>'edit', "message"=>$message], FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$address !== false) {
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$address->address_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$address_id = $entry_id;
-	if($address_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($address_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$address_id = $form['address_id'];
 	}
 	$address = new D2U_Address\Address($address_id, rex_config::get('d2u_helper', 'default_lang'));
@@ -91,7 +91,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$address = new D2U_Address\Address($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$address->changeStatus();
 	
@@ -106,30 +106,30 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_address_address'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[address_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[address_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_address_address_type'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							$address = new D2U_Address\Address($entry_id, rex_config::get('d2u_helper', 'default_lang'));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
-							d2u_addon_backend_helper::form_input('d2u_address_company', 'form[company]', $address->company, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_company_appendix', 'form[company_appendix]', $address->company_appendix, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_contact_name', 'form[contact_name]', $address->contact_name, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_street', 'form[street]', $address->street, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_additional_address', 'form[additional_address]', $address->additional_address, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_zip_codes', 'form[zip_code]', $address->zip_code, FALSE, $readonly, 'number');
-							d2u_addon_backend_helper::form_input('d2u_address_city', 'form[city]', $address->city, TRUE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_company', 'form[company]', $address->company, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_company_appendix', 'form[company_appendix]', $address->company_appendix, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_contact_name', 'form[contact_name]', $address->contact_name, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_street', 'form[street]', $address->street, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_additional_address', 'form[additional_address]', $address->additional_address, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_zip_codes', 'form[zip_code]', $address->zip_code, false, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('d2u_address_city', 'form[city]', $address->city, true, $readonly);
 							$countries = D2U_Address\Country::getAll(rex_config::get('d2u_helper', 'default_lang'));
 							$options_countries = [];
 							foreach ($countries as $country) {
 								$options_countries[$country->country_id] = $country->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [isset($address->country) ? $address->country->country_id : ''], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [isset($address->country) ? $address->country->country_id : ''], 1, false, $readonly);
 							
 							$d2u_helper = rex_addon::get("d2u_helper");
 							$api_key = "";
@@ -173,26 +173,26 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
-							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', ($address->latitude <> 0 ? $address->latitude : ''), TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', ($address->longitude <> 0 ? $address->longitude : ''), TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_mobile', 'form[mobile]', $address->mobile, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_address_fax', 'form[fax]', $address->fax, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_latitude', 'form[latitude]', ($address->latitude <> 0 ? $address->latitude : ''), true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_longitude', 'form[longitude]', ($address->longitude <> 0 ? $address->longitude : ''), true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_email', 'form[email]', $address->email, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_url', 'form[url]', $address->url, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_phone', 'form[phone]', $address->phone, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_mobile', 'form[mobile]', $address->mobile, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_address_fax', 'form[fax]', $address->fax, false, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $address->picture, $readonly);
 							$adress_types = D2U_Address\AddressType::getAll(rex_config::get('d2u_helper', 'default_lang'));
 							$options_address_types = [];
 							foreach ($adress_types as $adress_type) {
 								$options_address_types[$adress_type->address_type_id] = $adress_type->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, true, $readonly);
 							d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							d2u_addon_backend_helper::form_input('d2u_address_priority', 'form[priority]', $address->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('d2u_address_priority', 'form[priority]', $address->priority, true, $readonly, 'number');
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $address->online_status == "online", $readonly);
-							d2u_addon_backend_helper::form_select('d2u_address_countries_assigned', 'form[country_ids][]', $options_countries, $address->country_ids, 15, TRUE, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $address->online_status === "online", $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_countries_assigned', 'form[country_ids][]', $options_countries, $address->country_ids, 15, true, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -227,7 +227,7 @@ if ($func == 'edit' || $func == 'clone'|| $func == 'add') {
 //		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT address_id, company, contact_name, city, address_type_ids, priority, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_address '
 		. 'ORDER BY priority';

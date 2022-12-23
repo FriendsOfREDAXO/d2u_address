@@ -25,7 +25,7 @@ function rex_d2u_address_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$countries = D2U_Address\Country::getAll($clang_id);
 	foreach ($countries as $country) {
-		$country->delete(FALSE);
+		$country->delete(false);
 	}
 	
 	// Delete language settings

@@ -26,7 +26,7 @@
 	<div class="col-xs-4">Die eMailadresse welches Kontakts soll direkt angezeigt werden?</div>
 	<div class="col-xs-8">
 		<?php 
-			$addresses = D2U_Address\Address::getAll(TRUE);
+			$addresses = D2U_Address\Address::getAll(true);
 
 			if(count($addresses) > 0) {
 				print 'Die eMailadresse welches Kontakts soll direkt angezeigt werden? <select name="REX_INPUT_VALUE[2]" class="form-control">';

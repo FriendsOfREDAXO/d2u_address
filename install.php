@@ -80,7 +80,7 @@
 
 $sql = rex_sql::factory();
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_address_120x150'");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
 		(0, 'd2u_address_120x150', 'D2U Adressen: Vorschaubild Vertriebskontakt');");
 	$last_id = $sql->getLastId();

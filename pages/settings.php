@@ -28,7 +28,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						$country_options = [];
-						$countries = D2U_Address\Country::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+						$countries = D2U_Address\Country::getAll(intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())));
 						foreach($countries as $country) {
 							$country_options[$country->country_id] = $country->name;
 						}
@@ -74,8 +74,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_address_settings_analytics_emailevent_activate', 'settings[analytics_emailevent_activate]', 'true', $this->getConfig('analytics_emailevent_activate') == 'true');
-						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_category', 'settings[analytics_emailevent_category]', $this->getConfig('analytics_emailevent_category'), FALSE, FALSE, 'text');
-						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_action', 'settings[analytics_emailevent_action]', $this->getConfig('analytics_emailevent_action'), FALSE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_category', 'settings[analytics_emailevent_category]', $this->getConfig('analytics_emailevent_category'), false, false, 'text');
+						d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_action', 'settings[analytics_emailevent_action]', $this->getConfig('analytics_emailevent_action'), false, false, 'text');
 					?>
 					<script>
 						function changeType() {

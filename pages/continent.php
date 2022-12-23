@@ -10,13 +10,13 @@ if($message != "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
-	$success = TRUE;
-	$continent = FALSE;
+	$success = true;
+	$continent = false;
 	$continent_id = $form['continent_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($continent === FALSE) {
+		if($continent === false) {
 			$continent = new D2U_Address\Continent($continent_id, $rex_clang->getId());
 			$continent->continent_id = $continent_id; // Ensure correct ID in case first language has no object
 			$continent->country_ids = isset($form['country_ids']) ? $form['country_ids'] : [];
@@ -27,11 +27,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$continent->name = $form['lang'][$rex_clang->getId()]['name'];
 		$continent->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($continent->translation_needs_update == "delete") {
-			$continent->delete(FALSE);
+		if($continent->translation_needs_update === "delete") {
+			$continent->delete(false);
 		}
 		else if($continent->save() > 0){
-			$success = FALSE;
+			$success = false;
 		}
 		else {
 			// remember id, for each database lang object needs same id
@@ -46,32 +46,32 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $continent !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$continent->continent_id, "func"=>'edit', "message"=>$message], FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$continent !== false) {
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$continent->continent_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$continent_id = $entry_id;
-	if($continent_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($continent_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$continent_id = $form['continent_id'];
 	}
 	$continent = new D2U_Address\Continent($continent_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$continent->continent_id = $continent_id; // Ensure correct ID in case language has no object
 	
 	// Delete
-	$continent->delete(TRUE);
+	$continent->delete(true);
 	
 	$func = '';
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -81,11 +81,11 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$continent = new D2U_Address\Continent($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_address[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -97,7 +97,7 @@ if ($func == 'edit' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$continent->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$continent->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -130,9 +130,9 @@ if ($func == 'edit' || $func == 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$continent = new D2U_Address\Continent($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
 							$options_country_ids = [];
@@ -140,7 +140,7 @@ if ($func == 'edit' || $func == 'add') {
 							foreach ($countries as $country) {
 								$options_country_ids[$country->country_id] = $country->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_address_countries', 'form[country_ids][]', $options_country_ids, $continent->country_ids, 15, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_address_countries', 'form[country_ids][]', $options_country_ids, $continent->country_ids, 15, true, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -167,7 +167,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT continents.continent_id, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_address_continents AS continents '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_continents_lang AS lang '

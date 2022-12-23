@@ -172,8 +172,8 @@ class Address {
 	/**
 	 * Changes the status of the object
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->address_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_address_address "
 					."SET online_status = 'offline' "
@@ -209,14 +209,14 @@ class Address {
 	/**
 	 * Returns addresses
 	 * @param int $clang_id Redaxo Language ID
-	 * @param AddressType $address_type Address type, default: FALSE (all)
+	 * @param AddressType $address_type Address type, default: false (all)
 	 * @param boolean $online_only return only online adresses
 	 * @return Address[] Addresses
 	 */
-	static public function getAll($clang_id, $address_type = FALSE, $online_only = TRUE) {
+	static public function getAll($clang_id, $address_type = false, $online_only = true) {
 		$query = 'SELECT address_id, priority FROM '. \rex::getTablePrefix() .'d2u_address_address ';
 		$where = [];
-		if($address_type !== FALSE) {
+		if($address_type !== false) {
 			$where[] = 'address_type_ids LIKE "%|'. $address_type->address_type_id .'|%"';
 		}
 		if($online_only) {
@@ -314,7 +314,7 @@ class Address {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if error occured
+	 * @return boolean true if error occured
 	 */
 	public function save() {
 		$error = 0;
@@ -322,7 +322,7 @@ class Address {
 		$pre_save_object = new self($this->address_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->address_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->address_id === 0) {
 			$this->setPriority();
 		}
 
@@ -347,7 +347,7 @@ class Address {
 				."article_id = ". ($this->article_id ?: 0) .", "
 				."priority = ". $this->priority .", "
 				."online_status = '". $this->online_status ."' ";
-		if($this->address_id == 0) {
+		if($this->address_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -356,8 +356,8 @@ class Address {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->address_id == 0) {
-			$this->address_id = $result->getLastId();
+		if($this->address_id === 0) {
+			$this->address_id = intval($result->getLastId());
 			$error = $result->hasError();
 		}
 		
@@ -378,7 +378,7 @@ class Address {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT address_id, priority FROM ". \rex::getTablePrefix() ."d2u_address_address "
 			."WHERE address_id <> ". $this->address_id ." ORDER BY priority";
@@ -392,7 +392,7 @@ class Address {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$objects = [];
@@ -405,7 +405,7 @@ class Address {
 		// Save all prios
 		foreach($objects as $prio => $address_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_address_address "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE address_id = ". $address_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

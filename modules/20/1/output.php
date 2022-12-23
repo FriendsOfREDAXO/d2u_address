@@ -1,7 +1,7 @@
 <?php
 $address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
-$show_fax = "REX_VALUE[2]" == 'true' ? TRUE : FALSE;
+$show_fax = "REX_VALUE[2]" == 'true' ? true : false;
 $map_type = "REX_VALUE[3]" == '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility
 $default_contact = "REX_VALUE[4]" > 0 ? new D2U_Address\Address("REX_VALUE[4]", rex_clang::getCurrentId()) : false;
 
@@ -10,8 +10,8 @@ $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-$country = rex_request('country_id', 'int') > 0 ? new D2U_Address\Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : FALSE;
-$zip_code = rex_request('zip_code', 'int') > 0 ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : FALSE;
+$country = rex_request('country_id', 'int') > 0 ? new D2U_Address\Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false;
+$zip_code = rex_request('zip_code', 'int') > 0 ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : false;
 
 $d2u_address = rex_addon::get('d2u_address');
 $default_country_id = $d2u_address->hasConfig('default_country_id') ? $d2u_address->getConfig('default_country_id') : 0;
@@ -24,11 +24,11 @@ if($address_type->show_country_select == "yes") {
 	if(rex_request('country_id', 'int') == -1 && $default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0) {
 		$addresses[] = $default_contact;
 	}
-	else if($zip_code !== FALSE) {
-		$addresses = $zip_code->getAdresses(TRUE);
+	else if($zip_code !== false) {
+		$addresses = $zip_code->getAdresses(true);
 	}
-	else if($country !== FALSE) {
-		$addresses = $country->getAddresses($address_type, TRUE);
+	else if($country !== false) {
+		$addresses = $country->getAddresses($address_type, true);
 	}
 	else if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 		$accepted_lang = explode(";", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -38,25 +38,25 @@ if($address_type->show_country_select == "yes") {
 			$country = new D2U_Address\Country($countries[0]->country_id, rex_clang::getCurrentId());
 			foreach ($countries as $cur_country) {
 				// show all addresses with this ISO lang code
-				$countries_addresses = $cur_country->getAddresses($address_type, TRUE);
+				$countries_addresses = $cur_country->getAddresses($address_type, true);
 				foreach ($countries_addresses as $key => $countries_address) {
 					$addresses[$key] = $countries_address;
 				}
 			}
 		}
 	}
-	if($country !== FALSE) {
+	if($country !== false) {
 		$maps_zoom = $country->maps_zoom;
 	}
 }
 else {
-	$addresses = $address_type->getAddresses(TRUE);
+	$addresses = $address_type->getAddresses(true);
 }
 
 // Fallback if no address was found, there should be at least one address
 if(count($addresses) == 0) {
 	$country = new D2U_Address\Country($default_country_id, rex_clang::getCurrentId());
-	$addresses = $country->getAddresses($address_type, TRUE);
+	$addresses = $country->getAddresses($address_type, true);
 	$maps_zoom = $country->maps_zoom;
 }
 
@@ -76,7 +76,7 @@ if($address_type->show_country_select == "yes") {
 	$countries = $address_type->getCountries();
 	foreach($countries as $cur_country) {
 		$selected = "";
-		if(rex_request('country_id', 'int') > -1 && ($country->country_id == $cur_country->country_id || ($country === FALSE && $cur_country->country_id == $default_country_id))) {
+		if(rex_request('country_id', 'int') > -1 && ($country->country_id == $cur_country->country_id || ($country === false && $cur_country->country_id == $default_country_id))) {
 			$selected = ' selected="selected"';
 		}
 		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
@@ -85,20 +85,20 @@ if($address_type->show_country_select == "yes") {
 	print '</select>';
 	print '</div>';
 
-	if(rex_request('country_id', 'int') > -1 && $country !== FALSE) {
+	if(rex_request('country_id', 'int') > -1 && $country !== false) {
 		$country_zip_codes = $country->getZipCodes();
 		if(count($country_zip_codes) > 0) {
-			$show_zip_code_field = FALSE;
+			$show_zip_code_field = false;
 			foreach($country_zip_codes as $country_zip_code) {
 				if($country_zip_code->isOnline()) {
-					$show_zip_code_field = TRUE;
+					$show_zip_code_field = true;
 					break;
 				}
 			}
 			if($show_zip_code_field) {
 				print '<div class="col-12 col-md-6">';
-				$placeholder = $zip_code === FALSE ? $tag_open .'d2u_helper_module_form_zip'. $tag_close : rex_request('zip_code', 'int');
-				print '<input type="text" value="'. ($zip_code !== FALSE ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
+				$placeholder = $zip_code === false ? $tag_open .'d2u_helper_module_form_zip'. $tag_close : rex_request('zip_code', 'int');
+				print '<input type="text" value="'. ($zip_code !== false ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
 				print '<input type="submit" value="»" class="zip_code">';
 				print '</div>';
 			}
@@ -160,7 +160,7 @@ if(count($addresses) > 0) {
 		if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&
 				rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
 				rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '' &&
-				rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
+				rex_request('search_it_build_index', 'int', false) === false) {
 			$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
 		}
 		print '<a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a>';

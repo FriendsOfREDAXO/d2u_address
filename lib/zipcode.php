@@ -83,7 +83,7 @@ class ZipCode {
 			$zipcode = new ZipCode($result->getValue("zipcode_id"), $country->clang_id);
 			return $zipcode;
 		}
-		return FALSE;
+		return false;
     }
 	
 	/**
@@ -108,14 +108,14 @@ class ZipCode {
 
 	/**
 	 * Returns addresses for zip code
-	 * @param boolean $online_only TRUE to get only online addresses
+	 * @param boolean $online_only true to get only online addresses
 	 * @return Address[] Found addresses.
 	 */
-	public function getAdresses($online_only = TRUE) {
+	public function getAdresses($online_only = true) {
 		$addresses = [];
 		foreach ($this->address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
-			if($online_only === FALSE || ($online_only && $address->online_status == "online")) {
+			if($online_only === false || ($online_only && $address->online_status === "online")) {
 				$addresses[$address->priority] = new Address($address_id, $this->clang_id);
 			}
 		}
@@ -126,22 +126,22 @@ class ZipCode {
 
 	/**
 	 * Proves whether the object has addresses and in case it has, are these online?
-	 * @return boolean TRUE if there are online addresses for the object.
+	 * @return boolean true if there are online addresses for the object.
 	 */
 	public function isOnline() {
 		foreach ($this->address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
 			if($address->online_status == 'online') {
-				return TRUE;
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
     }
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if error occured
+	 * @return boolean true if error occured
 	 */
 	public function save() {
 		$query = \rex::getTablePrefix() ."d2u_address_zipcodes SET "
@@ -149,7 +149,7 @@ class ZipCode {
 				."range_from = '". $this->range_from ."', "
 				."range_to = '". $this->range_to ."', "
 				."country_id = ". $this->country->country_id ." ";
-		if($this->zipcode_id == 0) {
+		if($this->zipcode_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -158,8 +158,8 @@ class ZipCode {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->zipcode_id == 0) {
-			$this->zipcode_id = $result->getLastId();
+		if($this->zipcode_id === 0) {
+			$this->zipcode_id = intval($result->getLastId());
 		}
 
 		return $result->hasError();
