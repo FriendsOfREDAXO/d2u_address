@@ -58,7 +58,8 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->country_id = $result->getValue("country_id");
-			$this->iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower($result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
+			$iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower($result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
+			$this->iso_lang_codes = is_array($iso_lang_codes) ? $iso_lang_codes : [];
 			if($result->getValue("maps_zoom") != "") {
 				$this->maps_zoom = $result->getValue("maps_zoom");
 			}
