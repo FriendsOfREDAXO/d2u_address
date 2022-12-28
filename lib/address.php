@@ -153,7 +153,8 @@ class Address {
 			if($result->getValue("picture") != "") {
 				$this->picture = $result->getValue("picture");
 			}
-			$this->address_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_type_ids")), PREG_GREP_INVERT);
+			$address_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_type_ids")), PREG_GREP_INVERT);
+			$this->address_type_ids = is_array($address_type_ids) ? array_map('intval', $address_type_ids) : [];
 			$this->article_id = $result->getValue("article_id");
 			$this->priority = $result->getValue("priority");
 			if($result->getValue("online_status") != "") {

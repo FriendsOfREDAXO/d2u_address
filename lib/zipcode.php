@@ -49,7 +49,8 @@ class ZipCode {
 
 		if ($result->getRows() > 0) {
 			$this->zipcode_id = $result->getValue("zipcode_id");
-			$this->address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
+			$address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
+			$this->address_ids = is_array($address_ids) ? array_map('intval', $address_ids) : [];
 			$this->range_from = $result->getValue("range_from");
 			$this->range_to = $result->getValue("range_to");
 			$this->country = new Country($result->getValue("country_id"), $clang_id);

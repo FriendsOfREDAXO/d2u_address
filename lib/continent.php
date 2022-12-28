@@ -48,7 +48,8 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->continent_id = $result->getValue("continent_id");
-			$this->country_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("country_ids")), PREG_GREP_INVERT);
+			$country_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("country_ids")), PREG_GREP_INVERT);
+			$this->country_ids = is_array($country_ids) ? array_map('intval', $country_ids) : [];
 			$this->name = stripslashes($result->getValue("name"));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
