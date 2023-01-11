@@ -4,10 +4,10 @@
  */
 class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_address_contact' => 'Contact',
 		'd2u_address_failure_country' => 'Please enter your country.',
 		'd2u_address_fax' => 'Fax',
@@ -19,10 +19,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_address_contact' => 'Kontakt',
 		'd2u_address_failure_country' => 'Bitte geben Sie Ihr Land ein.',
 		'd2u_address_fax' => 'Fax',
@@ -34,10 +34,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_address_contact' => 'Contact',
 		'd2u_address_failure_country' => 'Veuillez indiquer votre pays.',
 		'd2u_address_fax' => 'Fax',
@@ -49,10 +49,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with spanish replacements. Key is the wildcard,
+	 * @var array<string, string> Array with spanish replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_spanish = [
+	protected array $replacements_spanish = [
 		'd2u_address_contact' => 'Contacto',
 		'd2u_address_failure_country' => 'Por favor, introduzca su país.',
 		'd2u_address_fax' => 'Fax',
@@ -64,10 +64,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with dutch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_dutch = [
+	protected array $replacements_dutch = [
 		'd2u_address_contact' => 'Contact',
 		'd2u_address_failure_country' => 'Voer uw land.',
 		'd2u_address_fax' => 'Fax',
@@ -79,10 +79,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with russian replacements. Key is the wildcard,
+	 * @var array<string, string> Array with russian replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_russian = [
+	protected array $replacements_russian = [
 		'd2u_address_contact' => 'контакт',
 		'd2u_address_failure_country' => 'Пожалуйста, введите название страны.',
 		'd2u_address_fax' => 'факс',
@@ -94,10 +94,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with portuguese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with portuguese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_portuguese = [
+	protected array $replacements_portuguese = [
 		'd2u_address_contact' => 'Contato',
 		'd2u_address_failure_country' => 'Introduza o seu país.',
 		'd2u_address_fax' => 'Fax',
@@ -109,10 +109,10 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with chinese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with chinese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_chinese = [
+	protected array $replacements_chinese = [
 		'd2u_address_contact' => '联系方式',
 		'd2u_address_failure_country' => '请输入您所在的国家。',
 		'd2u_address_fax' => '传真',
