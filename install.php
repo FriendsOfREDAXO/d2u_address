@@ -31,7 +31,7 @@
 	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(191)'))
 	->ensureColumn(new \rex_sql_column('show_address_details', 'VARCHAR(5)'))
 	->ensureColumn(new \rex_sql_column('show_country_select', 'VARCHAR(5)'))
-	->ensureColumn(new \rex_sql_column('maps_zoom', 'TINYINT(2)', false, 5))
+	->ensureColumn(new \rex_sql_column('maps_zoom', 'INT(2)', false, '5'))
 	->ensureColumn(new \rex_sql_column('default_address_id', 'INT(11)'))
 	->ensureColumn(new \rex_sql_column('article_id', 'INT(11)'))
 	->ensure();
@@ -40,11 +40,11 @@
 	->ensureColumn(new rex_sql_column('country_id', 'INT(11) unsigned', false, null, 'auto_increment'))
 	->setPrimaryKey('country_id')
 	->ensureColumn(new \rex_sql_column('iso_lang_codes', 'VARCHAR(255)'))
-	->ensureColumn(new \rex_sql_column('maps_zoom', 'TINYINT(2)', false, 5))
+	->ensureColumn(new \rex_sql_column('maps_zoom', 'INT(2)', false, '5'))
 	->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_address_countries_lang'))
-	->ensureColumn(new rex_sql_column('country_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, rex_clang::getStartId()))
+	->ensureColumn(new rex_sql_column('country_id', 'INT(11)', false, null))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, (string) rex_clang::getStartId()))
 	->setPrimaryKey(['country_id', 'clang_id'])
 	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
 	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
@@ -71,8 +71,8 @@
 	->ensureColumn(new \rex_sql_column('country_ids', 'VARCHAR(1000)', true))
 	->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_address_continents_lang'))
-	->ensureColumn(new rex_sql_column('continent_id', 'INT(10) unsigned', false, null, 'auto_increment'))
-	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, rex_clang::getStartId()))
+	->ensureColumn(new rex_sql_column('continent_id', 'INT(10)', false, null))
+	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, (string) rex_clang::getStartId()))
 	->setPrimaryKey(['continent_id', 'clang_id'])
 	->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
 	->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
@@ -104,7 +104,7 @@ if(class_exists('D2UModuleManager')) {
 		9);
 	$modules[] = new D2UModule("20-2",
 		"D2U Adressen - Kontaktbox",
-		4);
+		5);
 	$d2u_module_manager = new D2UModuleManager($modules, "", "d2u_address");
 	$d2u_module_manager->autoupdate();
 }

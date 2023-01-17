@@ -2,33 +2,34 @@
 namespace D2U_Address;
 
 /**
+ * @api
  * Data of country.
  */
 class Continent implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int ID 
 	 */
-	var $continent_id = 0;
+	public int $continent_id = 0;
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
-	 * @var string[] ISO language codes fitting for the country
+	 * @var array<int> ISO language codes fitting for the country
 	 */
-	var $country_ids = [];
+	public array $country_ids = [];
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 	
 	/**
 	 * Constructor.
@@ -47,12 +48,12 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->continent_id = $result->getValue("continent_id");
-			$country_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("country_ids")), PREG_GREP_INVERT);
+			$this->continent_id = (int) $result->getValue("continent_id");
+			$country_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("country_ids")), PREG_GREP_INVERT);
 			$this->country_ids = is_array($country_ids) ? array_map('intval', $country_ids) : [];
-			$this->name = stripslashes($result->getValue("name"));
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			if($result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
@@ -84,19 +85,18 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Gets all continents.
 	 * @param int $clang_id Redaxo language ID
-	 * @param int $address_type_id AddressType ID
-	 * @return Continent[] Array with country objects.
+	 * @return array<Continent> Array with country objects.
 	 */
 	public static function getAll($clang_id = 0) {
 		$query = 'SELECT continent_id FROM '. \rex::getTablePrefix() .'d2u_address_continents_lang '
-				."WHERE clang_id = ". ($clang_id == 0 ? \rex_clang::getCurrentId() : $clang_id) ." "
+				."WHERE clang_id = ". ($clang_id === 0 ? \rex_clang::getCurrentId() : $clang_id) ." "
 				.'ORDER BY name';
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$continents = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$continents[] = new Continent($result->getValue("continent_id"), $clang_id);
+			$continents[] = new Continent((int) $result->getValue("continent_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -121,14 +121,14 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 						.'ON main.continent_id = default_lang.continent_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.continent_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Continent($result->getValue("continent_id"), $clang_id);
+			$objects[] = new Continent((int) $result->getValue("continent_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -146,7 +146,7 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 		$pre_save_country = new Continent($this->continent_id, $this->clang_id);
 	
 		$result = \rex_sql::factory();
-		if($this->continent_id === 0 || $pre_save_country != $this) {
+		if($this->continent_id === 0 || $pre_save_country !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_address_continents SET "
 					."country_ids = '|". implode("|", $this->country_ids) ."|' ";
 
@@ -164,10 +164,10 @@ class Continent implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if(!$error) {
 			// Save the language specific part
 			$pre_save_country = new Continent($this->continent_id, $this->clang_id);
-			if($pre_save_country != $this) {
+			if($pre_save_country !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_address_continents_lang SET "
 						."continent_id = ". $this->continent_id .", "
 						."clang_id = ". $this->clang_id .", "

@@ -4,7 +4,7 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
-if($message != "") {
+if($message !== '') {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
@@ -12,24 +12,24 @@ if($message != "") {
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = rex_post('form', 'array', []);
 
-	$zipcode = new D2U_Address\ZipCode($form['zipcode_id'], rex_config::get('d2u_helper', 'default_lang'));
+	$zipcode = new D2U_Address\ZipCode($form['zipcode_id'], intval(rex_config::get('d2u_helper', 'default_lang')));
 	$zipcode->range_from = $form['range_from'];
 	$zipcode->range_to = $form['range_to'];
-	$zipcode->country = new D2U_Address\Country($form['country_id'], rex_config::get('d2u_helper', 'default_lang'));
+	$zipcode->country = new D2U_Address\Country($form['country_id'], intval(rex_config::get('d2u_helper', 'default_lang')));
 	$zipcode->address_ids = isset($form['address_ids']) ? $form['address_ids'] : [];
 
 	// message output
 	$message = 'form_save_error';
-	if($zipcode->save() == 0) {
+	if(!$zipcode->save()) {
 		$message = 'form_saved';
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$zipcode !== false) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 && $zipcode->zipcode_id > 0) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$zipcode->zipcode_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -67,16 +67,16 @@ if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 
 							d2u_addon_backend_helper::form_input('d2u_address_range_from', "form[range_from]", $zipcode->range_from, true, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_address_range_to', "form[range_to]", $zipcode->range_to, true, $readonly, "number");
-							$countries = D2U_Address\Country::getAll(rex_config::get('d2u_helper', 'default_lang'));
+							$countries = D2U_Address\Country::getAll(intval(rex_config::get('d2u_helper', 'default_lang')));
 							$options_countries = [];
 							foreach ($countries as $country) {
 								$options_countries[$country->country_id] = $country->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$zipcode->country->country_id], 1, false, $readonly);
 							$options_address_ids = [];
-							$addresses = D2U_Address\Address::getAll(rex_config::get('d2u_helper', 'default_lang'), false, false);
+							$addresses = D2U_Address\Address::getAll(intval(rex_config::get('d2u_helper', 'default_lang')), false, false);
 							foreach ($addresses as $address) {
-								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
+								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name !== '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $zipcode->address_ids, 15, true, $readonly);
 						?>

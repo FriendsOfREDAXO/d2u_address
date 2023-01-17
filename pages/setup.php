@@ -8,7 +8,7 @@ $d2u_module_manager = new D2UModuleManager(D2UAddressModules::getModules(), "mod
 $d2u_module_id = rex_request('d2u_module_id', 'string');
 $paired_module = rex_request('pair_'. $d2u_module_id, 'int');
 $function = rex_request('function', 'string');
-if($d2u_module_id != "") {
+if($d2u_module_id !== "") {
 	$d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
 }
 
@@ -25,9 +25,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.3-DEV:</p>
+<p>1.3.0:</p>
 <ul>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kann nun auch Karten des Geolocation Addons verwenden.</li>
+	<li>Ca. 250 rexstan Verbesserungen.</li>
 	<li>install.php und update.php auf Redaxo Stil umgeschrieben.</li>
 </ul>
 <p>1.2.2:</p>

@@ -9,7 +9,7 @@
 				foreach ($address_types as $address_type) {
 					echo '<option value="'. $address_type->address_type_id .'" ';
 
-					if ("REX_VALUE[1]" == $address_type->address_type_id) {
+					if (intval("REX_VALUE[1]") === $address_type->address_type_id) { /** @phpstan-ignore-line */
 						echo 'selected="selected" ';
 					}
 					echo '>'. $address_type->name .'</option>';
@@ -23,17 +23,17 @@
 	<div class="col-xs-12">&nbsp;</div>
 </div>
 <div class="row">
-	<div class="col-xs-4">Die eMailadresse welches Kontakts soll direkt angezeigt werden?</div>
+	<div class="col-xs-4">Die E-Mail-Adresse welches Kontakts soll direkt angezeigt werden?</div>
 	<div class="col-xs-8">
 		<?php 
-			$addresses = D2U_Address\Address::getAll(true);
+			$addresses = D2U_Address\Address::getAll(rex_clang::getCurrentId());
 
 			if(count($addresses) > 0) {
 				print 'Die eMailadresse welches Kontakts soll direkt angezeigt werden? <select name="REX_INPUT_VALUE[2]" class="form-control">';
 				foreach($addresses as $address) {
 					echo '<option value="'. $address->address_id .'" ';
 
-					if ("REX_VALUE[2]" == $address->address_id) {
+					if (intval("REX_VALUE[2]") === $address->address_id) { /** @phpstan-ignore-line */
 						echo 'selected="selected" ';
 					}
 					echo '>'. $address->company .' ('. $address->contact_name .')</option>';

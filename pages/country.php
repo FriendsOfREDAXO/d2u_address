@@ -4,7 +4,7 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
-if($message != "") {
+if($message !== '') {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
@@ -52,7 +52,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$country->country_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -70,15 +70,15 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 	$reffering_addresses = $country->getAddresses(false, false);
 
 	// If not used, delete
-	if(count($reffering_addresses) == 0 && rex_config::get("d2u_address", "default_country_id") != $country->country_id) {
+	if(count($reffering_addresses) === 0 && intval(rex_config::get("d2u_address", "default_country_id")) !== $country->country_id) {
 		$country->delete(true);
 	}
 	else {
 		$message = '<ul>';
 		foreach($reffering_addresses as $reffering_address) {
-			$message .= '<li><a href="index.php?page=d2u_address/address&func=edit&entry_id='. $reffering_address->address_id .'">'. $reffering_address->company . ($reffering_address->contact_name ? ' - '. $reffering_address->contact_name : '') .'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_address/address&func=edit&entry_id='. $reffering_address->address_id .'">'. $reffering_address->company . ($reffering_address->contact_name !== '' ? ' - '. $reffering_address->contact_name : '') .'</a></li>';
 		}
-		if(rex_config::get("d2u_address", "default_country_id") == $country->country_id) {
+		if(intval(rex_config::get("d2u_address", "default_country_id")) === $country->country_id) {
 			$message .= '<li><a href="index.php?page=d2u_address/settings">'. rex_i18n::msg('d2u_helper_settings') .'</a></li>';
 		}
 		$message .= '</ul>';
@@ -158,9 +158,9 @@ if ($func === 'edit' || $func === 'add') {
 							d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', "form[maps_zoom]", $country->maps_zoom, false, $readonly, "number");
 							d2u_addon_backend_helper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
 							$options_address_ids = [];
-							$addresses = D2U_Address\Address::getAll(rex_config::get('d2u_helper', 'default_lang'), false, false);
+							$addresses = D2U_Address\Address::getAll(intval(rex_config::get('d2u_helper', 'default_lang')), false, false);
 							foreach ($addresses as $address) {
-								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name != '' ? ' ('. trim($address->contact_name) .')' : '');
+								$options_address_ids[$address->address_id] = $address->company . ($address->contact_name !== '' ? ' ('. trim($address->contact_name) .')' : '');
 							}
 							d2u_addon_backend_helper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, true, $readonly);
 						?>

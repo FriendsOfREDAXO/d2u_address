@@ -2,43 +2,44 @@
 namespace D2U_Address;
 
 /**
+ * @api
  * Data of country.
  */
 class Country implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int ID 
 	 */
-	var $country_id = 0;
+	public int $country_id = 0;
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
-	 * @var string[] ISO language codes fitting for the country
+	 * @var array<string> ISO language codes fitting for the country
 	 */
-	var $iso_lang_codes = [];
+	public array $iso_lang_codes = [];
 	
 	/**
 	 * @var int Google Maps zoom level
 	 */
-	var $maps_zoom = 5;
+	public int $maps_zoom = 5;
 	
 	/**
-	 * @var int[] Adress IDs for this country
+	 * @var array<int> Adress IDs for this country
 	 */
-	var $address_ids = [];
+	public array $address_ids = [];
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 	
 	/**
 	 * Constructor.
@@ -57,15 +58,15 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->country_id = $result->getValue("country_id");
-			$iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower($result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
+			$this->country_id = (int) $result->getValue("country_id");
+			$iso_lang_codes = preg_grep('/^\s*$/s', explode(",", strtolower((string) $result->getValue("iso_lang_codes"))), PREG_GREP_INVERT);
 			$this->iso_lang_codes = is_array($iso_lang_codes) ? $iso_lang_codes : [];
-			if($result->getValue("maps_zoom") != "") {
-				$this->maps_zoom = $result->getValue("maps_zoom");
+			if((int) $result->getValue("maps_zoom") > 0) {
+				$this->maps_zoom = (int) $result->getValue("maps_zoom");
 			}
-			$this->name = stripslashes($result->getValue("name"));
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			if($result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 			
 			// Get address IDs
@@ -103,8 +104,8 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Returns addresses for country.
-	 * @param AddressType $address_type Address type, false if all address types should be used
-	 * @param boolean $online_only True if only online addresses should be returned
+	 * @param AddressType|bool $address_type Address type, false if all address types should be used
+	 * @param bool $online_only True if only online addresses should be returned
 	 * @return Address[] Found addresses
 	 */
 	public function getAddresses($address_type = false, $online_only = true) {
@@ -112,7 +113,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$address_ids = $this->getAddressIDs($online_only);
 		foreach($address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
-			if($address_type === false || ($address_type !== false && in_array($address_type->address_type_id, $address->address_type_ids))) {
+			if($address_type === false || ($address_type instanceof AddressType && in_array($address_type->address_type_id, $address->address_type_ids, true))) {
 				$addresses[$address->priority] = $address;
 			}
 		}
@@ -124,7 +125,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Returns address IDs for country.
 	 * @param boolean $online_only True if only online addresses should be returned
-	 * @return int[] address IDs
+	 * @return array<int> address IDs
 	 */
 	private function getAddressIDs($online_only = true) {
 		$query = "SELECT a2c.country_id, a2c.address_id FROM ". \rex::getTablePrefix() ."d2u_address_2_countries AS a2c ";
@@ -141,7 +142,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 		$address_ids = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$address_ids[] = $result->getValue("address_id");
+			$address_ids[] = (int) $result->getValue("address_id");
 			$result->next();
 		}
 
@@ -150,7 +151,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns continent IDs for country.
-	 * @return int[] address IDs
+	 * @return array<int> address IDs
 	 */
 	public function getContinentIDs() {
 		$query = "SELECT continent_id FROM ". \rex::getTablePrefix() ."d2u_address_continents "
@@ -161,7 +162,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 		$continent_ids = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$continent_ids[] = $result->getValue("continent_id");
+			$continent_ids[] = (int) $result->getValue("continent_id");
 			$result->next();
 		}
 
@@ -181,7 +182,7 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 		$zipcodes = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$zipcodes[] = new ZipCode($result->getValue('zipcode_id'), $this->clang_id);
+			$zipcodes[] = new ZipCode((int) $result->getValue('zipcode_id'), $this->clang_id);
 			$result->next();
 		}
 		return $zipcodes;
@@ -190,19 +191,18 @@ class Country implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Gets all countries.
 	 * @param int $clang_id Redaxo language ID
-	 * @param int $address_type_id AddressType ID
 	 * @return Country[] Array with country objects.
 	 */
 	public static function getAll($clang_id = 0) {
 		$query = 'SELECT country_id FROM '. \rex::getTablePrefix() .'d2u_address_countries_lang '
-				."WHERE clang_id = ". ($clang_id == 0 ? \rex_clang::getCurrentId() : $clang_id) ." "
+				."WHERE clang_id = ". ($clang_id === 0 ? \rex_clang::getCurrentId() : $clang_id) ." "
 				.'ORDER BY name';
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$countries = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$countries[] = new Country($result->getValue("country_id"), $clang_id);
+			$countries[] = new Country((int) $result->getValue("country_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -223,8 +223,8 @@ class Country implements \D2U_Helper\ITranslationHelper {
 
 		$countries = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$country = new Country($result->getValue("country_id"), $clang_id);
-			if(in_array(strtolower($iso_lang_code), $country->iso_lang_codes)) {
+			$country = new Country((int) $result->getValue("country_id"), $clang_id);
+			if(in_array(strtolower($iso_lang_code), $country->iso_lang_codes, true)) {
 				return [$country];
 			}
 			$countries[] = $country;
@@ -252,14 +252,14 @@ class Country implements \D2U_Helper\ITranslationHelper {
 						.'ON main.country_id = default_lang.country_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.country_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Country($result->getValue("country_id"), $clang_id);
+			$objects[] = new Country((int) $result->getValue("country_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -290,9 +290,9 @@ class Country implements \D2U_Helper\ITranslationHelper {
 		$pre_save_country = new Country($this->country_id, $this->clang_id);
 	
 		$result = \rex_sql::factory();
-		if($this->country_id === 0 || $pre_save_country != $this) {
+		if($this->country_id === 0 || $pre_save_country !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_address_countries SET "
-					."iso_lang_codes = '". $this->iso_lang_codes ."', "
+					."iso_lang_codes = '". implode(',', $this->iso_lang_codes) ."', "
 					."maps_zoom = ". $this->maps_zoom ." ";
 
 			if($this->country_id === 0) {
@@ -319,10 +319,10 @@ class Country implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if(!$error) {
 			// Save the language specific part
 			$pre_save_country = new Country($this->country_id, $this->clang_id);
-			if($pre_save_country != $this) {
+			if($pre_save_country !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_address_countries_lang SET "
 						."country_id = ". $this->country_id .", "
 						."clang_id = ". $this->clang_id .", "

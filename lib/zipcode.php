@@ -2,38 +2,39 @@
 namespace D2U_Address;
 
 /**
+ * @api
  * Zip code object
  */
 class ZipCode {
 	/**
 	 * @var int Database ID
 	 */
-	var $zipcode_id = 0;
+	public int $zipcode_id = 0;
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var int Start range
 	 */
-	var $range_from = 0;
+	public int $range_from = 0;
 	
 	/**
 	 * @var int End range
 	 */
-	var $range_to = 0;
+	public int $range_to = 0;
 	
 	/**
 	 * @var Country Country
 	 */
-	var $country;
+	public Country $country;
 	
 	/**
-	 * @var int[] adress_ids
+	 * @var array<int> adress_ids
 	 */
-	var $address_ids = [];
+	public array $address_ids = [];
 	
 	/**
 	 * Constructor
@@ -48,12 +49,12 @@ class ZipCode {
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
-			$this->zipcode_id = $result->getValue("zipcode_id");
-			$address_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_ids")), PREG_GREP_INVERT);
+			$this->zipcode_id = (int) $result->getValue("zipcode_id");
+			$address_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("address_ids")), PREG_GREP_INVERT);
 			$this->address_ids = is_array($address_ids) ? array_map('intval', $address_ids) : [];
-			$this->range_from = $result->getValue("range_from");
-			$this->range_to = $result->getValue("range_to");
-			$this->country = new Country($result->getValue("country_id"), $clang_id);
+			$this->range_from = (int) $result->getValue("range_from");
+			$this->range_to = (int) $result->getValue("range_to");
+			$this->country = new Country((int) $result->getValue("country_id"), $clang_id);
 		}
 	}
 
@@ -61,7 +62,7 @@ class ZipCode {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_zipcodes "
 			."WHERE zipcode_id = ". $this->zipcode_id;
 		$result = \rex_sql::factory();
@@ -72,7 +73,7 @@ class ZipCode {
 	 * Get all zip codes
 	 * @param Country $country Country
 	 * @param int $zip_code Zipcode
-	 * @return ZipCode[] Array with all zip codes for a country
+	 * @return ZipCode|bool Zipcode object
 	 */
 	public static function get($country, $zip_code) {
 		$query = 'SELECT zipcode_id FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes '
@@ -81,7 +82,7 @@ class ZipCode {
 		$result->setQuery($query);
 
 		if($result->getRows() > 0) {
-			$zipcode = new ZipCode($result->getValue("zipcode_id"), $country->clang_id);
+			$zipcode = new ZipCode((int) $result->getValue("zipcode_id"), $country->clang_id);
 			return $zipcode;
 		}
 		return false;
@@ -90,9 +91,10 @@ class ZipCode {
 	/**
 	 * Get all zip codes
 	 * @param int $country_id Country ID
+	 * @param int $clang_id Redaxo clang ID
 	 * @return ZipCode[] Array with all zip codes for a country
 	 */
-	public static function getAll($country_id) {
+	public static function getAll($country_id, $clang_id) {
 		$query = 'SELECT zipcode_id FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes '
 			.'WHERE country_id  = '. $country_id;
 		$result = \rex_sql::factory();
@@ -100,7 +102,7 @@ class ZipCode {
 
 		$zip_codes = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$zip_codes[] = new ZipCode($result->getValue("zipcode_id"), $this->clang_id);
+			$zip_codes[] = new ZipCode((int) $result->getValue("zipcode_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -110,7 +112,7 @@ class ZipCode {
 	/**
 	 * Returns addresses for zip code
 	 * @param boolean $online_only true to get only online addresses
-	 * @return Address[] Found addresses.
+	 * @return array<Address> Found addresses.
 	 */
 	public function getAdresses($online_only = true) {
 		$addresses = [];
@@ -132,7 +134,7 @@ class ZipCode {
 	public function isOnline() {
 		foreach ($this->address_ids as $address_id) {
 			$address = new Address($address_id, $this->clang_id);
-			if($address->online_status == 'online') {
+			if($address->online_status === 'online') {
 				return true;
 			}
 		}

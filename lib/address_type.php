@@ -2,48 +2,49 @@
 namespace D2U_Address;
 
 /**
+ * @api
  * Address type
  */
 class AddressType {
 	/**
 	 * @var int Database ID
 	 */
-	var $address_type_id = 0;
+	public int $address_type_id = 0;
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
-	 * @var string Show full address in frontend? "yes" or "no"
+	 * @var bool Show full address in frontend? "yes" or "no"
 	 */
-	var $show_address_details = "";
+	public bool $show_address_details = false;
 	
 	/**
-	 * @var string Show country selection in frontend? "yes" or "no"
+	 * @var bool Show country selection in frontend? "yes" or "no"
 	 */
-	var $show_country_select = "";
+	public bool $show_country_select = false;
 	
 	/**
 	 * @var int Google maps zoom level
 	 */
-	var $maps_zoom = 5;
+	public int $maps_zoom = 5;
 	
 	/**
 	 * @var int Redaxo article ID
 	 */
-	var $article_id = 0;
+	public int $article_id = 0;
 	
 	/**
 	 * @var int default country ID
 	 */
-	var $default_address_id = 0;
+	public int $default_address_id = 0;
 	
 	/**
 	 * Constructor
@@ -58,22 +59,22 @@ class AddressType {
 		$result->setQuery($query);
 
 		if ($result->getRows() > 0) {
-			$this->address_type_id = $result->getValue("address_type_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->show_address_details = $result->getValue("show_address_details") == "yes" ? true : false;
-			$this->show_country_select = $result->getValue("show_country_select") == "yes" ? true : false;
-			if($result->getValue("maps_zoom") != "") {
-				$this->maps_zoom = $result->getValue("maps_zoom");
+			$this->address_type_id = (int) $result->getValue("address_type_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->show_address_details = (string) $result->getValue("show_address_details") === "yes" ? true : false;
+			$this->show_country_select = (string) $result->getValue("show_country_select") === "yes" ? true : false;
+			if(intval($result->getValue("maps_zoom")) > 0) {
+				$this->maps_zoom = intval($result->getValue("maps_zoom"));
 			}
-			$this->article_id = $result->getValue("article_id");
-			$this->default_address_id = $result->getValue("default_address_id");
+			$this->article_id = (int) $result->getValue("article_id");
+			$this->default_address_id = (int) $result->getValue("default_address_id");
 		}
 	}
 	
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_types "
 			."WHERE address_type_id = ". $this->address_type_id;
 		$result = \rex_sql::factory();
@@ -83,7 +84,7 @@ class AddressType {
 	/**
 	 * Get all address types
 	 * @param int $clang_id Redaxo language ID.
-	 * @return AddressTypes[] Array with all address types
+	 * @return array<int, AddressType> Array with all address types
 	 */
 	public static function getAll($clang_id) {
 		$query = 'SELECT address_type_id FROM '. \rex::getTablePrefix() .'d2u_address_types';
@@ -92,7 +93,7 @@ class AddressType {
 
 		$address_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$address_types[] = new AddressType($result->getValue("address_type_id"), $clang_id);
+			$address_types[] = new AddressType((int) $result->getValue("address_type_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -102,7 +103,7 @@ class AddressType {
 	/**
 	 * Returns addresses for adress type
 	 * @param boolean $online_only true to get only online addresses
-	 * @return Address[] Found addresses.
+	 * @return array<int, Address> Found addresses.
 	 */
 	public function getAddresses($online_only = true) {
 		$query = "SELECT address_id, priority FROM ". \rex::getTablePrefix() ."d2u_address_address "
@@ -117,7 +118,7 @@ class AddressType {
 
 		$addresses = [];
 		for($i = 0; $i < $num_rows; $i++) {
-			$addresses[$result->getValue("priority")] = new Address($result->getValue("address_id"), $this->clang_id);
+			$addresses[(int) $result->getValue("priority")] = new Address((int) $result->getValue("address_id"), $this->clang_id);
 			$result->next();
 		}
 		
@@ -128,7 +129,7 @@ class AddressType {
 	/**
 	 * Gets all countries used by this object.
 	 * @param boolean $online_only If true only online objects are returned
-	 * @return Country[] Array with country objects
+	 * @return array<string, Country> Array with country objects
 	 */
 	public function getCountries($online_only = true) {
 		$query = 'SELECT address_id FROM '. \rex::getTablePrefix() .'d2u_address_address '
@@ -141,7 +142,7 @@ class AddressType {
 
 		$countries = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$address = new Address($result->getValue("address_id"), $this->clang_id);
+			$address = new Address((int) $result->getValue("address_id"), $this->clang_id);
 			foreach ($address->getReferringCountries() as $country) {
 				if(!key_exists(Country::normalizeCountryName($country->name), $countries)) {
 					$countries[Country::normalizeCountryName($country->name)] = $country;
@@ -150,7 +151,9 @@ class AddressType {
 			$result->next();
 		}
 		$default_address = new Address($this->default_address_id, $this->clang_id);
-		$countries[Country::normalizeCountryName($default_address->country->name)] = $default_address->country;
+		if($default_address->country instanceof Country) {
+			$countries[Country::normalizeCountryName($default_address->country->name)] = $default_address->country;
+		}
 		ksort($countries);
 		
 		return $countries;
@@ -161,15 +164,15 @@ class AddressType {
 	 * @return boolean true if error occured
 	 */
 	public function save() {
-		$error = 0;
+		$error = false;
 
 		$query = \rex::getTablePrefix() ."d2u_address_types SET "
 				."name = '". addslashes($this->name) ."', "
 				."show_address_details = '". ($this->show_address_details ? "yes" : "no") ."', "
 				."show_country_select = '". ($this->show_country_select ? "yes" : "no") ."', "
 				."maps_zoom = ". $this->maps_zoom .", "
-				."default_address_id = ". ($this->default_address_id == "" ? 0 : $this->default_address_id) .", "
-				."article_id = ". ($this->article_id == "" ? 0 : $this->article_id) ." ";
+				."default_address_id = ". $this->default_address_id .", "
+				."article_id = ". $this->article_id ." ";
 		if($this->address_type_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}

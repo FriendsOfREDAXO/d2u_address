@@ -1,9 +1,9 @@
 <?php
-$address_type_id = "REX_VALUE[1]" == "" ? 0 : "REX_VALUE[1]";
+$address_type_id = intval("REX_VALUE[1]"); /** @phpstan-ignore-line */
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
-$show_fax = "REX_VALUE[2]" == 'true' ? true : false;
-$map_type = "REX_VALUE[3]" == '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility
-$default_contact = "REX_VALUE[4]" > 0 ? new D2U_Address\Address("REX_VALUE[4]", rex_clang::getCurrentId()) : false;
+$show_fax = "REX_VALUE[2]" === 'true' ? true : false; /** @phpstan-ignore-line */
+$map_type = "REX_VALUE[3]" === '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility /** @phpstan-ignore-line */
+$default_contact = intval("REX_VALUE[4]") > 0 ? new D2U_Address\Address(intval("REX_VALUE[4]"), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
 
 // Get placeholder wildcard tags and other presets
 $sprog = rex_addon::get("sprog");
@@ -11,27 +11,27 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
 $country = rex_request('country_id', 'int') > 0 ? new D2U_Address\Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false;
-$zip_code = rex_request('zip_code', 'int') > 0 ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : false;
+$zip_code = rex_request('zip_code', 'int') > 0 && $country instanceof D2U_Address\Country ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : false;
 
 $d2u_address = rex_addon::get('d2u_address');
-$default_country_id = $d2u_address->hasConfig('default_country_id') ? $d2u_address->getConfig('default_country_id') : 0;
+$default_country_id = $d2u_address->hasConfig('default_country_id') ? intval($d2u_address->getConfig('default_country_id')) : 0;
 
 $maps_zoom = $address_type->maps_zoom;
 
 // Form selections
 $addresses = [];
-if($address_type->show_country_select == "yes") {
-	if(rex_request('country_id', 'int') == -1 && $default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0) {
+if($address_type->show_country_select) {
+	if(rex_request('country_id', 'int') === -1 && $default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0) { /** @phpstan-ignore-line */
 		$addresses[] = $default_contact;
 	}
-	else if($zip_code !== false) {
+	else if($zip_code instanceof D2U_Address\ZipCode) {
 		$addresses = $zip_code->getAdresses(true);
 	}
 	else if($country !== false) {
 		$addresses = $country->getAddresses($address_type, true);
 	}
-	else if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-		$accepted_lang = explode(";", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	else if(rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string') !== '') {
+		$accepted_lang = explode(";", rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string'));
 		$accepted_lang = explode(",", $accepted_lang[0]);
 		$countries = D2U_Address\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
 		if(count($countries) > 0) {
@@ -54,14 +54,14 @@ else {
 }
 
 // Fallback if no address was found, there should be at least one address
-if(count($addresses) == 0) {
+if(count($addresses) === 0) {
 	$country = new D2U_Address\Country($default_country_id, rex_clang::getCurrentId());
 	$addresses = $country->getAddresses($address_type, true);
 	$maps_zoom = $country->maps_zoom;
 }
 
 // Output
-if($address_type->show_country_select == "yes") {
+if($address_type->show_country_select) {
 	// Only if coutry selection should be available
 	print '<div class="col-12">';
 	print '<h1>'. $tag_open .'d2u_address_local_servicepartner'. $tag_close .'</h1>';
@@ -76,12 +76,12 @@ if($address_type->show_country_select == "yes") {
 	$countries = $address_type->getCountries();
 	foreach($countries as $cur_country) {
 		$selected = "";
-		if(rex_request('country_id', 'int') > -1 && ($country->country_id == $cur_country->country_id || ($country === false && $cur_country->country_id == $default_country_id))) {
+		if(rex_request('country_id', 'int') > -1 && (($country instanceof D2U_Address\Country && $country->country_id === $cur_country->country_id) || ($country === false && $cur_country->country_id === $default_country_id))) {
 			$selected = ' selected="selected"';
 		}
 		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
 	}
-	print '<option value="-1" '. (rex_request('country_id', 'int') == -1 ? 'selected="selected"' : '') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
+	print '<option value="-1" '. (rex_request('country_id', 'int') === -1 ? 'selected="selected"' : '') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
 	print '</select>';
 	print '</div>';
 
@@ -113,7 +113,7 @@ if($address_type->show_country_select == "yes") {
 } // END if country selection should be available
 
 if(count($addresses) > 0) {
-	if($address_type->show_country_select == "yes") {
+	if($address_type->show_country_select) {
 		// Only if coutry selection should be available
 		print '<div class="col-12"><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
 	}
@@ -125,39 +125,39 @@ if(count($addresses) > 0) {
 		$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
 		$a_href_close = $address->article_id > 0 ? '</a>' : '';
 		print $a_href_open .'<img src="'.
-			($address->picture != "" ? 'index.php?rex_media_type=d2u_address_120x150&rex_media_file='. $address->picture : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
+			($address->picture !== "" ? 'index.php?rex_media_type=d2u_address_120x150&rex_media_file='. $address->picture : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
 			.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
 		print '</div>';
 		print '<div class="col-9">';
-		if($address->contact_name != "") {
+		if($address->contact_name !== "") {
 			print $a_href_open .'<h3>'. $address->contact_name .'</h3>'. $a_href_close;
 			print $address->company .'<br>';
 		}
 		else {
 			print $a_href_open .'<h3>'. $address->company .'</h3>'. $a_href_close;
 		}
-		if($address->company_appendix != "") {
+		if($address->company_appendix !== "") {
 			print $address->company_appendix .'<br>';
 		}
-		if($address_type->show_address_details == "yes") {
-			print ($address->additional_address != "" ? $address->additional_address .'<br>' : '');
+		if($address_type->show_address_details) {
+			print ($address->additional_address !== "" ? $address->additional_address .'<br>' : '');
 			print $address->street .'<br>';
 			print $address->zip_code .' '. $address->city .'<br>';
 		}
 		print '<br />';
-		if($address->mobile != "") {
+		if($address->mobile !== "") {
 			print $tag_open .'d2u_address_mobile'. $tag_close .' '. $address->mobile .'<br>';
 		}
-		if($address->phone != "") {
+		if($address->phone !== "") {
 			print $tag_open .'d2u_helper_module_form_phone'. $tag_close .' '. $address->phone .'<br>';
 		}
-		if($show_fax && $address->fax != "") {
+		if($show_fax && $address->fax !== "") { /** @phpstan-ignore-line */
 			print $tag_open .'d2u_address_fax'. $tag_close .' '. $address->fax .'<br>';
 		}
 
 		// Google Analytics Event
 		$google_analytics = "";
-		if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&
+		if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') === 'true' &&
 				rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
 				rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '' &&
 				rex_request('search_it_build_index', 'int', false) === false) {
@@ -175,10 +175,10 @@ if(count($addresses) > 0) {
 
 <div class="col-12">
 	<?php
-		if($map_type == "google") {
+		if($map_type === "google") { /** @phpstan-ignore-line */
 			$d2u_helper = rex_addon::get("d2u_helper");
 			$api_key = "";
-			if($d2u_helper->getConfig("maps_key", "") != "" ) {
+			if($d2u_helper->getConfig("maps_key", "") !== "") {
 				$api_key = '?key='. $d2u_helper->getConfig("maps_key");
 			}
 	?>
@@ -195,18 +195,13 @@ if(count($addresses) > 0) {
 				print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
 				// Infotext
 				$infotext = '"'. $address->company .'<br />';
-				if($address->contact_name != "") {
+				if($address->contact_name !== "") {
 					$infotext .= $address->contact_name .'<br />';			
 				}
-				$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
+				$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city.'"';
 				print $infotext .", ";
 				// Latitude and Longitude
-				if($address->latitude != 0 && $address->longitude != 0) {
-					print $address->latitude .', '. $address->longitude;
-				}
-				else {
-					print '0, 0';
-				}
+				print $address->latitude .', '. $address->longitude;
 				print "],". PHP_EOL;
 			}	
 		?>];
@@ -292,15 +287,29 @@ if(count($addresses) > 0) {
 	</script>
 	<?php
 		}
-		elseif($map_type == "osm" && rex_addon::get('osmproxy')->isAvailable()) {
+		elseif($map_type === "osm" && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
 			$map_id = rand();
-			$latitude = 0;
-			$longitude = 0;
+			$latitude_max = 0;
+			$latitude_min = 0;
+			$longitude_max = 0;
+			$longitude_min = 0;
 			$address_counter = 0;
 			foreach($addresses as $address) {
-				if($address->latitude != 0 && $address->longitude != 0) {
-					$latitude += $address->latitude;
-					$longitude += $address->longitude;
+				if($address->address_id > 0) {
+					// Max and min values needed to calculate map center
+					if($address->latitude > $latitude_max || $latitude_max === 0) {
+						$latitude_max = $address->latitude;
+					}
+					if($address->latitude < $latitude_min || $latitude_min === 0) {
+						$latitude_min = $address->latitude;
+					}
+					if($address->longitude > $longitude_max || $longitude_max === 0) {
+						$longitude_max = $address->longitude;
+					}
+					if($address->longitude < $longitude_min || $longitude_min === 0) {
+						$longitude_min = $address->longitude;
+					}
+
 					$address_counter++;
 				}
 			}
@@ -312,7 +321,7 @@ if(count($addresses) > 0) {
 		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 500px"></div>
 		<script type="text/javascript" async="async">
 			<?php
-				print "var map = L.map('map-". $map_id ."').setView([". ($latitude / $address_counter) .", ". ($longitude / $address_counter) ."], ". $maps_zoom .");";
+				print "var map = L.map('map-". $map_id ."').setView([". (($latitude_max + $latitude_min) / 2) .", ". (($longitude_max + $longitude_min) / 2) ."], ". $maps_zoom .");";
 			?>
 			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
 				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -331,12 +340,12 @@ if(count($addresses) > 0) {
 
 			<?php
 				foreach($addresses as $address) {
-					if($address->latitude != 0 && $address->longitude != 0) {
+					if(($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
 						$infotext = '"'. $address->company .'<br />';
-						if($address->contact_name != "") {
+						if($address->contact_name !== "") {
 							$infotext .= $address->contact_name .'<br />';			
 						}
-						$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
+						$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city.'"';
 
 						print "var marker = L.marker([". $address->latitude .", ". $address->longitude ."], {"
 								."draggable: false,"
@@ -350,16 +359,16 @@ if(count($addresses) > 0) {
 			}
 		}
 		elseif(rex_addon::get('geolocation')->isAvailable()) {
-			$modInUse = rex::getProperty("d2u_module_geolocation_used", 0);
+			$modInUse = intval(rex::getProperty("d2u_module_geolocation_used", 0));
 			rex::setProperty("d2u_module_geolocation_used", ++$modInUse);
-			if($modInUse == 1) {
+			if($modInUse === 1) {
 				try {
 					if(rex::isFrontend()) {
 						\Geolocation\tools::echoAssetTags();
 					}
 ?>
 <script>
-	Geolocation.default.positionColor = '<?= rex_config::get('d2u_helper', 'article_color_h'); ?>';
+	Geolocation.default.positionColor = '<?= strval(rex_config::get('d2u_helper', 'article_color_h')); ?>';
 
 	// adjust zoom level
 	Geolocation.Tools.Center = class extends Geolocation.Tools.Template{
@@ -436,27 +445,38 @@ if(count($addresses) > 0) {
 			$mapsetId = (int) 'REX_VALUE[9]';
 
 			$rex_map = \Geolocation\mapset::take($mapsetId)
-				->attributes('id', $mapsetId);
+				->attributes('id', (string) $mapsetId);
 
-			$latitude = 0;
-			$longitude = 0;
-			$address_counter = 0;
+			$latitude_max = 0;
+			$latitude_min = 0;
+			$longitude_max = 0;
+			$longitude_min = 0;
 			foreach($addresses as $address) {
-				if($address->latitude != 0 && $address->longitude != 0) {
-					$latitude += $address->latitude;
-					$longitude += $address->longitude;
-					$address_counter++;
+				if(($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
+					// Max and min values needed to calculate map center
+					if($address->latitude > $latitude_max || $latitude_max === 0) {
+						$latitude_max = $address->latitude;
+					}
+					if($address->latitude < $latitude_min || $latitude_min === 0) {
+						$latitude_min = $address->latitude;
+					}
+					if($address->longitude > $longitude_max || $longitude_max === 0) {
+						$longitude_max = $address->longitude;
+					}
+					if($address->longitude < $longitude_min || $longitude_min === 0) {
+						$longitude_min = $address->longitude;
+					}
 
 					$infotext = '"'. $address->company .'<br />';
-					if($address->contact_name != "") {
+					if($address->contact_name !== "") {
 						$infotext .= $address->contact_name .'<br />';			
 					}
-					$infotext .= $address->country->name .' - '. $address->zip_code .' '. $address->city.'"';
+					$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city.'"';
 
 					$rex_map->dataset('infobox|'. $address->address_id, [[$address->latitude, $address->longitude], $infotext]);
 				}
 			}						
-			echo $rex_map->dataset('center', [[$latitude / $address_counter, $longitude / $address_counter], $maps_zoom])->parse();				
+			echo $rex_map->dataset('center', [[($latitude_max + $latitude_min) / 2, ($longitude_max + $longitude_min) / 2], $maps_zoom])->parse();
 		}
 	?>
 </div>

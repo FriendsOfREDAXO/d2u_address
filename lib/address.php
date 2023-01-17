@@ -2,123 +2,124 @@
 namespace D2U_Address;
 
 /**
+ * @api
  * Address class
  */
 class Address {
 	/**
 	 * @var int Database address ID
 	 */
-	var $address_id = 0;
+	public int $address_id = 0;
 	
 	/**
 	 * @var int Redaxo language ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Company Name
 	 */
-	var $company = "";
+	public string $company = "";
 	
 	/**
 	 * @var string Appendix for company name
 	 */
-	var $company_appendix = "";
+	public string $company_appendix = "";
 	
 	/**
 	 * @var string Name of contact person
 	 */
-	var $contact_name = "";
+	public string $contact_name = "";
 	
 	/**
 	 * @var string Street and house number
 	 */
-	var $street = "";
+	public string $street = "";
 	
 	/**
 	 * @var string Additional address
 	 */
-	var $additional_address = "";
+	public string $additional_address = "";
 	
 	/**
 	 * @var string ZIP code
 	 */
-	var $zip_code = "";
+	public string $zip_code = "";
 	
 	/**
 	 * @var string city
 	 */
-	var $city = "";
+	public string $city = "";
 	
 	/**
-	 * @var Country Country
+	 * @var Country|bool Country
 	 */
-	var $country;
+	public Country|bool $country = false;
 	
 	/**
-	 * @var int IDs of assigned countries
+	 * @var array<int> IDs of assigned countries
 	 */
-	var $country_ids = [];
+	public array $country_ids = [];
 	
 	/**
-	 * @var string Latitude
+	 * @var float Latitude
 	 */
-	var $latitude = 0;
+	public float $latitude = 0;
 	
 	/**
-	 * @var string Longitude
+	 * @var float Longitude
 	 */
-	var $longitude = 0;
+	public float $longitude = 0;
 	
 	/**
 	 * @var string E-Mailadresse der Address.
 	 */
-	var $email = "";
+	public string $email = "";
 	
 	/**
 	 * @var string Phone number
 	 */
-	var $phone = "";
+	public string $phone = "";
 	
 	/**
 	 * @var string Mobile phone number
 	 */
-	var $mobile = "";
+	public string $mobile = "";
 	
 	/**
 	 * @var string Fax number
 	 */
-	var $fax = "";
+	public string $fax = "";
 	
 	/**
 	 * @var string Bild der Address.
 	 */
-	var $picture = "";
+	public string $picture = "";
 	
 	/**
-	 * @var AdressType[] Adress types
+	 * @var array<int> Adress types
 	 */
-	var $address_type_ids = [];
+	public array $address_type_ids = [];
 	
 	/**
 	 * @var int Redaxo article ID with detailed information
 	 */
-	var $article_id = 0;
+	public int $article_id = 0;
 	
 	/**
 	 * @var string URL for detailed information
 	 */
-	var $url = "";
+	public string $url = "";
 	
 	/**
 	 * @var int Sort priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var string Online status, either "online" or "offline".
 	 */
-	var $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * Constructor.
@@ -134,36 +135,38 @@ class Address {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->address_id = $result->getValue("address_id");
-			$this->company = stripslashes($result->getValue("company"));
-			$this->company_appendix = stripslashes($result->getValue("company_appendix"));
-			$this->contact_name = stripslashes($result->getValue("contact_name"));
-			$this->street = stripslashes($result->getValue("street"));
-			$this->additional_address = stripslashes($result->getValue("additional_address"));
-			$this->zip_code = $result->getValue("zip_code");
-			$this->city = stripslashes($result->getValue("city"));
-			$this->country = new Country($result->getValue("country_id"), $clang_id);
-			$this->latitude = $result->getValue("latitude");
-			$this->longitude = $result->getValue("longitude");
-			$this->email = $result->getValue("email");
-			$this->url = $result->getValue("url");
-			$this->phone = $result->getValue("phone");
-			$this->mobile = $result->getValue("mobile");
-			$this->fax = $result->getValue("fax");
-			if($result->getValue("picture") != "") {
-				$this->picture = $result->getValue("picture");
+			$this->address_id = (int) $result->getValue("address_id");
+			$this->company = stripslashes((string) $result->getValue("company"));
+			$this->company_appendix = stripslashes((string) $result->getValue("company_appendix"));
+			$this->contact_name = stripslashes((string) $result->getValue("contact_name"));
+			$this->street = stripslashes((string) $result->getValue("street"));
+			$this->additional_address = stripslashes((string) $result->getValue("additional_address"));
+			$this->zip_code = (string) $result->getValue("zip_code");
+			$this->city = stripslashes((string) $result->getValue("city"));
+			if((int) $result->getValue("country_id") > 0) {
+				$this->country = new Country((int) $result->getValue("country_id"), $clang_id);
 			}
-			$address_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("address_type_ids")), PREG_GREP_INVERT);
+			$this->latitude = (float) $result->getValue("latitude");
+			$this->longitude = (float) $result->getValue("longitude");
+			$this->email = (string) $result->getValue("email");
+			$this->url = (string) $result->getValue("url");
+			$this->phone = (string) $result->getValue("phone");
+			$this->mobile = (string) $result->getValue("mobile");
+			$this->fax = (string) $result->getValue("fax");
+			if($result->getValue("picture") !== "") {
+				$this->picture = (string) $result->getValue("picture");
+			}
+			$address_type_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("address_type_ids")), PREG_GREP_INVERT);
 			$this->address_type_ids = is_array($address_type_ids) ? array_map('intval', $address_type_ids) : [];
-			$this->article_id = $result->getValue("article_id");
-			$this->priority = $result->getValue("priority");
-			if($result->getValue("online_status") != "") {
-				$this->online_status = $result->getValue("online_status");
+			$this->article_id = (int) $result->getValue("article_id");
+			$this->priority = (int) $result->getValue("priority");
+			if($result->getValue("online_status") !== "") {
+				$this->online_status = (string) $result->getValue("online_status");
 			}
 
 			// correct URL if needed
-			if(strlen($this->url) > 3 && substr($this->url, 0, 4) != "http") {
-				$this->url = "http://". $this->url;
+			if(strlen($this->url) > 3 && substr($this->url, 0, 4) !== "http") {
+				$this->url = "https://". $this->url;
 			}
 			
 			$this->country_ids = $this->getAssignedCountryIDs();
@@ -199,7 +202,7 @@ class Address {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$result = \rex_sql::factory();
 		$result->setQuery($query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_address_address "
 			."WHERE address_id = ". $this->address_id);
@@ -210,14 +213,14 @@ class Address {
 	/**
 	 * Returns addresses
 	 * @param int $clang_id Redaxo Language ID
-	 * @param AddressType $address_type Address type, default: false (all)
-	 * @param boolean $online_only return only online adresses
-	 * @return Address[] Addresses
+	 * @param AddressType|bool $address_type Address type, default: false (all)
+	 * @param bool $online_only return only online adresses
+	 * @return array<Address> Addresses
 	 */
 	static public function getAll($clang_id, $address_type = false, $online_only = true) {
 		$query = 'SELECT address_id, priority FROM '. \rex::getTablePrefix() .'d2u_address_address ';
 		$where = [];
-		if($address_type !== false) {
+		if($address_type instanceof AddressType) {
 			$where[] = 'address_type_ids LIKE "%|'. $address_type->address_type_id .'|%"';
 		}
 		if($online_only) {
@@ -232,7 +235,7 @@ class Address {
 
 		$addresses = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$addresses[$result->getValue("priority")] = new Address($result->getValue("address_id"), $clang_id);
+			$addresses[(int) $result->getValue("priority")] = new Address((int) $result->getValue("address_id"), $clang_id);
 			$result->next();
 		}
 		ksort($addresses);
@@ -241,7 +244,7 @@ class Address {
 
 	/**
 	 * Returns country ids of countries this address is assigned to.
-	 * @return int[] country IDs
+	 * @return array<int> country IDs
 	 */
 	private function getAssignedCountryIDs() {
 		$query = 'SELECT a2c.country_id FROM '. \rex::getTablePrefix() .'d2u_address_2_countries AS a2c '
@@ -254,7 +257,7 @@ class Address {
 
 		$country_ids = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$country_ids[] = $result->getValue("country_id");
+			$country_ids[] = (int) $result->getValue("country_id");
 			$result->next();
 		}
 		
@@ -274,7 +277,7 @@ class Address {
 
 		$address_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$address_types[] = new AddressType($result->getValue("address_type_id"), $this->clang_id);
+			$address_types[] = new AddressType((int) $result->getValue("address_type_id"), $this->clang_id);
 			$result->next();
 		}
 		return $address_types;
@@ -306,7 +309,7 @@ class Address {
 
 		$zip_codes = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$zip_codes[] = new ZipCode($result->getValue("zipcode_id"), $this->clang_id);
+			$zip_codes[] = new ZipCode((int) $result->getValue("zipcode_id"), $this->clang_id);
 			$result->next();
 		}
 		
@@ -318,7 +321,7 @@ class Address {
 	 * @return boolean true if error occured
 	 */
 	public function save() {
-		$error = 0;
+		$error = false;
 
 		$pre_save_object = new self($this->address_id, $this->clang_id);
 
@@ -335,7 +338,7 @@ class Address {
 				."additional_address = '". addslashes($this->additional_address) ."', "
 				."zip_code = '". $this->zip_code ."', "
 				."city = '". addslashes($this->city) ."', "
-				."country_id = ". $this->country->country_id .", "
+				."country_id = ". ($this->country instanceof Country ? $this->country->country_id : 0) .", "
 				."latitude = ". $this->latitude .", "
 				."longitude = ". $this->longitude .", "
 				."email = '". $this->email ."', "
@@ -345,7 +348,7 @@ class Address {
 				."fax = '". $this->fax ."', "
 				."picture = '". $this->picture ."', "
 				."address_type_ids = '|". implode("|", $this->address_type_ids) ."|', "
-				."article_id = ". ($this->article_id ?: 0) .", "
+				."article_id = ". ($this->article_id > 0 ? $this->article_id : 0) .", "
 				."priority = ". $this->priority .", "
 				."online_status = '". $this->online_status ."' ";
 		if($this->address_id === 0) {

@@ -16,7 +16,7 @@ class D2UAddressModules {
 			9);
 		$modules[] = new D2UModule("20-2",
 			"D2U Adressen - Kontaktbox",
-			4);
+			5);
 		return $modules;
 	}
 }

@@ -3,11 +3,11 @@
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
-	
-$address_type_id = "REX_VALUE[1]";
-$address_type = new D2U_Address\AddressType($address_type_id);
-$adress_id = "REX_VALUE[2]";
-$address = new D2U_Address\Address($adress_id);
+
+$address_type_id = intval("REX_VALUE[1]");
+$address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
+$adress_id = intval("REX_VALUE[2]");
+$address = new D2U_Address\Address($adress_id, rex_clang::getCurrentId());
 ?>
 <div class="col-12 col-lg-4 columns">
 	<h1><?php print $tag_open .'d2u_address_contact'. $tag_close; ?></h1>
@@ -29,12 +29,12 @@ $address = new D2U_Address\Address($adress_id);
 		</form>
 		<?php
 			}
-			if($address->adress_id > 0) {
+			if($address->address_id > 0) {
 				print '<br><br>';
 				print '<h4>'. $tag_open .'d2u_helper_module_form_email'. $tag_close .'</h4>';
 				// Google Analytics Event
 				$google_analytics = "";
-				if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') == 'true' &&
+				if(strval(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false')) === 'true' &&
 						rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
 						rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '' &&
 						rex_request('search_it_build_index', 'int', false) === false) {

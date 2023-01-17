@@ -4,7 +4,7 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
-if($message != "") {
+if($message !== '') {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
@@ -136,7 +136,7 @@ if ($func === 'edit' || $func === 'add') {
 							}
 							
 							$options_country_ids = [];
-							$countries = D2U_Address\Country::getAll(rex_config::get('d2u_helper', 'default_lang'));
+							$countries = D2U_Address\Country::getAll(intval(rex_config::get('d2u_helper', 'default_lang')));
 							foreach ($countries as $country) {
 								$options_country_ids[$country->country_id] = $country->name;
 							}

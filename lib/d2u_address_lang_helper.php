@@ -7,7 +7,7 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_address_contact' => 'Contact',
 		'd2u_address_failure_country' => 'Please enter your country.',
 		'd2u_address_fax' => 'Fax',
@@ -134,7 +134,7 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 	/**
 	 * Installs the replacement table for this addon.
 	 */
-	public function install() {
+	public function install():void {
 		foreach($this->replacements_english as $key => $value) {
 			foreach (rex_clang::getAllIds() as $clang_id) {
 				$lang_replacement = rex_config::get('d2u_address', 'lang_replacement_'. $clang_id, '');
@@ -142,9 +142,6 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 				// Load values for input
 				if($lang_replacement === 'chinese' && isset($this->replacements_chinese) && isset($this->replacements_chinese[$key])) {
 					$value = $this->replacements_chinese[$key];
-				}
-				else if($lang_replacement === 'czech' && isset($this->replacements_czech) && isset($this->replacements_czech[$key])) {
-					$value = $this->replacements_czech[$key];
 				}
 				else if($lang_replacement === 'dutch' && isset($this->replacements_dutch) && isset($this->replacements_dutch[$key])) {
 					$value = $this->replacements_dutch[$key];
@@ -154,12 +151,6 @@ class d2u_address_lang_helper extends \D2U_Helper\ALangHelper {
 				}
 				else if($lang_replacement === 'german' && isset($this->replacements_german) && isset($this->replacements_german[$key])) {
 					$value = $this->replacements_german[$key];
-				}
-				else if($lang_replacement === 'italian' && isset($this->replacements_italian) && isset($this->replacements_italian[$key])) {
-					$value = $this->replacements_italian[$key];
-				}
-				else if($lang_replacement === 'polish' && isset($this->replacements_polish) && isset($this->replacements_polish[$key])) {
-					$value = $this->replacements_polish[$key];
 				}
 				else if($lang_replacement === 'portuguese' && isset($this->replacements_portuguese) && isset($this->replacements_portuguese[$key])) {
 					$value = $this->replacements_portuguese[$key];
