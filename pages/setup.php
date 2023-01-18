@@ -28,7 +28,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.0:</p>
 <ul>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kann nun auch Karten des Geolocation Addons verwenden.</li>
-	<li>Modul 20-2 "D2U Adressen - Kontaktbox": Verschieden Fehlerbehebungen.</li>
+	<li>Modul 20-2 "D2U Adressen - Kontaktbox": Verschiedene Fehlerbehebungen.</li>
 	<li>Ca. 250 rexstan Verbesserungen.</li>
 	<li>install.php und update.php auf Redaxo Stil umgeschrieben.</li>
 </ul>
