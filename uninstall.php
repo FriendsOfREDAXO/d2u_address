@@ -1,4 +1,5 @@
 <?php
+
 $sql = \rex_sql::factory();
 
 // Delete views
@@ -6,13 +7,13 @@ $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_url_tags2ref');
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_url_tags');
 // Delete url schemes
-if(\rex_addon::get('url')->isAvailable()) {
-	$sql->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_references_url_%'");
+if (\rex_addon::get('url')->isAvailable()) {
+    $sql->setQuery('DELETE FROM `'. \rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_references_url_%'");
 }
 
 // Delete Media Manager media types
-$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name LIKE 'd2u_immo%'");
-$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type_effect WHERE createuser = 'd2u_immo'");
+$sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."media_manager_type WHERE name LIKE 'd2u_immo%'");
+$sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."media_manager_type_effect WHERE createuser = 'd2u_immo'");
 
 // Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_tag2refs');
@@ -22,8 +23,8 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_reference
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_references_lang');
 
 // Delete language replacements
-if(!class_exists('d2u_address_lang_helper')) {
-	// Load class in case addon is deactivated
-	require_once 'lib/d2u_address_lang_helper.php';
+if (!class_exists('d2u_address_lang_helper')) {
+    // Load class in case addon is deactivated
+    require_once 'lib/d2u_address_lang_helper.php';
 }
 d2u_address_lang_helper::factory()->uninstall();
