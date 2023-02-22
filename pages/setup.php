@@ -27,7 +27,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>PHP-CS-Fixer Verbesserungen.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>
