@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = rex_request('entry_id', 'int');
+$entry_id = (int) rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments

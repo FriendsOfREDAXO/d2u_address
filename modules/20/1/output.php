@@ -10,8 +10,8 @@ $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-$country = rex_request('country_id', 'int') > 0 ? new D2U_Address\Country(rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false;
-$zip_code = rex_request('zip_code', 'int') > 0 && $country instanceof D2U_Address\Country ? D2U_Address\ZipCode::get($country, rex_request('zip_code', 'int')) : false;
+$country = (int) rex_request('country_id', 'int') > 0 ? new D2U_Address\Country((int) rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
+$zip_code = (int) rex_request('zip_code', 'int') > 0 && $country instanceof D2U_Address\Country ? D2U_Address\ZipCode::get($country, (int) rex_request('zip_code', 'int')) : false; /** @phpstan-ignore-line */
 
 $d2u_address = rex_addon::get('d2u_address');
 $default_country_id = $d2u_address->hasConfig('default_country_id') ? intval($d2u_address->getConfig('default_country_id')) : 0;
