@@ -20,6 +20,7 @@ requires:
     packages:
         d2u_helper: '>=1.8.8'
         sprog: '>=1.0.0'
+    php: '>=7.4'
         
 installer_ignore:
     - .github
