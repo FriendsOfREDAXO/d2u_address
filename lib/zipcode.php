@@ -117,7 +117,7 @@ class ZipCode
         $addresses = [];
         foreach ($this->address_ids as $address_id) {
             $address = new Address($address_id, $this->clang_id);
-            if (false === $online_only || ($online_only && 'online' === $address->online_status)) {
+            if (false === $online_only || ('online' === $address->online_status)) {
                 $addresses[$address->priority] = new Address($address_id, $this->clang_id);
             }
         }
