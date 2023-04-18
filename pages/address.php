@@ -34,7 +34,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $address->fax = $form['fax'];
     $address->picture = $input_media[1];
     $address->address_type_ids = $form['address_type_ids'] ?? [];
-    $address->article_id = !is_array($link_ids) ? 0 : $link_ids['REX_INPUT_LINK'][1];
+    $address->article_id = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][1] : 0;
     $address->priority = $form['priority'];
     $address->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';
     $address->country_ids = $form['country_ids'] ?? [];

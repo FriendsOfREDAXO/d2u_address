@@ -21,7 +21,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $address_type->show_country_select = array_key_exists('show_country_select', $form);
     $address_type->maps_zoom = $form['maps_zoom'];
     $address_type->default_address_id = $form['default_address_id'];
-    $address_type->article_id = !is_array($link_ids) ? 0 : $link_ids['REX_INPUT_LINK'][1];
+    $address_type->article_id = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][1] : 0;
 
     // message output
     $message = 'form_save_error';
