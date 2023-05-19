@@ -62,7 +62,7 @@ class Country implements \D2U_Helper\ITranslationHelper
                 $this->maps_zoom = (int) $result->getValue('maps_zoom');
             }
             $this->name = stripslashes((string) $result->getValue('name'));
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
 
