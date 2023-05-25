@@ -1,10 +1,12 @@
-<div class="row">
-	<div class="col-xs-4">Anzuzeigende Kontaktart</div>
-	<div class="col-xs-8">
-		<?php
-            $address_types = \D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
+<?php
+$address_types = \D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
 
-            if (count($address_types) > 0) {
+if (count($address_types) > 0) {
+?>
+    <div class="row">
+        <div class="col-xs-4">Anzuzeigende Kontaktart</div>
+        <div class="col-xs-8">
+            <?php
                 echo '<select name="REX_INPUT_VALUE[1]" class="form-control">';
                 foreach ($address_types as $address_type) {
                     echo '<option value="'. $address_type->address_type_id .'" ';
@@ -15,13 +17,15 @@
                     echo '>'. $address_type->name .'</option>';
                 }
                 echo '</select>';
-            }
-        ?>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12">&nbsp;</div>
-</div>
+            ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">&nbsp;</div>
+    </div>
+<?php
+    }
+?>
 <div class="row">
 	<div class="col-xs-4">Standardkontakt für Option "weitere Länder"</div>
 	<div class="col-xs-8">
@@ -38,8 +42,8 @@
                     }
                     echo '>'. $address->company .' - '. $address->contact_name  .'</option>';
                 }
-                echo '</select>';
             }
+            echo '</select>';
         ?>
 	</div>
 </div>
@@ -52,9 +56,19 @@
             $map_types = [];
             if (rex_addon::get('geolocation')->isAvailable()) {
                 $map_types['geolocation'] = 'Geolocation Addon: Standardkarte';
-                $mapsets = \Geolocation\mapset::query()
-                    ->orderBy('title')
-                    ->findValues('title', 'id');
+                $mapsets = [];
+				if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+					// Geolocation 2.x
+                	$mapsets = \FriendsOfRedaxo\Geolocation\Mapset::query()
+                    	->orderBy('title')
+                    	->findValues('title', 'id');
+				}
+				else {
+					// Geolocation 1.x
+					$mapsets = \Geolocation\mapset::query()
+                    	->orderBy('title')
+                    	->findValues('title', 'id');
+				}
                 foreach ($mapsets as $id => $name) {
                     $map_types[$id] = 'Geolocation Addon: '. $name;
                 }

@@ -28,6 +28,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.1-DEV:</p>
 <ul>
 	<li>PHP-CS-Fixer Verbesserungen.</li>
+	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kann nun auch Karten des Geolocation Addons Verion 2 verwenden.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>

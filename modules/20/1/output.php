@@ -364,7 +364,14 @@ if(count($addresses) > 0) {
 			if($modInUse === 1) {
 				try {
 					if(rex::isFrontend()) {
-						\Geolocation\tools::echoAssetTags();
+						if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+							// Geolocation 2.x
+							\FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
+						}
+						else {
+							// Geolocation 1.x
+							\Geolocation\tools::echoAssetTags();
+						}
 					}
 ?>
 <script>
@@ -444,8 +451,17 @@ if(count($addresses) > 0) {
 
 			$mapsetId = (int) 'REX_VALUE[9]';
 
-			$rex_map = \Geolocation\mapset::take($mapsetId)
-				->attributes('id', (string) $mapsetId);
+			$rex_map = null;
+			if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+				// Geolocation 2.x
+				$rex_map = \FriendsOfRedaxo\Geolocation\Mapset::take($mapsetId)
+					->attributes('id', (string) $mapsetId);
+			}
+			else {
+				// Geolocation 1.x
+				$rex_map = \Geolocation\mapset::take($mapsetId)
+					->attributes('id', (string) $mapsetId);
+			}
 
 			$latitude_max = 0;
 			$latitude_min = 0;
