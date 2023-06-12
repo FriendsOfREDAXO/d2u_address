@@ -1,5 +1,5 @@
 <?php
-$address_type_id = intval('REX_VALUE[1]'); /** @phpstan-ignore-line */
+$address_type_id = (int) 'REX_VALUE[1]'; /** @phpstan-ignore-line */
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
 $maps_zoom = (int) 'REX_VALUE[2]'; /** @phpstan-ignore-line */
 $map_type = 'REX_VALUE[3]';
@@ -11,44 +11,44 @@ $addresses = $address_type->getAddresses(true);
 ?>
 <div class="col-12">
 	<?php
-		if($map_type === "google") { /** @phpstan-ignore-line */
-			$d2u_helper = rex_addon::get("d2u_helper");
-			$api_key = "";
-			if($d2u_helper->getConfig("maps_key", "") !== "") {
-				$api_key = '?key='. $d2u_helper->getConfig("maps_key");
-			}
-	?>
+        if ('google' === $map_type) { /** @phpstan-ignore-line */
+            $d2u_helper = rex_addon::get('d2u_helper');
+            $api_key = '';
+            if ('' !== $d2u_helper->getConfig('maps_key', '')) {
+                $api_key = '?key='. $d2u_helper->getConfig('maps_key');
+            }
+    ?>
 
-	<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
-	<div id="map_canvas" style="display: block; width: 100%; height: 700px;"></div> 
+	<script src="https://maps.googleapis.com/maps/api/js<?= $api_key ?>"></script>
+	<div id="map_canvas" style="display: block; width: 100%; height: 700px;"></div>
 	<script>
 		var map;
 		var infowindow = new google.maps.InfoWindow();
 		var address = [<?php
-			foreach($addresses as $address) {
-				print "[";
-				// Address for Geocoder
-				print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
-				// Infotext
-				$infotext = $address->company .'<br />';
-				if($address->contact_name !== "") {
-					$infotext .= $address->contact_name .'<br />';			
-				}
-				$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
-				if($address->phone !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
-				}
-				if($address->mobile !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
-				}
-				$infotext .= '"';
+            foreach ($addresses as $address) {
+                echo '[';
+                // Address for Geocoder
+                echo '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
+                // Infotext
+                $infotext = $address->company .'<br />';
+                if ('' !== $address->contact_name) {
+                    $infotext .= $address->contact_name .'<br />';
+                }
+                $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+                if ('' !== $address->phone) {
+                    $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
+                }
+                if ('' !== $address->mobile) {
+                    $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;
+                }
+                $infotext .= '"';
 
-				print $infotext .", ";
-				// Latitude and Longitude
-				print $address->latitude .', '. $address->longitude;
-				print "],". PHP_EOL;
-			}	
-		?>];
+                echo $infotext .', ';
+                // Latitude and Longitude
+                echo $address->latitude .', '. $address->longitude;
+                echo '],'. PHP_EOL;
+            }
+        ?>];
 		var address_position = 0;
 		var timeout = 100;
 		var center = true;
@@ -61,7 +61,7 @@ $addresses = $address_type->getAddresses(true);
 			var latlng = new google.maps.LatLng(47.6242,7.67378);
 			// Map settings
 			var myOptions = {
-			  zoom: <?php print $maps_zoom; ?>,
+			  zoom: <?= $maps_zoom ?>,
 			  center: latlng,
 			  mapTypeId: 'hybrid'
 			};
@@ -130,50 +130,48 @@ $addresses = $address_type->getAddresses(true);
 		initialize();
 	</script>
 	<?php
-		}
-		elseif($map_type === "osm" && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
-			$map_id = rand();
-			$latitude_max = 0;
-			$latitude_min = 0;
-			$longitude_max = 0;
-			$longitude_min = 0;
-			$address_counter = 0;
-			foreach($addresses as $address) {
-				if($address->address_id > 0) {
-					// Max and min values needed to calculate map center
-					if($address->latitude > $latitude_max || $latitude_max === 0) {
-						$latitude_max = $address->latitude;
-					}
-					if($address->latitude < $latitude_min || $latitude_min === 0) {
-						$latitude_min = $address->latitude;
-					}
-					if($address->longitude > $longitude_max || $longitude_max === 0) {
-						$longitude_max = $address->longitude;
-					}
-					if($address->longitude < $longitude_min || $longitude_min === 0) {
-						$longitude_min = $address->longitude;
-					}
+        } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
+            $map_id = random_int(0, getrandmax());
+            $latitude_max = 0;
+            $latitude_min = 0;
+            $longitude_max = 0;
+            $longitude_min = 0;
+            $address_counter = 0;
+            foreach ($addresses as $address) {
+                if ($address->address_id > 0) {
+                    // Max and min values needed to calculate map center
+                    if ($address->latitude > $latitude_max || 0 === $latitude_max) {
+                        $latitude_max = $address->latitude;
+                    }
+                    if ($address->latitude < $latitude_min || 0 === $latitude_min) {
+                        $latitude_min = $address->latitude;
+                    }
+                    if ($address->longitude > $longitude_max || 0 === $longitude_max) {
+                        $longitude_max = $address->longitude;
+                    }
+                    if ($address->longitude < $longitude_min || 0 === $longitude_min) {
+                        $longitude_min = $address->longitude;
+                    }
 
-					$address_counter++;
-				}
-			}
+                    ++$address_counter;
+                }
+            }
 
-			if ($address_counter > 0) {
-				$leaflet_js_file = 'modules/04-2/leaflet.js';
-				print '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
-	?>
-		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 700px"></div>
+            if ($address_counter > 0) {
+                $leaflet_js_file = 'modules/04-2/leaflet.js';
+                echo '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
+    ?>
+		<div id="map-<?= $map_id ?>" style="width:100%; height: 700px"></div>
 		<script type="text/javascript" async="async">
-			<?php
-				print "var map = L.map('map-". $map_id ."').setView([". (($latitude_max + $latitude_min) / 2) .", ". (($longitude_max + $longitude_min) / 2) ."], ". $maps_zoom .");";
-			?>
+			<?= "var map = L.map('map-". $map_id ."').setView([". (($latitude_max + $latitude_min) / 2) .', '. (($longitude_max + $longitude_min) / 2) .'], '. $maps_zoom .');';
+            ?>
 			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
 				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
 			map.scrollWheelZoom.disable();
 			var myIcon = L.icon({
-				iconUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'); ?>',
-				shadowUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'); ?>',
+				iconUrl: '<?= rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png') ?>',
+				shadowUrl: '<?= rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png') ?>',
 
 				iconSize:     [25, 41], // size of the icon
 				shadowSize:   [41, 41], // size of the shadow
@@ -183,49 +181,47 @@ $addresses = $address_type->getAddresses(true);
 			});
 
 			<?php
-				foreach($addresses as $address) {
-					if(($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
-						$infotext = $address->company .'<br />';
-						if($address->contact_name !== "") {
-							$infotext .= $address->contact_name .'<br />';			
-						}
-						$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
-						if($address->phone !== '') {
-							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
-						}
-						if($address->mobile !== '') {
-							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
-						}
-	
-						print "var marker = L.marker([". $address->latitude .", ". $address->longitude ."], {"
-								."draggable: false,"
-								."icon: myIcon"
-								."}).addTo(map).bindPopup('". addslashes($infotext) ."');";
-					}
-				}
-			?>
+                foreach ($addresses as $address) {
+                    if (($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
+                        $infotext = $address->company .'<br />';
+                        if ('' !== $address->contact_name) {
+                            $infotext .= $address->contact_name .'<br />';
+                        }
+                        $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+                        if ('' !== $address->phone) {
+                            $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
+                        }
+                        if ('' !== $address->mobile) {
+                            $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;
+                        }
+
+                        echo 'var marker = L.marker(['. $address->latitude .', '. $address->longitude .'], {'
+                                .'draggable: false,'
+                                .'icon: myIcon'
+                                ."}).addTo(map).bindPopup('". addslashes($infotext) ."');";
+                    }
+                }
+            ?>
 		</script>
 	<?php
-			}
-		}
-		elseif(rex_addon::get('geolocation')->isAvailable()) {
-			$modInUse = (int) rex::getProperty("d2u_module_geolocation_used", 0);
-			rex::setProperty("d2u_module_geolocation_used", ++$modInUse);
-			if($modInUse === 1) {
-				try {
-					if(rex::isFrontend()) {
-						if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-							// Geolocation 2.x
-							\FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
-						}
-						else {
-							// Geolocation 1.x
-							\Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
-						}
-					}
+            }
+        } elseif (rex_addon::get('geolocation')->isAvailable()) {
+            $modInUse = (int) rex::getProperty('d2u_module_geolocation_used', 0);
+            rex::setProperty('d2u_module_geolocation_used', ++$modInUse);
+            if (1 === $modInUse) {
+                try {
+                    if (rex::isFrontend()) {
+                        if (rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+                            // Geolocation 2.x
+                            \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
+                        } else {
+                            // Geolocation 1.x
+                            \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
+                        }
+                    }
 ?>
 <script>
-	Geolocation.default.positionColor = '<?= (string) rex_config::get('d2u_helper', 'article_color_h'); ?>';
+	Geolocation.default.positionColor = '<?= (string) rex_config::get('d2u_helper', 'article_color_h') ?>';
 
 	// adjust zoom level
 	Geolocation.Tools.Center = class extends Geolocation.Tools.Template{
@@ -295,60 +291,59 @@ $addresses = $address_type->getAddresses(true);
 	Geolocation.tools.infobox = function(...args) { return new Geolocation.Tools.Infobox(args); };
 </script>
 <?php
-				}
-				catch (Exception $e) {}
-			}
+                } catch (Exception $e) {
+                }
+            }
 
-			$mapsetId = (int) 'REX_VALUE[9]';
+            $mapsetId = (int) 'REX_VALUE[9]';
 
-			$rex_map = null;
-			if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-				// Geolocation 2.x
-				$rex_map = \FriendsOfRedaxo\Geolocation\Mapset::take($mapsetId)
-					->attributes('id', (string) $mapsetId);
-			}
-			else {
-				// Geolocation 1.x
-				$rex_map = \Geolocation\mapset::take($mapsetId) /** @phpstan-ignore-line */
-					->attributes('id', (string) $mapsetId);
-			}
+            $rex_map = null;
+            if (rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+                // Geolocation 2.x
+                $rex_map = \FriendsOfRedaxo\Geolocation\Mapset::take($mapsetId)
+                    ->attributes('id', (string) $mapsetId);
+            } else {
+                // Geolocation 1.x
+                $rex_map = \Geolocation\mapset::take($mapsetId) /** @phpstan-ignore-line */
+                    ->attributes('id', (string) $mapsetId);
+            }
 
-			$latitude_max = 0;
-			$latitude_min = 0;
-			$longitude_max = 0;
-			$longitude_min = 0;
-			foreach($addresses as $address) {
-				if(($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
-					// Max and min values needed to calculate map center
-					if($address->latitude > $latitude_max || $latitude_max === 0) {
-						$latitude_max = $address->latitude;
-					}
-					if($address->latitude < $latitude_min || $latitude_min === 0) {
-						$latitude_min = $address->latitude;
-					}
-					if($address->longitude > $longitude_max || $longitude_max === 0) {
-						$longitude_max = $address->longitude;
-					}
-					if($address->longitude < $longitude_min || $longitude_min === 0) {
-						$longitude_min = $address->longitude;
-					}
+            $latitude_max = 0;
+            $latitude_min = 0;
+            $longitude_max = 0;
+            $longitude_min = 0;
+            foreach ($addresses as $address) {
+                if (($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
+                    // Max and min values needed to calculate map center
+                    if ($address->latitude > $latitude_max || 0 === $latitude_max) {
+                        $latitude_max = $address->latitude;
+                    }
+                    if ($address->latitude < $latitude_min || 0 === $latitude_min) {
+                        $latitude_min = $address->latitude;
+                    }
+                    if ($address->longitude > $longitude_max || 0 === $longitude_max) {
+                        $longitude_max = $address->longitude;
+                    }
+                    if ($address->longitude < $longitude_min || 0 === $longitude_min) {
+                        $longitude_min = $address->longitude;
+                    }
 
-					$infotext = $address->company .'<br />';
-					if($address->contact_name !== '') {
-						$infotext .= $address->contact_name .'<br />';			
-					}
-					$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
-					if($address->phone !== '') {
-						$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
-					}
-					if($address->mobile !== '') {
-						$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
-					}
+                    $infotext = $address->company .'<br />';
+                    if ('' !== $address->contact_name) {
+                        $infotext .= $address->contact_name .'<br />';
+                    }
+                    $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+                    if ('' !== $address->phone) {
+                        $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
+                    }
+                    if ('' !== $address->mobile) {
+                        $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;
+                    }
 
-					$rex_map->dataset('infobox|'. $address->address_id, [[$address->latitude, $address->longitude], $infotext]);
-				}
-			}						
-			echo $rex_map->dataset('center', [[($latitude_max + $latitude_min) / 2, ($longitude_max + $longitude_min) / 2], $maps_zoom])->parse();
-		}
-	?>
+                    $rex_map->dataset('infobox|'. $address->address_id, [[$address->latitude, $address->longitude], $infotext]);
+                }
+            }
+            echo $rex_map->dataset('center', [[($latitude_max + $latitude_min) / 2, ($longitude_max + $longitude_min) / 2], $maps_zoom])->parse();
+        }
+    ?>
 </div>

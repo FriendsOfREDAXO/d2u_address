@@ -1,35 +1,3 @@
-.country-box {
-	background-color: article_color_box;
-	margin-bottom: 2em;
-	padding: 1em;
-}
-.country-box select {
-	appearance: none;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
-	background-position: 100% center;
-	background-repeat: no-repeat;
-	border: 1px solid white;
-	padding: 0.5em;
-	width: 100%;
-}
-.country-box input {
-	border: 1px solid white;
-	padding: 0.5em;
-}
-.country-box .zip_code {
-	float: right;
-	position: absolute;
-	width: 40px;
-	right: 15px;
-}
-@media (max-width: 767px) {
-	.country-box .country_select {
-		margin-bottom: 15px;
-	}	
-}
-
 /* required leaflet styles */
 .leaflet-pane,
 .leaflet-tile,

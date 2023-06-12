@@ -57,18 +57,17 @@ if (count($address_types) > 0) {
             if (rex_addon::get('geolocation')->isAvailable()) {
                 $map_types['geolocation'] = 'Geolocation Addon: Standardkarte';
                 $mapsets = [];
-				if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-					// Geolocation 2.x
-                	$mapsets = \FriendsOfRedaxo\Geolocation\Mapset::query()
-                    	->orderBy('title')
-                    	->findValues('title', 'id');
-				}
-				else {
-					// Geolocation 1.x
-					$mapsets = \Geolocation\mapset::query() /** @phpstan-ignore-line */
-                    	->orderBy('title')
-                    	->findValues('title', 'id');
-				}
+                if (rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+                    // Geolocation 2.x
+                    $mapsets = \FriendsOfRedaxo\Geolocation\Mapset::query()
+                        ->orderBy('title')
+                        ->findValues('title', 'id');
+                } else {
+                    // Geolocation 1.x
+                    $mapsets = \Geolocation\mapset::query() /** @phpstan-ignore-line */
+                        ->orderBy('title')
+                        ->findValues('title', 'id');
+                }
                 foreach ($mapsets as $id => $name) {
                     $map_types[$id] = 'Geolocation Addon: '. $name;
                 }
