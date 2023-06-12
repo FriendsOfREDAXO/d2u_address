@@ -118,14 +118,14 @@ if(count($addresses) > 0) {
 		print '<div class="col-12"><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
 	}
 	foreach($addresses as $address) {
-		print '<div class="col-12 col-md-6">';
-		print '<div class="country-box" data-height-watch>';
+		print '<div class="col-12 col-md-6 d-flex">';
+		print '<div class="country-box flex-fill">';
 		print '<div class="row">';
 		print '<div class="col-3">';
 		$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
 		$a_href_close = $address->article_id > 0 ? '</a>' : '';
 		print $a_href_open .'<img src="'.
-			($address->picture !== "" ? 'index.php?rex_media_type=d2u_address_120x150&rex_media_file='. $address->picture : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
+			($address->picture !== "" ? rex_media_manager::getUrl('d2u_address_120x150',$address->picture) : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
 			.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
 		print '</div>';
 		print '<div class="col-9">';
@@ -194,11 +194,19 @@ if(count($addresses) > 0) {
 				// Address for Geocoder
 				print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
 				// Infotext
-				$infotext = '"'. $address->company .'<br />';
+				$infotext = $address->company .'<br />';
 				if($address->contact_name !== "") {
 					$infotext .= $address->contact_name .'<br />';			
 				}
-				$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city.'"';
+				$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+				if($address->phone !== '') {
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
+				}
+				if($address->mobile !== '') {
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
+				}
+				$infotext .= '"';
+
 				print $infotext .", ";
 				// Latitude and Longitude
 				print $address->latitude .', '. $address->longitude;
@@ -341,12 +349,18 @@ if(count($addresses) > 0) {
 			<?php
 				foreach($addresses as $address) {
 					if(($address->latitude > 0 || $address->latitude < 0) && ($address->longitude > 0 || $address->longitude < 0)) {
-						$infotext = '"'. $address->company .'<br />';
+						$infotext = $address->company .'<br />';
 						if($address->contact_name !== "") {
 							$infotext .= $address->contact_name .'<br />';			
 						}
-						$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city.'"';
-
+						$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+						if($address->phone !== '') {
+							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
+						}
+						if($address->mobile !== '') {
+							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
+						}
+	
 						print "var marker = L.marker([". $address->latitude .", ". $address->longitude ."], {"
 								."draggable: false,"
 								."icon: myIcon"
@@ -483,11 +497,17 @@ if(count($addresses) > 0) {
 						$longitude_min = $address->longitude;
 					}
 
-					$infotext = '"'. $address->company .'<br />';
-					if($address->contact_name !== "") {
+					$infotext = $address->company .'<br />';
+					if($address->contact_name !== '') {
 						$infotext .= $address->contact_name .'<br />';			
 					}
-					$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city.'"';
+					$infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+					if($address->phone !== '') {
+						$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
+					}
+					if($address->mobile !== '') {
+						$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
+					}
 
 					$rex_map->dataset('infobox|'. $address->address_id, [[$address->latitude, $address->longitude], $infotext]);
 				}
