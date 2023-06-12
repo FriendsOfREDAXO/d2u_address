@@ -1,33 +1,19 @@
-<?php
-/*
- * Modules
- */
-$d2u_module_manager = new D2UModuleManager(D2UAddressModules::getModules(), 'modules/', 'd2u_address');
-
-// D2UModuleManager actions
-$d2u_module_id = rex_request('d2u_module_id', 'string');
-$paired_module = (int) rex_request('pair_'. $d2u_module_id, 'int');
-$function = rex_request('function', 'string');
-if ('' !== $d2u_module_id) {
-    $d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
-}
-
-// D2UModuleManager show list
-$d2u_module_manager->showManagerList();
-?>
-<h2>Beispielseiten</h2>
-<ul>
-	<li>Adressen Addon: <a href="https://www.kaltenbach.com/de/unternehmen/kontakt/" target="_blank">
-		Kaltenbach GmbH + Co KG</a>.</li>
-	<li>Adressen Addon: <a href="https://www.inotec-gmbh.com/kontakt/unser-service-netz/" target="_blank">
-		Inotec GmbH</a>.</li>
-</ul>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
+<fieldset style='padding: 1em; border: 1px solid #dfe3e9;'>
+	<p style="margin-bottom: 0.5em;">Sag einfach Danke und unterstütze die Weiterentwicklung durch deine Spende:</p>
+	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+		<input type="hidden" name="cmd" value="_s-xclick" />
+		<input type="hidden" name="hosted_button_id" value="CB7B6QTLM76N6" />
+		<input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
+		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+	</form>
+</fieldset>
+
 <h2>Changelog</h2>
 <p>1.4.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>README hinzugefügt.</li>
 </ul>
 <p>1.4.0:</p>
 <ul>

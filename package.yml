@@ -13,8 +13,15 @@ page:
         country: { title: 'translate:d2u_address_countries', icon: rex-icon fa-flag }
         continent: { title: 'translate:d2u_address_continents', icon: rex-icon fa-globe }
         zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road, perm: 'd2u_address[edit_data]' }
-        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemClass: pull-right, perm: 'd2u_address[settings]' }
-        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemClass: pull-right, perm: 'd2u_address[settings]' }
+        settings:
+            icon: rex-icon rex-icon-system
+            title: 'translate:d2u_helper_settings'
+            itemClass: pull-right
+            subpages:
+                settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemClass: pull-right, perm: 'd2u_address[settings]' }
+                setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemClass: pull-right, perm: 'd2u_address[settings]' }
+                help: { title: 'translate:package_hhelp', icon: rex-icon rex-icon-help }
+                changelog: { title: 'translate:d2u_helper_help_chapter_changelog', icon: rex-icon fa-files-o }
 
 requires:
     packages:
