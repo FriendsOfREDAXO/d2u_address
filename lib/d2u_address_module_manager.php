@@ -19,6 +19,9 @@ class D2UAddressModules
         $modules[] = new D2UModule('20-2',
             'D2U Adressen - Kontaktbox',
             5);
+        $modules[] = new D2UModule('20-3',
+            'D2U Adressen - Weltkarte',
+            1);
         return $modules;
     }
 }

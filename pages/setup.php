@@ -25,10 +25,12 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.3.1-DEV:</p>
+<p>1.4.0:</p>
 <ul>
 	<li>PHP-CS-Fixer Verbesserungen.</li>
+	<li>rexstan Abgleich.</li>
 	<li>Modul 20-1 "D2U Adressen - Adressausgabe": Kann nun auch Karten des Geolocation Addons Verion 2 verwenden und zeigt in den Infoboxen der Karten nun auch Telefonnummern an.</li>
+	<li>Modul 20-3 "D2U Adressen - Weltkarte" hinzugefügt. Es werden alle Kontakte einer Kontaktart angezeigt.
 </ul>
 <p>1.3.0:</p>
 <ul>

@@ -1,178 +1,14 @@
 <?php
-$address_type_id = intval("REX_VALUE[1]"); /** @phpstan-ignore-line */
+$address_type_id = intval('REX_VALUE[1]'); /** @phpstan-ignore-line */
 $address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
-$show_fax = "REX_VALUE[2]" === 'true' ? true : false; /** @phpstan-ignore-line */
-$map_type = "REX_VALUE[3]" === '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility /** @phpstan-ignore-line */
-$default_contact = intval("REX_VALUE[4]") > 0 ? new D2U_Address\Address(intval("REX_VALUE[4]"), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
+$maps_zoom = (int) 'REX_VALUE[2]'; /** @phpstan-ignore-line */
+$map_type = 'REX_VALUE[3]';
 
-// Get placeholder wildcard tags and other presets
-$sprog = rex_addon::get("sprog");
-$tag_open = $sprog->getConfig('wildcard_open_tag');
-$tag_close = $sprog->getConfig('wildcard_close_tag');
-
-$country = (int) rex_request('country_id', 'int') > 0 ? new D2U_Address\Country((int) rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
-$zip_code = (int) rex_request('zip_code', 'int') > 0 && $country instanceof D2U_Address\Country ? D2U_Address\ZipCode::get($country, (int) rex_request('zip_code', 'int')) : false; /** @phpstan-ignore-line */
-
-$d2u_address = rex_addon::get('d2u_address');
-$default_country_id = $d2u_address->hasConfig('default_country_id') ? (int) $d2u_address->getConfig('default_country_id') : 0;
-
-$maps_zoom = $address_type->maps_zoom;
-
-// Form selections
-$addresses = [];
-if($address_type->show_country_select) {
-	if(rex_request('country_id', 'int') === -1 && $default_contact instanceof D2U_Address\Address && $default_contact->address_id > 0) { /** @phpstan-ignore-line */
-		$addresses[] = $default_contact;
-	}
-	else if($zip_code instanceof D2U_Address\ZipCode) {
-		$addresses = $zip_code->getAdresses(true);
-	}
-	else if($country !== false) {
-		$addresses = $country->getAddresses($address_type, true);
-	}
-	else if(rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string') !== '') {
-		$accepted_lang = explode(";", rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string'));
-		$accepted_lang = explode(",", $accepted_lang[0]);
-		$countries = D2U_Address\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
-		if(count($countries) > 0) {
-			$country = new D2U_Address\Country($countries[0]->country_id, rex_clang::getCurrentId());
-			foreach ($countries as $cur_country) {
-				// show all addresses with this ISO lang code
-				$countries_addresses = $cur_country->getAddresses($address_type, true);
-				foreach ($countries_addresses as $key => $countries_address) {
-					$addresses[$key] = $countries_address;
-				}
-			}
-		}
-	}
-	if($country !== false) {
-		$maps_zoom = $country->maps_zoom;
-	}
-}
-else {
-	$addresses = $address_type->getAddresses(true);
-}
-
-// Fallback if no address was found, there should be at least one address
-if(count($addresses) === 0) {
-	$country = new D2U_Address\Country($default_country_id, rex_clang::getCurrentId());
-	$addresses = $country->getAddresses($address_type, true);
-	$maps_zoom = $country->maps_zoom;
-}
+// Get addresses
+$addresses = $address_type->getAddresses(true);
 
 // Output
-if($address_type->show_country_select) {
-	// Only if coutry selection should be available
-	print '<div class="col-12">';
-	print '<h1>'. $tag_open .'d2u_address_local_servicepartner'. $tag_close .'</h1>';
-	print '<p>'. $tag_open .'d2u_address_specialists'. $tag_close .'</p>';
-	print '<br />';
-
-	print '<div class="country-box">';
-	print '<form method="post">';
-	print '<div class="row">';
-	print '<div class="col-12 col-md-6">';
-	print '<select name="country_id" class="country_select" onChange="this.form.submit()">';
-	$countries = $address_type->getCountries();
-	foreach($countries as $cur_country) {
-		$selected = "";
-		if(rex_request('country_id', 'int') > -1 && (($country instanceof D2U_Address\Country && $country->country_id === $cur_country->country_id) || ($country === false && $cur_country->country_id === $default_country_id))) {
-			$selected = ' selected="selected"';
-		}
-		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
-	}
-	print '<option value="-1" '. (rex_request('country_id', 'int') === -1 ? 'selected="selected"' : '') .'>'. $tag_open .'d2u_address_other_countries'. $tag_close .'</option>';
-	print '</select>';
-	print '</div>';
-
-	if(rex_request('country_id', 'int') > -1 && $country !== false) {
-		$country_zip_codes = $country->getZipCodes();
-		if(count($country_zip_codes) > 0) {
-			$show_zip_code_field = false;
-			foreach($country_zip_codes as $country_zip_code) {
-				if($country_zip_code->isOnline()) {
-					$show_zip_code_field = true;
-					break;
-				}
-			}
-			if($show_zip_code_field) {
-				print '<div class="col-12 col-md-6">';
-				$placeholder = $zip_code === false ? $tag_open .'d2u_helper_module_form_zip'. $tag_close : rex_request('zip_code', 'int');
-				print '<input type="text" value="'. ($zip_code !== false ? rex_request('zip_code', 'int') : '') .'" name="zip_code" placeholder="'. $placeholder .'">';
-				print '<input type="submit" value="»" class="zip_code">';
-				print '</div>';
-			}
-		}
-	}
-
-	print '</div>';
-	print '</form>';
-	print '</div>';
-	print '</div>';
-	print '<br />';
-} // END if country selection should be available
-
-if(count($addresses) > 0) {
-	if($address_type->show_country_select) {
-		// Only if coutry selection should be available
-		print '<div class="col-12"><h2>'. $tag_open .'d2u_address_nearby'. $tag_close .'</h2><br></div>';
-	}
-	foreach($addresses as $address) {
-		print '<div class="col-12 col-md-6 d-flex">';
-		print '<div class="country-box flex-fill">';
-		print '<div class="row">';
-		print '<div class="col-3">';
-		$a_href_open = $address->article_id > 0 ? '<a href="'. rex_getUrl($address->article_id) .'">' : '';
-		$a_href_close = $address->article_id > 0 ? '</a>' : '';
-		print $a_href_open .'<img src="'.
-			($address->picture !== "" ? rex_media_manager::getUrl('d2u_address_120x150',$address->picture) : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
-			.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
-		print '</div>';
-		print '<div class="col-9">';
-		if($address->contact_name !== "") {
-			print $a_href_open .'<h3>'. $address->contact_name .'</h3>'. $a_href_close;
-			print $address->company .'<br>';
-		}
-		else {
-			print $a_href_open .'<h3>'. $address->company .'</h3>'. $a_href_close;
-		}
-		if($address->company_appendix !== "") {
-			print $address->company_appendix .'<br>';
-		}
-		if($address_type->show_address_details) {
-			print ($address->additional_address !== "" ? $address->additional_address .'<br>' : '');
-			print $address->street .'<br>';
-			print $address->zip_code .' '. $address->city .'<br>';
-		}
-		print '<br />';
-		if($address->mobile !== "") {
-			print $tag_open .'d2u_address_mobile'. $tag_close .' '. $address->mobile .'<br>';
-		}
-		if($address->phone !== "") {
-			print $tag_open .'d2u_helper_module_form_phone'. $tag_close .' '. $address->phone .'<br>';
-		}
-		if($show_fax && $address->fax !== "") { /** @phpstan-ignore-line */
-			print $tag_open .'d2u_address_fax'. $tag_close .' '. $address->fax .'<br>';
-		}
-
-		// Google Analytics Event
-		$google_analytics = "";
-		if(rex_config::get('d2u_address', 'analytics_emailevent_activate', 'false') === 'true' &&
-				rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
-				rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '' &&
-				rex_request('search_it_build_index', 'int', false) === false) {
-			$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
-		}
-		print '<a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a>';
-		print '</div>';
-		print '</div>';
-		print '</div>';
-		print '</div>';
-	}
-	print '<br />';
-}
 ?>
-
 <div class="col-12">
 	<?php
 		if($map_type === "google") { /** @phpstan-ignore-line */
@@ -184,7 +20,7 @@ if(count($addresses) > 0) {
 	?>
 
 	<script src="https://maps.googleapis.com/maps/api/js<?php echo $api_key; ?>"></script>
-	<div id="map_canvas" style="display: block; width: 100%; height: 500px;"></div> 
+	<div id="map_canvas" style="display: block; width: 100%; height: 700px;"></div> 
 	<script>
 		var map;
 		var infowindow = new google.maps.InfoWindow();
@@ -326,7 +162,7 @@ if(count($addresses) > 0) {
 				$leaflet_js_file = 'modules/04-2/leaflet.js';
 				print '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
 	?>
-		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 500px"></div>
+		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 700px"></div>
 		<script type="text/javascript" async="async">
 			<?php
 				print "var map = L.map('map-". $map_id ."').setView([". (($latitude_max + $latitude_min) / 2) .", ". (($longitude_max + $longitude_min) / 2) ."], ". $maps_zoom .");";

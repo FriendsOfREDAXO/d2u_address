@@ -27,29 +27,6 @@ if (count($address_types) > 0) {
     }
 ?>
 <div class="row">
-	<div class="col-xs-4">Standardkontakt für Option "weitere Länder"</div>
-	<div class="col-xs-8">
-		<?php
-            $addresses = \D2U_Address\Address::getAll(rex_clang::getCurrentId());
-            echo '<select name="REX_INPUT_VALUE[4]" class="form-control">';
-            echo '<option value="0">Adressen des Standardlandes aus den Einstellungen anzeigen</option>';
-            if (count($addresses) > 0) {
-                foreach ($addresses as $address) {
-                    echo '<option value="'. $address->address_id .'" ';
-
-                    if ((int) 'REX_VALUE[4]' === $address->address_id) { /** @phpstan-ignore-line */
-                        echo 'selected="selected" ';
-                    }
-                    echo '>'. $address->company .' - '. $address->contact_name  .'</option>';
-                }
-            }
-            echo '</select>';
-        ?>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12">&nbsp;</div>
-</div><div class="row">
 	<div class="col-xs-4">Art der Karte:</div>
 	<div class="col-xs-8">
 		<?php
@@ -91,14 +68,25 @@ if (count($address_types) > 0) {
 	</div>
 </div>
 <div class="row">
-	<div class="col-xs-12">&nbsp;</div>
+    <div class="col-xs-12">&nbsp;</div>
 </div>
 <div class="row">
 	<div class="col-xs-4">
-		<input type="checkbox" name="REX_INPUT_VALUE[2]" value="true" <?php echo 'REX_VALUE[2]' === 'true' ? ' checked="checked"' : ''; /** @phpstan-ignore-line */ ?> class="form-control d2u_helper_toggle" />
+		Zoomstufe:
 	</div>
 	<div class="col-xs-8">
-		Faxnummer anzeigen - wenn vorhanden <br />
+		<select name="REX_INPUT_VALUE[2]" class="form-control">
+			<?php
+            foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] as $value) {
+                echo '<option value="'.$value.'" ';
+
+                if ((int) 'REX_VALUE[2]' === $value) { /** @phpstan-ignore-line */
+                    echo 'selected="selected" ';
+                }
+                echo '>'. $value .'</option>';
+            }
+            ?>
+		</select>
 	</div>
 </div>
 <div class="row">
