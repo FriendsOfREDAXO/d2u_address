@@ -1,6 +1,6 @@
 d2u_address_default_country_id = Default country
 
-d2u_address = D2U Address
+d2u_address = Address
 d2u_address_address = Addresses
 d2u_address_address_type = Address type
 d2u_address_address_types = Address types
@@ -44,7 +44,7 @@ d2u_address_settings_analytics_emailevent_action = Name event action
 d2u_address_settings_analytics_emailevent_activate = Send an Analytics event when clicking on an email address
 d2u_address_settings_analytics_emailevent_category = Name event category
 
-d2u_address_rights = D2U address addon
-d2u_address_rights_edit_data = D2U address addon: edit rights for data
-d2u_address_rights_edit_lang = D2U address addon: edit rights for translations (languages set in user roles apply)
-d2u_address_rights_settings = D2U address addon: settings
+d2u_address_rights = Address addon
+d2u_address_rights_edit_data = Address addon: edit rights for data
+d2u_address_rights_edit_lang = Address addon: edit rights for translations (languages set in user roles apply)
+d2u_address_rights_settings = Address addon: settings

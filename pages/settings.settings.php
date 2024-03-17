@@ -12,7 +12,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
         echo rex_view::success(rex_i18n::msg('form_saved'));
 
         // Install / update language replacements
-        d2u_address_lang_helper::factory()->install();
+        FriendsOfREDAXO\D2UAddress\LangHelper::factory()->install();
     } else {
         echo rex_view::error(rex_i18n::msg('form_save_error'));
     }
@@ -27,11 +27,11 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $country_options = [];
-                        $countries = D2U_Address\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                        $countries = FriendsOfREDAXO\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                         foreach ($countries as $country) {
                             $country_options[$country->country_id] = $country->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_address_default_country_id', 'settings[default_country_id]', $country_options, [(int) rex_config::get('d2u_address', 'default_country_id')]);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_default_country_id', 'settings[default_country_id]', $country_options, [(int) rex_config::get('d2u_address', 'default_country_id')]);
                     ?>
 				</div>
 			</fieldset>
@@ -39,7 +39,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?= rex_i18n::msg('d2u_helper_lang_replacements') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        d2u_addon_backend_helper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_address', 'lang_wildcard_overwrite'));
+                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_address', 'lang_wildcard_overwrite'));
                         foreach (rex_clang::getAll() as $rex_clang) {
                             echo '<dl class="rex-form-group form-group">';
                             echo '<dt><label>'. $rex_clang->getName() .'</label></dt>';
@@ -72,9 +72,9 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon fa-google"></i></small> <?= rex_i18n::msg('d2u_address_settings_analytics') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        d2u_addon_backend_helper::form_checkbox('d2u_address_settings_analytics_emailevent_activate', 'settings[analytics_emailevent_activate]', 'true', 'true' === rex_config::get('d2u_address', 'analytics_emailevent_activate'));
-                        d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_category', 'settings[analytics_emailevent_category]', (string) rex_config::get('d2u_address', 'analytics_emailevent_category'), false, false, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_address_settings_analytics_emailevent_action', 'settings[analytics_emailevent_action]', (string) rex_config::get('d2u_address', 'analytics_emailevent_action'), false, false, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_address_settings_analytics_emailevent_activate', 'settings[analytics_emailevent_activate]', 'true', 'true' === rex_config::get('d2u_address', 'analytics_emailevent_activate'));
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_settings_analytics_emailevent_category', 'settings[analytics_emailevent_category]', (string) rex_config::get('d2u_address', 'analytics_emailevent_category'), false, false, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_settings_analytics_emailevent_action', 'settings[analytics_emailevent_action]', (string) rex_config::get('d2u_address', 'analytics_emailevent_action'), false, false, 'text');
                     ?>
 					<script>
 						function changeType() {
@@ -108,6 +108,6 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 	</div>
 </form>
 <?php
-    echo d2u_addon_backend_helper::getCSS();
-    echo d2u_addon_backend_helper::getJS();
-    echo d2u_addon_backend_helper::getJSOpenAll();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+    echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();

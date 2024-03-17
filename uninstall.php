@@ -23,8 +23,8 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_reference
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_references_references_lang');
 
 // Delete language replacements
-if (!class_exists('d2u_address_lang_helper')) {
+if (!class_exists(TobiasKrais\D2UHelper\LangHelper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_address_lang_helper.php';
 }
-d2u_address_lang_helper::factory()->uninstall();
+FriendsOfREDAXO\D2UAddress\LangHelper::factory()->uninstall();

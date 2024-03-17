@@ -1,5 +1,5 @@
 package: d2u_address
-version: '1.4.1'
+version: '1.5.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_address
 
@@ -25,7 +25,7 @@ page:
 
 requires:
     packages:
-        d2u_helper: '>=1.8.8'
+        d2u_helper: '>=1.14.0'
         sprog: '>=1.0.0'
     php: '>=7.4'
         

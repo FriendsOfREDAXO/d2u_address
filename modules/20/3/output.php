@@ -1,6 +1,6 @@
 <?php
 $address_type_id = (int) 'REX_VALUE[1]'; /** @phpstan-ignore-line */
-$address_type = new D2U_Address\AddressType($address_type_id, rex_clang::getCurrentId());
+$address_type = new FriendsOfREDAXO\D2UAddress\AddressType($address_type_id, rex_clang::getCurrentId());
 $maps_zoom = (int) 'REX_VALUE[2]'; /** @phpstan-ignore-line */
 $map_type = 'REX_VALUE[3]';
 
@@ -34,7 +34,7 @@ $addresses = $address_type->getAddresses(true);
                 if ('' !== $address->contact_name) {
                     $infotext .= $address->contact_name .'<br />';
                 }
-                $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+                $infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
                 if ('' !== $address->phone) {
                     $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
                 }
@@ -187,7 +187,7 @@ $addresses = $address_type->getAddresses(true);
                         if ('' !== $address->contact_name) {
                             $infotext .= $address->contact_name .'<br />';
                         }
-                        $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+                        $infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
                         if ('' !== $address->phone) {
                             $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
                         }
@@ -215,6 +215,7 @@ $addresses = $address_type->getAddresses(true);
                             // Geolocation 2.x
                             \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
                         } else {
+							/** @deprecated remove in version 2 */
                             // Geolocation 1.x
                             \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
                         }
@@ -303,6 +304,7 @@ $addresses = $address_type->getAddresses(true);
                 $rex_map = \FriendsOfRedaxo\Geolocation\Mapset::take($mapsetId)
                     ->attributes('id', (string) $mapsetId);
             } else {
+				/** @deprecated remove in version 2 */
                 // Geolocation 1.x
                 $rex_map = \Geolocation\mapset::take($mapsetId) /** @phpstan-ignore-line */
                     ->attributes('id', (string) $mapsetId);
@@ -332,7 +334,7 @@ $addresses = $address_type->getAddresses(true);
                     if ('' !== $address->contact_name) {
                         $infotext .= $address->contact_name .'<br />';
                     }
-                    $infotext .= ($address->country instanceof D2U_Address\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+                    $infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
                     if ('' !== $address->phone) {
                         $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
                     }

@@ -11,9 +11,23 @@
 </fieldset>
 
 <h2>Changelog</h2>
-<p>1.4.1-DEV:</p>
+<p>1.5.0-DEV:</p>
 <ul>
 	<li>README hinzugefügt.</li>
+	<li>Vorbereitung auf R6: Folgende Klassen werden ab Version 2 dieses Addons umbenannt. Schon jetzt stehen die neuen Klassen für die Übergangszeit zur Verfügung:
+		<ul>
+			<li><code>FriendsOfREDAXO\D2UAddress\Address</code> wird zu <code>FriendsOfREDAXO\D2UAddress\Address</code>.</li>
+			<li><code>FriendsOfREDAXO\D2UAddress\AddressType</code> wird zu <code>FriendsOfREDAXO\D2UAddress\AddressType</code>.</li>
+			<li><code>FriendsOfREDAXO\D2UAddress\Country</code> wird zu <code>FriendsOfREDAXO\D2UAddress\Country</code>.</li>
+			<li><code>FriendsOfREDAXO\D2UAddress\Continent</code> wird zu <code>FriendsOfREDAXO\D2UAddress\Continent</code>.</li>
+			<li><code>FriendsOfREDAXO\D2UAddress\ZipCode</code> wird zu <code>FriendsOfREDAXO\D2UAddress\ZipCode</code>.</li>
+		</ul>
+		Folgende interne Klassen wurden wurden ebenfalls umbenannt. Hier gibt es keine Übergangszeit, da sie nicht öffentlich sind:
+		<ul>
+			<li><code>d2u_address_lang_helper</code> wird zu <code>FriendsOfREDAXO\D2UAddress\LangHelper</code>.</li>
+			<li><code>D2UAddressModules</code> wird zu <code>FriendsOfREDAXO\D2UAddress\Module</code>.</li>
+		</ul>
+	</li>
 </ul>
 <p>1.4.0:</p>
 <ul>

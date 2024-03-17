@@ -112,7 +112,7 @@
 	<div class="col-xs-4">Die E-Mail-Adresse welches Kontakts soll direkt angezeigt werden?</div>
 	<div class="col-xs-8">
 		<?php
-            $addresses = D2U_Address\Address::getAll(rex_clang::getCurrentId());
+            $addresses = FriendsOfREDAXO\D2UAddress\Address::getAll(rex_clang::getCurrentId());
 
             if (count($addresses) > 0) {
                 echo '<select name="REX_INPUT_VALUE[2]" class="form-control">';

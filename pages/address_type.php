@@ -15,12 +15,12 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     // Linkmap Link and media needs special treatment
     $link_ids = filter_input_array(INPUT_POST, ['REX_INPUT_LINK' => ['filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY]]);
 
-    $address_type = new D2U_Address\AddressType($form['address_type_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+    $address_type = new FriendsOfREDAXO\D2UAddress\AddressType($form['address_type_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
     $address_type->name = $form['name'];
     $address_type->show_address_details = array_key_exists('show_address_details', $form);
     $address_type->show_country_select = array_key_exists('show_country_select', $form);
     $address_type->maps_zoom = $form['maps_zoom'];
-    $address_type->default_address_id = $form['default_address_id'];
+    $address_type->default_address_id = (int) $form['default_address_id'];
     $address_type->article_id = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][1] : 0;
 
     // message output
@@ -44,7 +44,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $address_type_id = $form['address_type_id'];
     }
-    $address_type = new D2U_Address\AddressType($address_type_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $address_type = new FriendsOfREDAXO\D2UAddress\AddressType($address_type_id, (int) rex_config::get('d2u_helper', 'default_lang'));
 
     // Check if category is used
     $uses_addresses = $address_type->getAddresses();
@@ -77,23 +77,23 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_address_address_type') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            $address_type = new D2U_Address\AddressType($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $address_type = new FriendsOfREDAXO\D2UAddress\AddressType($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $address_type->name, true, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, true, $readonly, 'number');
-                            $addresses = D2U_Address\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $address_type->name, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, true, $readonly, 'number');
+                            $addresses = FriendsOfREDAXO\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             $options_address_id = [];
                             foreach ($addresses as $address) {
                                 $options_address_id[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }
-                            d2u_addon_backend_helper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                         ?>
 					</div>
 				</fieldset>
@@ -124,8 +124,8 @@ if ('edit' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-//		print d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+//		print \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

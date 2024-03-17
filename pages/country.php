@@ -17,7 +17,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $country_id = $form['country_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $country) {
-            $country = new D2U_Address\Country($country_id, $rex_clang->getId());
+            $country = new FriendsOfREDAXO\D2UAddress\Country($country_id, $rex_clang->getId());
             $country->country_id = $country_id; // Ensure correct ID in case first language has no object
             $country->iso_lang_codes = array_map('trim', explode(',', $form['iso_lang_codes']));
             $country->maps_zoom = $form['maps_zoom'];
@@ -59,7 +59,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $country_id = $form['country_id'];
     }
-    $country = new D2U_Address\Country($country_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $country = new FriendsOfREDAXO\D2UAddress\Country($country_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $country->country_id = $country_id; // Ensure correct ID in case language has no object
 
     // Check if object is used
@@ -94,7 +94,7 @@ if ('edit' === $func || 'add' === $func) {
 				<input type="hidden" name="form[country_id]" value="<?= $entry_id ?>">
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $country = new D2U_Address\Country($entry_id, $rex_clang->getId());
+                        $country = new FriendsOfREDAXO\D2UAddress\Country($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -111,7 +111,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$country->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$country->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -129,7 +129,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $country->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $country->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -142,21 +142,21 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $country = new D2U_Address\Country($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $country = new FriendsOfREDAXO\D2UAddress\Country($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_input('d2u_address_iso_lang_codes_comma', 'form[iso_lang_codes]', implode(',', $country->iso_lang_codes), false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $country->maps_zoom, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_iso_lang_codes_comma', 'form[iso_lang_codes]', implode(',', $country->iso_lang_codes), false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $country->maps_zoom, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
                             $options_address_ids = [];
-                            $addresses = D2U_Address\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
+                            $addresses = FriendsOfREDAXO\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             foreach ($addresses as $address) {
                                 $options_address_ids[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }
-                            d2u_addon_backend_helper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -179,8 +179,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

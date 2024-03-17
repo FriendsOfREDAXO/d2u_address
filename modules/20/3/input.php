@@ -1,5 +1,5 @@
 <?php
-$address_types = \D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
+$address_types = \FriendsOfREDAXO\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
 
 if (count($address_types) > 0) {
 ?>
@@ -40,6 +40,7 @@ if (count($address_types) > 0) {
                         ->orderBy('title')
                         ->findValues('title', 'id');
                 } else {
+                    /** @deprecated will be removed in version 2.0.0 */
                     // Geolocation 1.x
                     $mapsets = \Geolocation\mapset::query() /** @phpstan-ignore-line */
                         ->orderBy('title')

@@ -1,6 +1,6 @@
 d2u_address_default_country_id = Standardland
 
-d2u_address = D2U Adressen
+d2u_address = Adressen
 d2u_address_address = Adressen
 d2u_address_address_type = Adressart
 d2u_address_address_types = Adressarten
@@ -44,7 +44,7 @@ d2u_address_settings_analytics_emailevent_action = Name Eventaktion
 d2u_address_settings_analytics_emailevent_activate = Beim Klick auf eine E-Mailadresse ein Analytics Event senden
 d2u_address_settings_analytics_emailevent_category = Name Eventkategorie
 
-d2u_address_rights = D2U Adressen Addon
-d2u_address_rights_edit_data = D2U Adressen Addon: Editierrechte für Daten und sprachübergreifende Inhalte
-d2u_address_rights_edit_lang = D2U Adressen Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)
-d2u_address_rights_settings = D2U Adressen Addon: Einstellungen
+d2u_address_rights = Adressen Addon
+d2u_address_rights_edit_data = Adressen Addon: Editierrechte für Daten und sprachübergreifende Inhalte
+d2u_address_rights_edit_lang = Adressen Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)
+d2u_address_rights_settings = Adressen Addon: Einstellungen

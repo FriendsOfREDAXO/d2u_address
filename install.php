@@ -91,24 +91,13 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Insert / update frontend translations
-if (!class_exists('d2u_address_lang_helper')) {
+if (!class_exists(TobiasKrais\D2UHelper\LangHelper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_address_lang_helper.php';
 }
-d2u_address_lang_helper::factory()->install();
+FriendsOfREDAXO\D2UAddress\LangHelper::factory()->install();
 
 // Update modules
-if (class_exists('D2UModuleManager')) {
-    $modules = [];
-    $modules[] = new D2UModule('20-1',
-        'D2U Adressen - Adressausgabe',
-        10);
-    $modules[] = new D2UModule('20-2',
-        'D2U Adressen - Kontaktbox',
-        5);
-    $modules[] = new D2UModule('20-3',
-        'D2U Adressen - Weltkarte',
-        1);
-    $d2u_module_manager = new D2UModuleManager($modules, '', 'd2u_address');
-    $d2u_module_manager->autoupdate();
-}
+include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\FriendsOfREDAXO\D2UAddress\Module::getModules(), '', 'd2u_address');
+$d2u_module_manager->autoupdate();

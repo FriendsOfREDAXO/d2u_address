@@ -1,6 +1,6 @@
 <?php
 
-namespace D2U_Address;
+namespace FriendsOfREDAXO\D2UAddress;
 
 use rex;
 use rex_sql;
@@ -168,3 +168,10 @@ class ZipCode
         return $result->hasError();
     }
 }
+
+namespace D2U_Address;
+
+/**
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use \FriendsOfREDAXO\D2UAddress\ZipCode instead.
+ */
+class ZipCode extends \FriendsOfREDAXO\D2UAddress\ZipCode {}

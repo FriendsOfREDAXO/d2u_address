@@ -17,7 +17,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $continent_id = $form['continent_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $continent) {
-            $continent = new D2U_Address\Continent($continent_id, $rex_clang->getId());
+            $continent = new FriendsOfREDAXO\D2UAddress\Continent($continent_id, $rex_clang->getId());
             $continent->continent_id = $continent_id; // Ensure correct ID in case first language has no object
             $continent->country_ids = $form['country_ids'] ?? [];
         } else {
@@ -57,7 +57,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $continent_id = $form['continent_id'];
     }
-    $continent = new D2U_Address\Continent($continent_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $continent = new FriendsOfREDAXO\D2UAddress\Continent($continent_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $continent->continent_id = $continent_id; // Ensure correct ID in case language has no object
 
     // Delete
@@ -76,7 +76,7 @@ if ('edit' === $func || 'add' === $func) {
 				<input type="hidden" name="form[continent_id]" value="<?= $entry_id ?>">
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $continent = new D2U_Address\Continent($entry_id, $rex_clang->getId());
+                        $continent = new FriendsOfREDAXO\D2UAddress\Continent($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -93,7 +93,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$continent->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$continent->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -111,7 +111,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $continent->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $continent->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -124,18 +124,18 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $continent = new D2U_Address\Continent($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $continent = new FriendsOfREDAXO\D2UAddress\Continent($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
                                 $readonly = false;
                             }
 
                             $options_country_ids = [];
-                            $countries = D2U_Address\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
+                            $countries = FriendsOfREDAXO\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             foreach ($countries as $country) {
                                 $options_country_ids[$country->country_id] = $country->name;
                             }
-                            d2u_addon_backend_helper::form_select('d2u_address_countries', 'form[country_ids][]', $options_country_ids, $continent->country_ids, 15, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_countries', 'form[country_ids][]', $options_country_ids, $continent->country_ids, 15, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -158,8 +158,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

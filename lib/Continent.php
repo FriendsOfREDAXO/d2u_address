@@ -1,6 +1,6 @@
 <?php
 
-namespace D2U_Address;
+namespace FriendsOfREDAXO\D2UAddress;
 
 use rex;
 use rex_clang;
@@ -13,7 +13,7 @@ use function is_array;
  * @api
  * Data of country.
  */
-class Continent implements \D2U_Helper\ITranslationHelper
+class Continent implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int ID */
     public int $continent_id = 0;
@@ -183,4 +183,13 @@ class Continent implements \D2U_Helper\ITranslationHelper
 
         return $error;
     }
+}
+
+namespace D2U_Address;
+
+/**
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfREDAXO\D2UAddress\Continent instead.
+ */
+class Continent extends \FriendsOfREDAXO\D2UAddress\Continent {
+
 }

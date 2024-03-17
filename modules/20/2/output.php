@@ -10,7 +10,7 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
 $adress_id = (int) 'REX_VALUE[2]';
-$address = new D2U_Address\Address($adress_id, rex_clang::getCurrentId());
+$address = new FriendsOfREDAXO\D2UAddress\Address($adress_id, rex_clang::getCurrentId());
 
 echo '<div class="col-12 col-sm-'. $cols_sm .' col-md-'. $cols_md .' col-lg-'. $cols_lg . $offset_lg .'" abstand>';
 ?>

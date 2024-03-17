@@ -1,5 +1,5 @@
 <?php
-$address_types = \D2U_Address\AddressType::getAll(rex_clang::getCurrentId());
+$address_types = \FriendsOfREDAXO\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
 
 if (count($address_types) > 0) {
 ?>
@@ -30,7 +30,7 @@ if (count($address_types) > 0) {
 	<div class="col-xs-4">Standardkontakt für Option "weitere Länder"</div>
 	<div class="col-xs-8">
 		<?php
-            $addresses = \D2U_Address\Address::getAll(rex_clang::getCurrentId());
+            $addresses = \FriendsOfREDAXO\D2UAddress\Address::getAll(rex_clang::getCurrentId());
             echo '<select name="REX_INPUT_VALUE[4]" class="form-control">';
             echo '<option value="0">Adressen des Standardlandes aus den Einstellungen anzeigen</option>';
             if (count($addresses) > 0) {
@@ -63,6 +63,7 @@ if (count($address_types) > 0) {
                         ->orderBy('title')
                         ->findValues('title', 'id');
                 } else {
+                    /** @deprecated will be removed in version 2.0.0 */
                     // Geolocation 1.x
                     $mapsets = \Geolocation\mapset::query() /** @phpstan-ignore-line */
                         ->orderBy('title')
