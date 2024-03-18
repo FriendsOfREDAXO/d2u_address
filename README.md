@@ -13,3 +13,7 @@ Nach der Installation des Addons erleichtert die Einhaltung folgender Schritte d
 5. Adressen eingeben.
 6. Optional PLZ Bereiche eingeben, für die eine Adresse / Kontakt zuständig ist.
 7. Optional Beispielmodule eingeben.
+
+## Autor und Projektleitung
+
+Dieses Addon wurde von Tobias Krais (<https://github.com/TobiasKrais>) an FriendsOfREDAXO übergeben und nach wie vor betreut.
