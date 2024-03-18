@@ -1,5 +1,5 @@
 <h2>Support</h2>
-<p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
+<p>Fehlermeldungen bitte im <a href="https://github.com/FriendsOfREDAXO/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 <fieldset style='padding: 1em; border: 1px solid #dfe3e9;'>
 	<p style="margin-bottom: 0.5em;">Sag einfach Danke und unterstütze die Weiterentwicklung durch deine Spende:</p>
 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
@@ -11,6 +11,10 @@
 </fieldset>
 
 <h2>Changelog</h2>
+<p>1.5.1-DEV:</p>
+<ul>
+	<li>Fix bug in install and uninstall file.</li>
+</ul>
 <p>1.5.0:</p>
 <ul>
 	<li>README hinzugefügt.</li>
