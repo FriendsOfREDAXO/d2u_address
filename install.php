@@ -91,9 +91,9 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Insert / update frontend translations
-if (!class_exists(TobiasKrais\D2UHelper\LangHelper::class)) {
+if (!class_exists(FriendsOfREDAXO\D2UAddress\LangHelper::class)) {
     // Load class in case addon is deactivated
-    require_once 'lib/d2u_address_lang_helper.php';
+    require_once 'lib/LangHelper.php';
 }
 FriendsOfREDAXO\D2UAddress\LangHelper::factory()->install();
 
