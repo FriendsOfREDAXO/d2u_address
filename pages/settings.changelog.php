@@ -11,7 +11,7 @@
 </fieldset>
 
 <h2>Changelog</h2>
-<p>1.5.0-DEV:</p>
+<p>1.5.0:</p>
 <ul>
 	<li>README hinzugefügt.</li>
 	<li>Vorbereitung auf R6: Folgende Klassen werden ab Version 2 dieses Addons umbenannt. Schon jetzt stehen die neuen Klassen für die Übergangszeit zur Verfügung:

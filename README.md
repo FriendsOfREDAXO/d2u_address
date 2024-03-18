@@ -1,6 +1,6 @@
 # Redaxo 5 Adressverwaltung
 
-Redaxo 5 Adressen Addon zur Verwaltung von Vertiebs-, Servicekontakten und Standorten. Die Adressarten können frei gewählt werden. Demoseite der Beispielmodule: <https://test.design-to-use.de/de/addontests/d2u-adressen/>
+Redaxo 5 Adressen Addon zur Verwaltung von Unternehmenskontakten. Die Adressarten können frei gewählt werden, z.B. Vertrieb, Service oder Standorte. Außerdem können Kontinente, Ländern und Postleitzahlengebiete definiert werden Demoseite der Beispielmodule: <https://test.design-to-use.de/de/addontests/d2u-adressen/>
 
 ## Installation und Einrichtung
 

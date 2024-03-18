@@ -1,7 +1,7 @@
 package: d2u_address
 version: '1.5.0'
-author: Tobias Krais
-supportpage: http://github.com/tobiaskrais/d2u_address
+author: Friends Of REDAXO
+supportpage: http://github.com/FriendsOfREDAXO/d2u_address
 
 page:
     title: 'translate:d2u_address'
