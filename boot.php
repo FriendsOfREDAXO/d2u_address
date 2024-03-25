@@ -8,9 +8,9 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 }
 
 if (\rex::isBackend()) {
-    rex_extension::register('CLANG_DELETED', 'rex_d2u_address_clang_deleted');
-    rex_extension::register('D2U_HELPER_TRANSLATION_LIST', 'rex_d2u_address_translation_list');
-    rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_address_media_is_in_use');
+    rex_extension::register('CLANG_DELETED', rex_d2u_address_clang_deleted(...));
+    rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_address_translation_list(...));
+    rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_address_media_is_in_use(...));
 }
 
 /**
@@ -73,7 +73,7 @@ function rex_d2u_address_media_is_in_use(rex_extension_point $ep)
 /**
  * Addon translation list.
  * @param rex_extension_point<array<string>> $ep Redaxo extension point
- * @return array<array<string, array<int, array<string, string>>|string>|string> Addon translation list
+ * @return array<array<string,array<int,array<string,string>>|string>|string> Addon translation list
  */
 function rex_d2u_address_translation_list(rex_extension_point $ep) {
     $params = $ep->getParams();
