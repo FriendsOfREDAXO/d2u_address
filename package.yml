@@ -27,7 +27,7 @@ requires:
     packages:
         d2u_helper: '>=1.14.0'
         sprog: '>=1.0.0'
-    php: '>=7.4'
+    php: '>=8.0'
         
 installer_ignore:
     - .github
