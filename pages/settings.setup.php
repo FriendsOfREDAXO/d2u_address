@@ -2,7 +2,7 @@
 /*
  * Modules
  */
-$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(FriendsOfREDAXO\D2UAddress\Module::getModules(), 'modules/', 'd2u_address');
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(FriendsOfRedaxo\D2UAddress\Module::getModules(), 'modules/', 'd2u_address');
 
 // \TobiasKrais\D2UHelper\ModuleManager actions
 $d2u_module_id = rex_request('d2u_module_id', 'string');

@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsOfREDAXO\D2UAddress;
+namespace FriendsOfRedaxo\D2UAddress;
 
 use rex;
 use rex_clang;
@@ -188,8 +188,8 @@ class Continent implements \TobiasKrais\D2UHelper\ITranslationHelper
 namespace D2U_Address;
 
 /**
- * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfREDAXO\D2UAddress\Continent instead.
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfRedaxo\D2UAddress\Continent instead.
  */
-class Continent extends \FriendsOfREDAXO\D2UAddress\Continent {
+class Continent extends \FriendsOfRedaxo\D2UAddress\Continent {
 
 }

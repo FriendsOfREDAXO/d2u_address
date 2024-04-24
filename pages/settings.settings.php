@@ -12,7 +12,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
         echo rex_view::success(rex_i18n::msg('form_saved'));
 
         // Install / update language replacements
-        FriendsOfREDAXO\D2UAddress\LangHelper::factory()->install();
+        FriendsOfRedaxo\D2UAddress\LangHelper::factory()->install();
     } else {
         echo rex_view::error(rex_i18n::msg('form_save_error'));
     }
@@ -27,7 +27,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $country_options = [];
-                        $countries = FriendsOfREDAXO\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                        $countries = FriendsOfRedaxo\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                         foreach ($countries as $country) {
                             $country_options[$country->country_id] = $country->name;
                         }

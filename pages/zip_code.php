@@ -12,10 +12,10 @@ if ('' !== $message) {
 if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply')) {
     $form = rex_post('form', 'array', []);
 
-    $zipcode = new FriendsOfREDAXO\D2UAddress\ZipCode($form['zipcode_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+    $zipcode = new FriendsOfRedaxo\D2UAddress\ZipCode($form['zipcode_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
     $zipcode->range_from = $form['range_from'];
     $zipcode->range_to = $form['range_to'];
-    $zipcode->country = new FriendsOfREDAXO\D2UAddress\Country($form['country_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+    $zipcode->country = new FriendsOfRedaxo\D2UAddress\Country($form['country_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
     $zipcode->address_ids = $form['address_ids'] ?? [];
 
     // message output
@@ -39,7 +39,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $zipcode_id = $form['zipcode_id'];
     }
-    $zipcode = new FriendsOfREDAXO\D2UAddress\ZipCode($zipcode_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $zipcode = new FriendsOfRedaxo\D2UAddress\ZipCode($zipcode_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $zipcode->delete();
 
     $func = '';
@@ -58,7 +58,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $zipcode = new FriendsOfREDAXO\D2UAddress\ZipCode($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $zipcode = new FriendsOfRedaxo\D2UAddress\ZipCode($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
                                 $readonly = false;
@@ -66,14 +66,14 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 
                             \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_range_from', 'form[range_from]', $zipcode->range_from, true, $readonly, 'number');
                             \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_range_to', 'form[range_to]', $zipcode->range_to, true, $readonly, 'number');
-                            $countries = FriendsOfREDAXO\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
+                            $countries = FriendsOfRedaxo\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             $options_countries = [];
                             foreach ($countries as $country) {
                                 $options_countries[$country->country_id] = $country->name;
                             }
                             \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$zipcode->country->country_id], 1, false, $readonly);
                             $options_address_ids = [];
-                            $addresses = FriendsOfREDAXO\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
+                            $addresses = FriendsOfRedaxo\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             foreach ($addresses as $address) {
                                 $options_address_ids[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }

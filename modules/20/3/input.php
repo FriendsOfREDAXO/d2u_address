@@ -1,5 +1,5 @@
 <?php
-$address_types = \FriendsOfREDAXO\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
+$address_types = \FriendsOfRedaxo\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
 
 if (count($address_types) > 0) {
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsOfREDAXO\D2UAddress;
+namespace FriendsOfRedaxo\D2UAddress;
 
 use rex;
 use rex_sql;
@@ -390,8 +390,8 @@ class Address
 namespace D2U_Address;
 
 /**
- * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfREDAXO\D2UAddress\Address instead.
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfRedaxo\D2UAddress\Address instead.
  */
-class Address extends \FriendsOfREDAXO\D2UAddress\Address {
+class Address extends \FriendsOfRedaxo\D2UAddress\Address {
 
 }

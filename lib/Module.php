@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsOfREDAXO\D2UAddress;
+namespace FriendsOfRedaxo\D2UAddress;
 /**
  * Class managing modules published by www.design-to-use.de.
  *

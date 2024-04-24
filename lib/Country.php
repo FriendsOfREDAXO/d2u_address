@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsOfREDAXO\D2UAddress;
+namespace FriendsOfRedaxo\D2UAddress;
 
 use rex;
 use rex_clang;
@@ -346,8 +346,8 @@ class Country implements \TobiasKrais\D2UHelper\ITranslationHelper
 namespace D2U_Address;
 
 /**
- * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfREDAXO\D2UAddress\Country instead.
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use FriendsOfRedaxo\D2UAddress\Country instead.
  */
-class Country extends \FriendsOfREDAXO\D2UAddress\Country {
+class Country extends \FriendsOfRedaxo\D2UAddress\Country {
 
 }

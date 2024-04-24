@@ -1,6 +1,6 @@
 <?php
 
-namespace FriendsOfREDAXO\D2UAddress;
+namespace FriendsOfRedaxo\D2UAddress;
 
 use rex;
 use rex_sql;
@@ -172,6 +172,6 @@ class ZipCode
 namespace D2U_Address;
 
 /**
- * @deprecated since 1.5.0, to be removed in 2.0.0. Use \FriendsOfREDAXO\D2UAddress\ZipCode instead.
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Use \FriendsOfRedaxo\D2UAddress\ZipCode instead.
  */
-class ZipCode extends \FriendsOfREDAXO\D2UAddress\ZipCode {}
+class ZipCode extends \FriendsOfRedaxo\D2UAddress\ZipCode {}

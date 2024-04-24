@@ -25,7 +25,7 @@ function rex_d2u_address_clang_deleted(rex_extension_point $ep)
     $clang_id = $params['id'];
 
     // Delete
-    $countries = FriendsOfREDAXO\D2UAddress\Country::getAll($clang_id);
+    $countries = FriendsOfRedaxo\D2UAddress\Country::getAll($clang_id);
     foreach ($countries as $country) {
         $country->delete(false);
     }
@@ -35,7 +35,7 @@ function rex_d2u_address_clang_deleted(rex_extension_point $ep)
         rex_config::remove('d2u_address', 'lang_replacement_'. $clang_id);
     }
     // Delete language replacements
-    FriendsOfREDAXO\D2UAddress\LangHelper::factory()->uninstall($clang_id);
+    FriendsOfRedaxo\D2UAddress\LangHelper::factory()->uninstall($clang_id);
 
     return $warning;
 }
@@ -87,12 +87,12 @@ function rex_d2u_address_translation_list(rex_extension_point $ep) {
         'pages' => []
     ];
 
-    $continents = FriendsOfREDAXO\D2UAddress\Continent::getTranslationHelperObjects($target_clang_id, $filter_type);
+    $continents = FriendsOfRedaxo\D2UAddress\Continent::getTranslationHelperObjects($target_clang_id, $filter_type);
     if (count($continents) > 0) {
         $html_continents = '<ul>';
         foreach ($continents as $continent) {
             if ('' === $continent->name) {
-                $continent = new \FriendsOfREDAXO\D2UAddress\Continent($continent->continent_id, $source_clang_id);
+                $continent = new \FriendsOfRedaxo\D2UAddress\Continent($continent->continent_id, $source_clang_id);
             }
             $html_continents .= '<li><a href="'. rex_url::backendPage('d2u_address/continent', ['entry_id' => $continent->continent_id, 'func' => 'edit']) .'">'. $continent->name .'</a></li>';
         }
@@ -105,12 +105,12 @@ function rex_d2u_address_translation_list(rex_extension_point $ep) {
         ];
     }
 
-    $countries = FriendsOfREDAXO\D2UAddress\Country::getTranslationHelperObjects($target_clang_id, $filter_type);
+    $countries = FriendsOfRedaxo\D2UAddress\Country::getTranslationHelperObjects($target_clang_id, $filter_type);
     if (count($countries) > 0) {
         $html_countries = '<ul>';
         foreach ($countries as $country) {
             if ('' === $country->name) {
-                $country = new \FriendsOfREDAXO\D2UAddress\Country($country->country_id, $source_clang_id);
+                $country = new \FriendsOfRedaxo\D2UAddress\Country($country->country_id, $source_clang_id);
             }
             $html_countries .= '<li><a href="'. rex_url::backendPage('d2u_address/continent', ['entry_id' => $country->country_id, 'func' => 'edit']) .'">'. $country->name .'</a></li>';
         }

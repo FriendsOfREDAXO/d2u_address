@@ -1,5 +1,5 @@
 <?php
-$address_types = \FriendsOfREDAXO\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
+$address_types = \FriendsOfRedaxo\D2UAddress\AddressType::getAll(rex_clang::getCurrentId());
 
 if (count($address_types) > 0) {
 ?>
@@ -30,7 +30,7 @@ if (count($address_types) > 0) {
 	<div class="col-xs-4">Standardkontakt für Option "weitere Länder"</div>
 	<div class="col-xs-8">
 		<?php
-            $addresses = \FriendsOfREDAXO\D2UAddress\Address::getAll(rex_clang::getCurrentId());
+            $addresses = \FriendsOfRedaxo\D2UAddress\Address::getAll(rex_clang::getCurrentId());
             echo '<select name="REX_INPUT_VALUE[4]" class="form-control">';
             echo '<option value="0">Adressen des Standardlandes aus den Einstellungen anzeigen</option>';
             if (count($addresses) > 0) {

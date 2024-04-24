@@ -91,13 +91,13 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Insert / update frontend translations
-if (!class_exists(FriendsOfREDAXO\D2UAddress\LangHelper::class)) {
+if (!class_exists(FriendsOfRedaxo\D2UAddress\LangHelper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/LangHelper.php';
 }
-FriendsOfREDAXO\D2UAddress\LangHelper::factory()->install();
+FriendsOfRedaxo\D2UAddress\LangHelper::factory()->install();
 
 // Update modules
 include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
-$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\FriendsOfREDAXO\D2UAddress\Module::getModules(), '', 'd2u_address');
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\FriendsOfRedaxo\D2UAddress\Module::getModules(), '', 'd2u_address');
 $d2u_module_manager->autoupdate();

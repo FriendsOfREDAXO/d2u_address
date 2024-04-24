@@ -1,17 +1,17 @@
 <?php
 $address_type_id = intval("REX_VALUE[1]"); /** @phpstan-ignore-line */
-$address_type = new FriendsOfREDAXO\D2UAddress\AddressType($address_type_id, rex_clang::getCurrentId());
+$address_type = new FriendsOfRedaxo\D2UAddress\AddressType($address_type_id, rex_clang::getCurrentId());
 $show_fax = "REX_VALUE[2]" === 'true' ? true : false; /** @phpstan-ignore-line */
 $map_type = "REX_VALUE[3]" === '' ? 'google' : "REX_VALUE[3]"; // Backward compatibility /** @phpstan-ignore-line */
-$default_contact = intval("REX_VALUE[4]") > 0 ? new FriendsOfREDAXO\D2UAddress\Address(intval("REX_VALUE[4]"), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
+$default_contact = intval("REX_VALUE[4]") > 0 ? new FriendsOfRedaxo\D2UAddress\Address(intval("REX_VALUE[4]"), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
 
 // Get placeholder wildcard tags and other presets
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-$country = (int) rex_request('country_id', 'int') > 0 ? new FriendsOfREDAXO\D2UAddress\Country((int) rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
-$zip_code = (int) rex_request('zip_code', 'int') > 0 && $country instanceof FriendsOfREDAXO\D2UAddress\Country ? FriendsOfREDAXO\D2UAddress\ZipCode::get($country, (int) rex_request('zip_code', 'int')) : false; /** @phpstan-ignore-line */
+$country = (int) rex_request('country_id', 'int') > 0 ? new FriendsOfRedaxo\D2UAddress\Country((int) rex_request('country_id', 'int'), rex_clang::getCurrentId()) : false; /** @phpstan-ignore-line */
+$zip_code = (int) rex_request('zip_code', 'int') > 0 && $country instanceof FriendsOfRedaxo\D2UAddress\Country ? FriendsOfRedaxo\D2UAddress\ZipCode::get($country, (int) rex_request('zip_code', 'int')) : false; /** @phpstan-ignore-line */
 
 $d2u_address = rex_addon::get('d2u_address');
 $default_country_id = $d2u_address->hasConfig('default_country_id') ? (int) $d2u_address->getConfig('default_country_id') : 0;
@@ -21,10 +21,10 @@ $maps_zoom = $address_type->maps_zoom;
 // Form selections
 $addresses = [];
 if($address_type->show_country_select) {
-	if(rex_request('country_id', 'int') === -1 && $default_contact instanceof FriendsOfREDAXO\D2UAddress\Address && $default_contact->address_id > 0) { /** @phpstan-ignore-line */
+	if(rex_request('country_id', 'int') === -1 && $default_contact instanceof FriendsOfRedaxo\D2UAddress\Address && $default_contact->address_id > 0) { /** @phpstan-ignore-line */
 		$addresses[] = $default_contact;
 	}
-	else if($zip_code instanceof FriendsOfREDAXO\D2UAddress\ZipCode) {
+	else if($zip_code instanceof FriendsOfRedaxo\D2UAddress\ZipCode) {
 		$addresses = $zip_code->getAdresses(true);
 	}
 	else if($country !== false) {
@@ -33,9 +33,9 @@ if($address_type->show_country_select) {
 	else if(rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string') !== '') {
 		$accepted_lang = explode(";", rex_request::server('HTTP_ACCEPT_LANGUAGE', 'string'));
 		$accepted_lang = explode(",", $accepted_lang[0]);
-		$countries = FriendsOfREDAXO\D2UAddress\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
+		$countries = FriendsOfRedaxo\D2UAddress\Country::getByLangCode($accepted_lang[0], rex_clang::getCurrentId());
 		if(count($countries) > 0) {
-			$country = new FriendsOfREDAXO\D2UAddress\Country($countries[0]->country_id, rex_clang::getCurrentId());
+			$country = new FriendsOfRedaxo\D2UAddress\Country($countries[0]->country_id, rex_clang::getCurrentId());
 			foreach ($countries as $cur_country) {
 				// show all addresses with this ISO lang code
 				$countries_addresses = $cur_country->getAddresses($address_type, true);
@@ -55,7 +55,7 @@ else {
 
 // Fallback if no address was found, there should be at least one address
 if(count($addresses) === 0) {
-	$country = new FriendsOfREDAXO\D2UAddress\Country($default_country_id, rex_clang::getCurrentId());
+	$country = new FriendsOfRedaxo\D2UAddress\Country($default_country_id, rex_clang::getCurrentId());
 	$addresses = $country->getAddresses($address_type, true);
 	$maps_zoom = $country->maps_zoom;
 }
@@ -76,7 +76,7 @@ if($address_type->show_country_select) {
 	$countries = $address_type->getCountries();
 	foreach($countries as $cur_country) {
 		$selected = "";
-		if(rex_request('country_id', 'int') > -1 && (($country instanceof FriendsOfREDAXO\D2UAddress\Country && $country->country_id === $cur_country->country_id) || ($country === false && $cur_country->country_id === $default_country_id))) {
+		if(rex_request('country_id', 'int') > -1 && (($country instanceof FriendsOfRedaxo\D2UAddress\Country && $country->country_id === $cur_country->country_id) || ($country === false && $cur_country->country_id === $default_country_id))) {
 			$selected = ' selected="selected"';
 		}
 		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
@@ -198,7 +198,7 @@ if(count($addresses) > 0) {
 				if($address->contact_name !== "") {
 					$infotext .= $address->contact_name .'<br />';			
 				}
-				$infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+				$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
 				if($address->phone !== '') {
 					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
 				}
@@ -353,7 +353,7 @@ if(count($addresses) > 0) {
 						if($address->contact_name !== "") {
 							$infotext .= $address->contact_name .'<br />';			
 						}
-						$infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+						$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
 						if($address->phone !== '') {
 							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
 						}
@@ -503,7 +503,7 @@ if(count($addresses) > 0) {
 					if($address->contact_name !== '') {
 						$infotext .= $address->contact_name .'<br />';			
 					}
-					$infotext .= ($address->country instanceof FriendsOfREDAXO\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
+					$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : ''). $address->zip_code .' '. $address->city;
 					if($address->phone !== '') {
 						$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
 					}

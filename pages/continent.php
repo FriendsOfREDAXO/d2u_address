@@ -17,7 +17,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $continent_id = $form['continent_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $continent) {
-            $continent = new FriendsOfREDAXO\D2UAddress\Continent($continent_id, $rex_clang->getId());
+            $continent = new FriendsOfRedaxo\D2UAddress\Continent($continent_id, $rex_clang->getId());
             $continent->continent_id = $continent_id; // Ensure correct ID in case first language has no object
             $continent->country_ids = $form['country_ids'] ?? [];
         } else {
@@ -57,7 +57,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $continent_id = $form['continent_id'];
     }
-    $continent = new FriendsOfREDAXO\D2UAddress\Continent($continent_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $continent = new FriendsOfRedaxo\D2UAddress\Continent($continent_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $continent->continent_id = $continent_id; // Ensure correct ID in case language has no object
 
     // Delete
@@ -76,7 +76,7 @@ if ('edit' === $func || 'add' === $func) {
 				<input type="hidden" name="form[continent_id]" value="<?= $entry_id ?>">
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $continent = new FriendsOfREDAXO\D2UAddress\Continent($entry_id, $rex_clang->getId());
+                        $continent = new FriendsOfRedaxo\D2UAddress\Continent($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -124,14 +124,14 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $continent = new FriendsOfREDAXO\D2UAddress\Continent($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $continent = new FriendsOfRedaxo\D2UAddress\Continent($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_address[edit_data]'))) {
                                 $readonly = false;
                             }
 
                             $options_country_ids = [];
-                            $countries = FriendsOfREDAXO\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
+                            $countries = FriendsOfRedaxo\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             foreach ($countries as $country) {
                                 $options_country_ids[$country->country_id] = $country->name;
                             }
