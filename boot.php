@@ -77,9 +77,9 @@ function rex_d2u_address_media_is_in_use(rex_extension_point $ep)
  */
 function rex_d2u_address_translation_list(rex_extension_point $ep) {
     $params = $ep->getParams();
-    $source_clang_id = $params['source_clang_id'];
-    $target_clang_id = $params['target_clang_id'];
-    $filter_type = $params['filter_type'];
+    $source_clang_id = (int) $params['source_clang_id'];
+    $target_clang_id = (int) $params['target_clang_id'];
+    $filter_type = (string) $params['filter_type'];
 
     $list = $ep->getSubject();
     $list_entry = [
