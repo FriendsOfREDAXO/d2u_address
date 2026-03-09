@@ -20,8 +20,13 @@ page:
             subpages:
                 settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, perm: 'd2u_address[settings]' }
                 setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, perm: 'd2u_address[settings]' }
-                help: { title: 'translate:package_hhelp', icon: rex-icon rex-icon-help }
-                changelog: { title: 'translate:d2u_helper_help_chapter_changelog', icon: rex-icon fa-files-o }
+        help:
+            icon: rex-icon rex-icon-help
+            title: ''
+            itemClass: pull-right
+            subpages:
+                readme: { title: 'README' }
+                changelog: { title: 'translate:d2u_helper_help_chapter_changelog' }
 
 requires:
     packages:

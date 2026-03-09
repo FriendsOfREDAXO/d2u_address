@@ -1,14 +1,5 @@
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/FriendsOfRedaxo/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
-<fieldset style='padding: 1em; border: 1px solid #dfe3e9;'>
-	<p style="margin-bottom: 0.5em;">Sag einfach Danke und unterstütze die Weiterentwicklung durch deine Spende:</p>
-	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-		<input type="hidden" name="cmd" value="_s-xclick" />
-		<input type="hidden" name="hosted_button_id" value="CB7B6QTLM76N6" />
-		<input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
-		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
-	</form>
-</fieldset>
 
 <h2>Changelog</h2>
 <p>1.5.1-DEV:</p>
