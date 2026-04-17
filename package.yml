@@ -1,5 +1,5 @@
 package: d2u_address
-version: '1.5.1'
+version: '1.6.0'
 author: Friends Of REDAXO
 supportpage: http://github.com/FriendsOfREDAXO/d2u_address
 
@@ -30,7 +30,7 @@ page:
 
 requires:
     packages:
-        d2u_helper: '>=1.14.0'
+        d2u_helper: '>=2.1.4'
         sprog: '>=1.0.0'
     php: '>=8.0'
         
