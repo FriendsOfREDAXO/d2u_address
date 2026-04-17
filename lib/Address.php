@@ -201,10 +201,9 @@ class Address
 
         $addresses = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $addresses[(int) $result->getValue('priority')] = new self((int) $result->getValue('address_id'), $clang_id);
+            $addresses[] = new self((int) $result->getValue('address_id'), $clang_id);
             $result->next();
         }
-        ksort($addresses);
         return $addresses;
     }
 
@@ -354,8 +353,8 @@ class Address
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT address_id, priority FROM '. rex::getTablePrefix() .'d2u_address_address '
-            .'WHERE address_id <> '. $this->address_id .' ORDER BY priority';
+        $query = 'SELECT address_id FROM '. rex::getTablePrefix() .'d2u_address_address '
+            .'WHERE address_id <> '. $this->address_id .' ORDER BY priority, address_id';
         $result = rex_sql::factory();
         $result->setQuery($query);
 
@@ -371,7 +370,7 @@ class Address
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[$result->getValue('priority')] = $result->getValue('address_id');
+            $objects[] = (int) $result->getValue('address_id');
             $result->next();
         }
         array_splice($objects, $this->priority - 1, 0, [$this->address_id]);

@@ -113,11 +113,10 @@ class AddressType
 
         $addresses = [];
         for ($i = 0; $i < $num_rows; ++$i) {
-            $addresses[(int) $result->getValue('priority')] = new Address((int) $result->getValue('address_id'), $this->clang_id);
+            $addresses[] = new Address((int) $result->getValue('address_id'), $this->clang_id);
             $result->next();
         }
 
-        ksort($addresses);
         return $addresses;
     }
 
