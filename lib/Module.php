@@ -16,14 +16,23 @@ class Module
     {
         $modules = [];
         $modules[] = new \TobiasKrais\D2UHelper\Module('20-1',
-            'D2U Adressen - Adressausgabe',
+            'D2U Adressen - Adressausgabe (BS4, deprecated)',
             11);
         $modules[] = new \TobiasKrais\D2UHelper\Module('20-2',
-            'D2U Adressen - Kontaktbox',
+            'D2U Adressen - Kontaktbox (BS4, deprecated)',
             6);
         $modules[] = new \TobiasKrais\D2UHelper\Module('20-3',
-            'D2U Adressen - Weltkarte',
+            'D2U Adressen - Weltkarte (BS4, deprecated)',
             2);
+        $modules[] = new \TobiasKrais\D2UHelper\Module('20-4',
+            'D2U Adressen - Adressausgabe (BS5)',
+            1);
+        $modules[] = new \TobiasKrais\D2UHelper\Module('20-5',
+            'D2U Adressen - Kontaktbox (BS5)',
+            1);
+        $modules[] = new \TobiasKrais\D2UHelper\Module('20-6',
+            'D2U Adressen - Weltkarte (BS5)',
+            1);
         return $modules;
     }
 }

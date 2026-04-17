@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -83,17 +85,17 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $address_type->name, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, true, $readonly, 'number');
+                            BackendHelper::form_input('d2u_helper_name', 'form[name]', $address_type->name, true, $readonly);
+                            BackendHelper::form_checkbox('d2u_address_show_address_details', 'form[show_address_details]', 'true', $address_type->show_address_details, $readonly);
+                            BackendHelper::form_checkbox('d2u_address_show_country_select', 'form[show_country_select]', 'true', $address_type->show_country_select, $readonly);
+                            BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $address_type->maps_zoom, true, $readonly, 'number');
                             $addresses = FriendsOfRedaxo\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             $options_address_id = [];
                             foreach ($addresses as $address) {
                                 $options_address_id[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            BackendHelper::form_select('d2u_address_default_address', 'form[default_address_id]', $options_address_id, [$address_type->default_address_id], 1, false, $readonly);
+                            BackendHelper::form_linkfield('d2u_helper_article_id', '1', $address_type->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                         ?>
 					</div>
 				</fieldset>
@@ -124,15 +126,14 @@ if ('edit' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-//		print \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+    //		print BackendHelper::getJS();
 }
 
 if ('' === $func) {
     $query = 'SELECT address_type_id, name '
-        . 'FROM '. \rex::getTablePrefix() .'d2u_address_types '
-        . 'ORDER BY name';
-    $list = rex_list::factory($query, 1000);
+        . 'FROM '. \rex::getTablePrefix() .'d2u_address_types ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -143,9 +144,11 @@ if ('' === $func) {
 
     $list->setColumnLabel('address_type_id', rex_i18n::msg('id'));
     $list->setColumnLayout('address_type_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('address_type_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###address_type_id###']);
+    $list->setColumnSortable('name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
