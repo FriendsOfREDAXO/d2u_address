@@ -2,11 +2,11 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/FriendsOfRedaxo/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.6.0-DEV:</p>
+<p>1.6.0:</p>
 <ul>
 	<li>Neue Module 20-4 bis 20-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>
 	<li>Module 20-1 bis 20-3 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im nächsten Major Release entfernt.</li>
-	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
+	<li>Benötigt d2u_helper &gt;= 2.1.3.</li>
 	<li>Bugfix: Prioritäten werden bei Adressen und Adresstypen nach dem Speichern wieder stabil neu durchnummeriert, auch wenn in der Datenbank bereits doppelte Werte vorhanden sind.</li>
 	<li>Backend-Listen sortierbar gemacht und Standardsortierungen von SQL-Queries auf <code>rex_list</code>-<code>defaultSort</code> umgestellt.</li>
 	<li>Die Priorität von Adressen kann in der Backend-Liste jetzt direkt per Hoch-/Runter-Buttons geändert werden.</li>
