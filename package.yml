@@ -14,7 +14,7 @@ page:
         continent: { title: 'translate:d2u_address_continents', icon: rex-icon fa-globe }
         zip_code: { title: 'translate:d2u_address_zip_codes', icon: rex-icon fa-road, perm: 'd2u_address[edit_data]' }
         settings:
-            icon: rex-icon fa-navicon
+            icon: rex-icon rex-icon-system
             title: ''
             itemClass: pull-right
             subpages:
