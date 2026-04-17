@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -111,7 +113,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$country->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$country->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -129,7 +131,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $country->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $country->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -148,15 +150,15 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_iso_lang_codes_comma', 'form[iso_lang_codes]', implode(',', $country->iso_lang_codes), false, $readonly, 'text');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $country->maps_zoom, false, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
+                            BackendHelper::form_input('d2u_address_iso_lang_codes_comma', 'form[iso_lang_codes]', implode(',', $country->iso_lang_codes), false, $readonly, 'text');
+                            BackendHelper::form_input('d2u_address_maps_zoom', 'form[maps_zoom]', $country->maps_zoom, false, $readonly, 'number');
+                            BackendHelper::form_infotext('d2u_address_hint_address_select', 'hint_address_select');
                             $options_address_ids = [];
                             $addresses = FriendsOfRedaxo\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             foreach ($addresses as $address) {
                                 $options_address_ids[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, true, $readonly);
+                            BackendHelper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $country->address_ids, 15, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -179,17 +181,16 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {
     $query = 'SELECT countries.country_id, name, iso_lang_codes '
         . 'FROM '. \rex::getTablePrefix() .'d2u_address_countries AS countries '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS lang '
-            . 'ON countries.country_id = lang.country_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name ASC';
-    $list = rex_list::factory($query, 1000);
+            . 'ON countries.country_id = lang.country_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -203,11 +204,14 @@ if ('' === $func) {
 
     $list->setColumnLabel('country_id', rex_i18n::msg('id'));
     $list->setColumnLayout('country_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('country_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###country_id###']);
+    $list->setColumnSortable('name');
 
     $list->setColumnLabel('iso_lang_codes', rex_i18n::msg('d2u_address_iso_lang_codes'));
+    $list->setColumnSortable('iso_lang_codes');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

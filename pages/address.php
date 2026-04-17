@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -97,6 +99,20 @@ elseif ('changestatus' === $func) {
     header('Location: '. rex_url::currentBackendPage());
     exit;
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $address = new FriendsOfRedaxo\D2UAddress\Address($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+
+    if ('priority_down' === $func) {
+        ++$address->priority;
+        $address->save();
+    } elseif ($address->priority > 1) {
+        --$address->priority;
+        $address->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+}
 
 // Eingabeformular
 if ('edit' === $func || 'clone' === $func || 'add' === $func) {
@@ -116,19 +132,19 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_company', 'form[company]', $address->company, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_company_appendix', 'form[company_appendix]', $address->company_appendix, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_contact_name', 'form[contact_name]', $address->contact_name, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_street', 'form[street]', $address->street, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_additional_address', 'form[additional_address]', $address->additional_address, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_zip_codes', 'form[zip_code]', $address->zip_code, false, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_city', 'form[city]', $address->city, true, $readonly);
+                            BackendHelper::form_input('d2u_address_company', 'form[company]', $address->company, true, $readonly);
+                            BackendHelper::form_input('d2u_address_company_appendix', 'form[company_appendix]', $address->company_appendix, false, $readonly);
+                            BackendHelper::form_input('d2u_address_contact_name', 'form[contact_name]', $address->contact_name, false, $readonly);
+                            BackendHelper::form_input('d2u_address_street', 'form[street]', $address->street, true, $readonly);
+                            BackendHelper::form_input('d2u_address_additional_address', 'form[additional_address]', $address->additional_address, false, $readonly);
+                            BackendHelper::form_input('d2u_address_zip_codes', 'form[zip_code]', $address->zip_code, false, $readonly, 'number');
+                            BackendHelper::form_input('d2u_address_city', 'form[city]', $address->city, true, $readonly);
                             $countries = FriendsOfRedaxo\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             $options_countries = [];
                             foreach ($countries as $country) {
                                 $options_countries[$country->country_id] = $country->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->country_id : ''], 1, false, $readonly);
+                            BackendHelper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->country_id : ''], 1, false, $readonly);
 
                             $d2u_helper = rex_addon::get('d2u_helper');
                             $api_key = '';
@@ -171,27 +187,27 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     echo '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
                                 }
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_latitude', 'form[latitude]', (string) $address->latitude, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_longitude', 'form[longitude]', (string) $address->longitude, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_email', 'form[email]', $address->email, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_url', 'form[url]', $address->url, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_phone', 'form[phone]', $address->phone, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_mobile', 'form[mobile]', $address->mobile, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_fax', 'form[fax]', $address->fax, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $address->picture, $readonly);
+                            BackendHelper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
+                            BackendHelper::form_input('d2u_address_latitude', 'form[latitude]', (string) $address->latitude, true, $readonly);
+                            BackendHelper::form_input('d2u_address_longitude', 'form[longitude]', (string) $address->longitude, true, $readonly);
+                            BackendHelper::form_input('d2u_address_email', 'form[email]', $address->email, false, $readonly);
+                            BackendHelper::form_input('d2u_address_url', 'form[url]', $address->url, false, $readonly);
+                            BackendHelper::form_input('d2u_address_phone', 'form[phone]', $address->phone, false, $readonly);
+                            BackendHelper::form_input('d2u_address_mobile', 'form[mobile]', $address->mobile, false, $readonly);
+                            BackendHelper::form_input('d2u_address_fax', 'form[fax]', $address->fax, false, $readonly);
+                            BackendHelper::form_mediafield('d2u_helper_picture', '1', $address->picture, $readonly);
                             $adress_types = FriendsOfRedaxo\D2UAddress\AddressType::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             $options_address_types = [];
                             foreach ($adress_types as $adress_type) {
                                 $options_address_types[$adress_type->address_type_id] = $adress_type->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_priority', 'form[priority]', $address->priority, true, $readonly, 'number');
+                            BackendHelper::form_select('d2u_address_address_types', 'form[address_type_ids][]', $options_address_types, $address->address_type_ids, 4, true, $readonly);
+                            BackendHelper::form_linkfield('d2u_helper_article_id', '1', $address->article_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            BackendHelper::form_input('d2u_address_priority', 'form[priority]', $address->priority, true, $readonly, 'number');
                             $options_status = ['online' => rex_i18n::msg('clang_online'),
                                 'offline' => rex_i18n::msg('clang_offline')];
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $address->online_status, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_countries_assigned', 'form[country_ids][]', $options_countries, $address->country_ids, 15, true, $readonly);
+                            BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $address->online_status, $readonly);
+                            BackendHelper::form_select('d2u_address_countries_assigned', 'form[country_ids][]', $options_countries, $address->country_ids, 15, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -222,15 +238,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-//		print \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+    //		print BackendHelper::getJS();
 }
 
 if ('' === $func) {
-    $query = 'SELECT address_id, company, contact_name, city, address_type_ids, priority, online_status '
-        . 'FROM '. \rex::getTablePrefix() .'d2u_address_address '
-        . 'ORDER BY priority';
-    $list = rex_list::factory($query, 1000);
+    $query = 'SELECT address_id, company, contact_name, city, address_type_ids, priority, online_status, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_address_address) AS max_priority '
+        . 'FROM '. \rex::getTablePrefix() .'d2u_address_address ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['priority' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -241,13 +257,17 @@ if ('' === $func) {
 
     $list->setColumnLabel('address_id', rex_i18n::msg('id'));
     $list->setColumnLayout('address_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('address_id');
 
     $list->setColumnLabel('company', rex_i18n::msg('d2u_address_company'));
     $list->setColumnParams('company', ['func' => 'edit', 'entry_id' => '###address_id###']);
+    $list->setColumnSortable('company');
 
     $list->setColumnLabel('contact_name', rex_i18n::msg('d2u_address_contact_name'));
+    $list->setColumnSortable('contact_name');
 
     $list->setColumnLabel('city', rex_i18n::msg('d2u_address_city'));
+    $list->setColumnSortable('city');
 
     $list->setColumnLabel('address_type_ids', rex_i18n::msg('d2u_address_address_types'));
     $list->setColumnFormat('address_type_ids', 'custom', static function ($params) {
@@ -264,6 +284,18 @@ if ('' === $func) {
     });
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('address_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

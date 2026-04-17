@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -64,20 +66,20 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_range_from', 'form[range_from]', $zipcode->range_from, true, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_address_range_to', 'form[range_to]', $zipcode->range_to, true, $readonly, 'number');
+                            BackendHelper::form_input('d2u_address_range_from', 'form[range_from]', $zipcode->range_from, true, $readonly, 'number');
+                            BackendHelper::form_input('d2u_address_range_to', 'form[range_to]', $zipcode->range_to, true, $readonly, 'number');
                             $countries = FriendsOfRedaxo\D2UAddress\Country::getAll((int) rex_config::get('d2u_helper', 'default_lang'));
                             $options_countries = [];
                             foreach ($countries as $country) {
                                 $options_countries[$country->country_id] = $country->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$zipcode->country->country_id], 1, false, $readonly);
+                            BackendHelper::form_select('d2u_address_country', 'form[country_id]', $options_countries, [$zipcode->country->country_id], 1, false, $readonly);
                             $options_address_ids = [];
                             $addresses = FriendsOfRedaxo\D2UAddress\Address::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false, false);
                             foreach ($addresses as $address) {
                                 $options_address_ids[$address->address_id] = $address->company . ('' !== $address->contact_name ? ' ('. trim($address->contact_name) .')' : '');
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $zipcode->address_ids, 15, true, $readonly);
+                            BackendHelper::form_select('d2u_address_address', 'form[address_ids][]', $options_address_ids, $zipcode->address_ids, 15, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -108,17 +110,16 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-//		print \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+    //		print BackendHelper::getJS();
 }
 
 if ('' === $func) {
     $query = 'SELECT zipcode_id, range_from, range_to, name '
         . 'FROM '. \rex::getTablePrefix() .'d2u_address_zipcodes AS zipcodes '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_address_countries_lang AS country '
-            . 'ON zipcodes.country_id = country.country_id AND country.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name, range_from ASC';
-    $list = rex_list::factory($query, 1000);
+            . 'ON zipcodes.country_id = country.country_id AND country.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC', 'range_from' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -129,14 +130,18 @@ if ('' === $func) {
 
     $list->setColumnLabel('zipcode_id', rex_i18n::msg('id'));
     $list->setColumnLayout('zipcode_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('zipcode_id');
 
     $list->setColumnLabel('range_from', rex_i18n::msg('d2u_address_range_from'));
     $list->setColumnParams('range_from', ['func' => 'edit', 'entry_id' => '###zipcode_id###']);
+    $list->setColumnSortable('range_from');
 
     $list->setColumnLabel('range_to', rex_i18n::msg('d2u_address_range_to'));
     $list->setColumnParams('range_to', ['func' => 'edit', 'entry_id' => '###zipcode_id###']);
+    $list->setColumnSortable('range_to');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_address_country'));
+    $list->setColumnSortable('name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
