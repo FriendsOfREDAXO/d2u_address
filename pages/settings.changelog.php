@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/FriendsOfRedaxo/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.6.1-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.6.0:</p>
 <ul>
 	<li>Neue Module 20-4 bis 20-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>
