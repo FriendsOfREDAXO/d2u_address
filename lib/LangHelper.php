@@ -71,7 +71,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
         'd2u_address_mobile' => 'Móvil',
         'd2u_address_nearby' => 'Cerca de usted',
         'd2u_address_other_countries' => 'Otros países',
-        'd2u_address_phone' => 'Teléphono',
+        'd2u_address_phone' => 'Teléfono',
         'd2u_address_specialists' => 'Nuestros especialistas están disponibles en todo el mundo por teléfono y estarán encantados de asesorarle en sus necesidades individuales.',
     ];
 
