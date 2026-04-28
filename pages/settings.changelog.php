@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>1.6.1-DEV:</p>
 <ul>
+	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
 	<li>...</li>
 </ul>
 <p>1.6.0:</p>
