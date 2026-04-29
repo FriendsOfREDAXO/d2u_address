@@ -5,7 +5,7 @@
 <p>1.6.1-DEV:</p>
 <ul>
 	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
-	<li>...</li>
+	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
 </ul>
 <p>1.6.0:</p>
 <ul>
