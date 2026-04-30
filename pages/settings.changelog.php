@@ -5,8 +5,9 @@
 <p>1.6.1-DEV:</p>
 <ul>
 	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
-	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
-</ul>
+	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>        <li>Security: Die <code>media-is-in-use</code>-Extension-Points in <code>boot.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+        <li>Security: Die <code>save()</code>-Methoden in <code>lib/*.php</code> (Address, AddressType, Country, Continent) verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+        <li>Security: Modul-Ausgaben (<code>modules/20/1/output.php</code>, <code>modules/20/3/output.php</code>, <code>modules/20/4/output.php</code>, <code>modules/20/6/output.php</code>) härten Leaflet-Popup-Inhalte: Werte werden via <code>json_encode()</code> in JS-Strings übergeben statt mit <code>addslashes()</code>; Lat/Long strikt als <code>(float)</code> gecastet. Weitere Adress-/Namensfelder werden in HTML-Ausgaben mit <code>rex_escape()</code> gehärtet.</li></ul>
 <p>1.6.0:</p>
 <ul>
 	<li>Neue Module 20-4 bis 20-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>

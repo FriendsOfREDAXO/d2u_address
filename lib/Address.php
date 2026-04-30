@@ -301,34 +301,50 @@ class Address
         }
 
         $query = rex::getTablePrefix() .'d2u_address_address SET '
-                ."company = '". addslashes($this->company) ."', "
-                ."company_appendix = '". addslashes($this->company_appendix) ."', "
-                ."contact_name = '". addslashes($this->contact_name) ."', "
-                ."street = '". addslashes($this->street) ."', "
-                ."additional_address = '". addslashes($this->additional_address) ."', "
-                ."zip_code = '". $this->zip_code ."', "
-                ."city = '". addslashes($this->city) ."', "
-                .'country_id = '. ($this->country instanceof Country ? $this->country->country_id : 0) .', '
-                .'latitude = '. $this->latitude .', '
-                .'longitude = '. $this->longitude .', '
-                ."email = '". $this->email ."', "
-                ."url = '". $this->url ."', "
-                ."phone = '". $this->phone ."', "
-                ."mobile = '". $this->mobile ."', "
-                ."fax = '". $this->fax ."', "
-                ."picture = '". $this->picture ."', "
-                ."address_type_ids = '|". implode('|', $this->address_type_ids) ."|', "
-                .'article_id = '. ($this->article_id > 0 ? $this->article_id : 0) .', '
-                .'priority = '. $this->priority .', '
-                ."online_status = '". $this->online_status ."' ";
+                .'company = :company, '
+                .'company_appendix = :company_appendix, '
+                .'contact_name = :contact_name, '
+                .'street = :street, '
+                .'additional_address = :additional_address, '
+                .'zip_code = :zip_code, '
+                .'city = :city, '
+                .'country_id = '. ($this->country instanceof Country ? (int) $this->country->country_id : 0) .', '
+                .'latitude = '. (float) $this->latitude .', '
+                .'longitude = '. (float) $this->longitude .', '
+                .'email = :email, '
+                .'url = :url, '
+                .'phone = :phone, '
+                .'mobile = :mobile, '
+                .'fax = :fax, '
+                .'picture = :picture, '
+                .'address_type_ids = :address_type_ids, '
+                .'article_id = '. ($this->article_id > 0 ? (int) $this->article_id : 0) .', '
+                .'priority = '. (int) $this->priority .', '
+                .'online_status = :online_status ';
         if (0 === $this->address_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE address_id = '. $this->address_id;
+            $query = 'UPDATE '. $query .' WHERE address_id = '. (int) $this->address_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':company' => $this->company,
+            ':company_appendix' => $this->company_appendix,
+            ':contact_name' => $this->contact_name,
+            ':street' => $this->street,
+            ':additional_address' => $this->additional_address,
+            ':zip_code' => $this->zip_code,
+            ':city' => $this->city,
+            ':email' => $this->email,
+            ':url' => $this->url,
+            ':phone' => $this->phone,
+            ':mobile' => $this->mobile,
+            ':fax' => $this->fax,
+            ':picture' => $this->picture,
+            ':address_type_ids' => '|' . implode('|', $this->address_type_ids) . '|',
+            ':online_status' => $this->online_status,
+        ]);
         if (0 === $this->address_id) {
             $this->address_id = (int) $result->getLastId();
             $error = $result->hasError();

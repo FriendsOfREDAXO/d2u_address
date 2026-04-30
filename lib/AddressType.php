@@ -163,20 +163,20 @@ class AddressType
         $error = false;
 
         $query = rex::getTablePrefix() .'d2u_address_types SET '
-                ."name = '". addslashes($this->name) ."', "
+                .'name = :name, '
                 ."show_address_details = '". ($this->show_address_details ? 'yes' : 'no') ."', "
                 ."show_country_select = '". ($this->show_country_select ? 'yes' : 'no') ."', "
-                .'maps_zoom = '. $this->maps_zoom .', '
-                .'default_address_id = '. $this->default_address_id .', '
-                .'article_id = '. $this->article_id .' ';
+                .'maps_zoom = '. (int) $this->maps_zoom .', '
+                .'default_address_id = '. (int) $this->default_address_id .', '
+                .'article_id = '. (int) $this->article_id .' ';
         if (0 === $this->address_type_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE address_type_id = '. $this->address_type_id;
+            $query = 'UPDATE '. $query .' WHERE address_type_id = '. (int) $this->address_type_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [':name' => $this->name]);
         if (0 === $this->address_type_id) {
             $this->address_type_id = (int) $result->getLastId();
             $error = $result->hasError();

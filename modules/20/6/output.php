@@ -195,10 +195,10 @@ $addresses = $address_type->getAddresses(true);
                             $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;
                         }
 
-                        echo 'var marker = L.marker(['. $address->latitude .', '. $address->longitude .'], {'
+                        echo 'var marker = L.marker(['. (float) $address->latitude .', '. (float) $address->longitude .'], {'
                                 .'draggable: false,'
                                 .'icon: myIcon'
-                                ."}).addTo(map).bindPopup('". addslashes($infotext) ."');";
+                                .'}).addTo(map).bindPopup('. json_encode($infotext, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) .');';
                     }
                 }
             ?>

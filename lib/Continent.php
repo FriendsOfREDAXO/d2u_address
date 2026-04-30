@@ -172,11 +172,11 @@ class Continent implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_country = new self($this->continent_id, $this->clang_id);
             if ($pre_save_country !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_address_continents_lang SET '
-                        .'continent_id = '. $this->continent_id .', '
-                        .'clang_id = '. $this->clang_id .', '
-                        ."name = '". addslashes($this->name) ."', "
+                        .'continent_id = '. (int) $this->continent_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'name = :name, '
                         ."translation_needs_update = '". $this->translation_needs_update ."' ";
-                $result->setQuery($query);
+                $result->setQuery($query, [':name' => $this->name]);
                 $error = $result->hasError();
             }
         }

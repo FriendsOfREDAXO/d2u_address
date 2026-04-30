@@ -330,11 +330,11 @@ class Country implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_country = new self($this->country_id, $this->clang_id);
             if ($pre_save_country !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_address_countries_lang SET '
-                        .'country_id = '. $this->country_id .', '
-                        .'clang_id = '. $this->clang_id .', '
-                        ."name = '". addslashes($this->name) ."', "
+                        .'country_id = '. (int) $this->country_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'name = :name, '
                         ."translation_needs_update = '". $this->translation_needs_update ."' ";
-                $result->setQuery($query);
+                $result->setQuery($query, [':name' => $this->name]);
                 $error = $result->hasError();
             }
         }

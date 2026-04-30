@@ -74,7 +74,7 @@ if($address_type->show_country_select) {
 		if(rex_request('country_id', 'int') > -1 && (($country instanceof FriendsOfRedaxo\D2UAddress\Country && $country->country_id === $cur_country->country_id) || ($country === false && $cur_country->country_id === $default_country_id))) {
 			$selected = ' selected="selected"';
 		}
-		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. $cur_country->name .'</option>';
+		print '<option value="'. $cur_country->country_id .'" '. $selected .'>'. rex_escape($cur_country->name) .'</option>';
 	}
 	print '<option value="-1" '. (rex_request('country_id', 'int') === -1 ? 'selected="selected"' : '') .'>'. \Sprog\Wildcard::get('d2u_address_other_countries') .'</option>';
 	print '</select>';
@@ -356,10 +356,10 @@ if(count($addresses) > 0) {
 							$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
 						}
 	
-						print "var marker = L.marker([". $address->latitude .", ". $address->longitude ."], {"
-								."draggable: false,"
-								."icon: myIcon"
-								."}).addTo(map).bindPopup('". addslashes($infotext) ."');";
+								print 'var marker = L.marker(['. (float) $address->latitude .', '. (float) $address->longitude .'], {'
+										.'draggable: false,'
+										.'icon: myIcon'
+										.'}).addTo(map).bindPopup('. json_encode($infotext, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) .');';
 					}
 				}
 			?>
