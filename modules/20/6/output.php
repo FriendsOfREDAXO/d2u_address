@@ -15,38 +15,35 @@ $addresses = $address_type->getAddresses(true);
             $d2u_helper = rex_addon::get('d2u_helper');
             $api_key = '';
             if ('' !== $d2u_helper->getConfig('maps_key', '')) {
-                $api_key = '?key='. $d2u_helper->getConfig('maps_key');
+                $api_key = '?key='. rawurlencode((string) $d2u_helper->getConfig('maps_key'));
             }
     ?>
 
-	<script src="https://maps.googleapis.com/maps/api/js<?= $api_key ?>"></script>
+	<script src="https://maps.googleapis.com/maps/api/js<?= rex_escape($api_key) ?>"></script>
 	<div id="map_canvas" style="display: block; width: 100%; height: 700px;"></div>
 	<script>
 		var map;
 		var infowindow = new google.maps.InfoWindow();
 		var address = [<?php
             foreach ($addresses as $address) {
-                echo '[';
-                // Address for Geocoder
-                echo '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
-                // Infotext
-                $infotext = $address->company .'<br />';
+                // Infotext (HTML, escaped per piece)
+                $infotext = rex_escape($address->company) .'<br />';
                 if ('' !== $address->contact_name) {
-                    $infotext .= $address->contact_name .'<br />';
+                    $infotext .= rex_escape($address->contact_name) .'<br />';
                 }
-                $infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+                $infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? rex_escape($address->country->name) .' - ' : '') . rex_escape($address->zip_code) .' '. rex_escape($address->city);
                 if ('' !== $address->phone) {
-                    $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;
+                    $infotext .= '<br />'. rex_escape(\Sprog\Wildcard::get('d2u_address_phone')) .' '. rex_escape($address->phone);
                 }
                 if ('' !== $address->mobile) {
-                    $infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;
+                    $infotext .= '<br />'. rex_escape(\Sprog\Wildcard::get('d2u_address_mobile')) .' '. rex_escape($address->mobile);
                 }
-                $infotext .= '"';
 
-                echo $infotext .', ';
-                // Latitude and Longitude
-                echo $address->latitude .', '. $address->longitude;
-                echo '],'. PHP_EOL;
+                echo '['
+                    . json_encode($address->street .', '. $address->zip_code .' '. $address->city, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) .', '
+                    . json_encode($infotext, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) .', '
+                    . (float) $address->latitude .', '. (float) $address->longitude
+                    .'],'. PHP_EOL;
             }
         ?>];
 		var address_position = 0;
@@ -161,9 +158,9 @@ $addresses = $address_type->getAddresses(true);
                 $leaflet_js_file = 'modules/04-2/leaflet.js';
                 echo '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
     ?>
-		<div id="map-<?= $map_id ?>" style="width:100%; height: 700px"></div>
+		<div id="map-<?= (int) $map_id ?>" style="width:100%; height: 700px"></div>
 		<script type="text/javascript" async="async">
-			<?= "var map = L.map('map-". $map_id ."').setView([". (($latitude_max + $latitude_min) / 2) .', '. (($longitude_max + $longitude_min) / 2) .'], '. $maps_zoom .');';
+			<?= "var map = L.map('map-". (int) $map_id ."').setView([". (float) (($latitude_max + $latitude_min) / 2) .', '. (float) (($longitude_max + $longitude_min) / 2) .'], '. (int) $maps_zoom .');';
             ?>
 			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
 				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
