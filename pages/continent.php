@@ -27,6 +27,11 @@ if ('' !== $message) {
     echo rex_view::success(rex_i18n::msg($message));
 }
 
+if (1 === (int) filter_input(INPUT_POST, 'btn_abort', FILTER_VALIDATE_INT)) {
+    header('Location: '. BackendHelper::getCurrentBackendPage([], ['entry_id', 'func', 'message', 'message_type']));
+    exit;
+}
+
 // save settings
 if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply'))) {
     $form = rex_post('form', 'array', []);

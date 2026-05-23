@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>1.6.1-DEV:</p>
 <ul>
+	<li>Backend: Abbrechen-Buttons in den Formularen fuer Adressen, Adresstypen, Laender, Kontinente und PLZ fuehren jetzt wieder zur Liste statt einen normalen Formular-Submit auszufuehren.</li>
 	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
 	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>        <li>Security: Die <code>media-is-in-use</code>-Extension-Points in <code>boot.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
         <li>Security: Die <code>save()</code>-Methoden in <code>lib/*.php</code> (Address, AddressType, Country, Continent) verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
