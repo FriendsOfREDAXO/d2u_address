@@ -14,7 +14,7 @@ if (count($address_types) > 0) {
                     if ((int) 'REX_VALUE[1]' === $address_type->address_type_id) { /** @phpstan-ignore-line */
                         echo 'selected="selected" ';
                     }
-                    echo '>'. $address_type->name .'</option>';
+                    echo '>'. rex_escape($address_type->name) .'</option>';
                 }
                 echo '</select>';
             ?>

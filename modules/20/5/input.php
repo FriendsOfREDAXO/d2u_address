@@ -122,7 +122,7 @@
                     if ((int) 'REX_VALUE[2]' === $address->address_id) { /** @phpstan-ignore-line */
                         echo 'selected="selected" ';
                     }
-                    echo '>'. $address->company .' ('. $address->contact_name .')</option>';
+                    echo '>'. rex_escape($address->company) .' ('. rex_escape($address->contact_name) .')</option>';
                 }
                 echo '</select>';
             }

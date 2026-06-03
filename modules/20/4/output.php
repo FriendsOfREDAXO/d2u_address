@@ -174,7 +174,7 @@ if(count($addresses) > 0) {
 			$d2u_helper = rex_addon::get("d2u_helper");
 			$api_key = "";
 			if($d2u_helper->getConfig("maps_key", "") !== "") {
-				$api_key = '?key='. $d2u_helper->getConfig("maps_key");
+				$api_key = '?key='. rawurlencode($d2u_helper->getConfig("maps_key"));
 			}
 	?>
 
@@ -187,24 +187,23 @@ if(count($addresses) > 0) {
 			foreach($addresses as $address) {
 				print "[";
 				// Address for Geocoder
-				print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
+				print json_encode($address->street .', '. $address->zip_code .' '. $address->city) .', ';
 				// Infotext
-				$infotext = $address->company .'<br />';
+				$infotext = rex_escape($address->company) .'<br />';
 				if($address->contact_name !== "") {
-					$infotext .= $address->contact_name .'<br />';			
+					$infotext .= rex_escape($address->contact_name) .'<br />';
 				}
-				$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+				$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? rex_escape($address->country->name) .' - ' : '') . rex_escape($address->zip_code) .' '. rex_escape($address->city);
 				if($address->phone !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. rex_escape($address->phone);
 				}
 				if($address->mobile !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. rex_escape($address->mobile);
 				}
-				$infotext .= '"';
 
-				print $infotext .", ";
+				print json_encode($infotext) .", ";
 				// Latitude and Longitude
-				print $address->latitude .', '. $address->longitude;
+				print (float) $address->latitude .', '. (float) $address->longitude;
 				print "],". PHP_EOL;
 			}	
 		?>];

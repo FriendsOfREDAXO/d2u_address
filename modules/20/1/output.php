@@ -121,33 +121,33 @@ if(count($addresses) > 0) {
 		$a_href_close = $address->article_id > 0 ? '</a>' : '';
 		print $a_href_open .'<img src="'.
 			($address->picture !== "" ? rex_media_manager::getUrl('d2u_address_120x150',$address->picture) : \rex_addon::get('d2u_address')->getAssetsUrl("noavatar.jpg"))
-			.'" alt="'. $address->company . $address->contact_name .'">'. $a_href_close;
+			.'" alt="'. rex_escape($address->company . $address->contact_name, 'html_attr') .'">'. $a_href_close;
 		print '</div>';
 		print '<div class="col-9">';
 		if($address->contact_name !== "") {
-			print $a_href_open .'<h3>'. $address->contact_name .'</h3>'. $a_href_close;
-			print $address->company .'<br>';
+			print $a_href_open .'<h3>'. rex_escape($address->contact_name) .'</h3>'. $a_href_close;
+			print rex_escape($address->company) .'<br>';
 		}
 		else {
-			print $a_href_open .'<h3>'. $address->company .'</h3>'. $a_href_close;
+			print $a_href_open .'<h3>'. rex_escape($address->company) .'</h3>'. $a_href_close;
 		}
 		if($address->company_appendix !== "") {
-			print $address->company_appendix .'<br>';
+			print rex_escape($address->company_appendix) .'<br>';
 		}
 		if($address_type->show_address_details) {
-			print ($address->additional_address !== "" ? $address->additional_address .'<br>' : '');
-			print $address->street .'<br>';
-			print $address->zip_code .' '. $address->city .'<br>';
+			print ($address->additional_address !== "" ? rex_escape($address->additional_address) .'<br>' : '');
+			print rex_escape($address->street) .'<br>';
+			print rex_escape($address->zip_code) .' '. rex_escape($address->city) .'<br>';
 		}
 		print '<br />';
 		if($address->mobile !== "") {
-			print \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile .'<br>';
+			print \Sprog\Wildcard::get('d2u_address_mobile') .' '. rex_escape($address->mobile) .'<br>';
 		}
 		if($address->phone !== "") {
-			print \Sprog\Wildcard::get('d2u_helper_module_form_phone') .' '. $address->phone .'<br>';
+			print \Sprog\Wildcard::get('d2u_helper_module_form_phone') .' '. rex_escape($address->phone) .'<br>';
 		}
 		if($show_fax && $address->fax !== "") { /** @phpstan-ignore-line */
-			print \Sprog\Wildcard::get('d2u_address_fax') .' '. $address->fax .'<br>';
+			print \Sprog\Wildcard::get('d2u_address_fax') .' '. rex_escape($address->fax) .'<br>';
 		}
 
 		// Google Analytics Event
@@ -156,9 +156,9 @@ if(count($addresses) > 0) {
 				rex_config::get('d2u_address', 'analytics_emailevent_category', '') !== '' &&
 				rex_config::get('d2u_address', 'analytics_emailevent_action', '') !== '' &&
 				rex_request('search_it_build_index', 'int', false) === false) {
-			$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
+			$google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". rex_escape($address->email, 'html_attr') ."');\"";
 		}
-		print '<a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a>';
+		print '<a href="mailto:'. rex_escape($address->email, 'html_attr') .'"'. $google_analytics .'>'. rex_escape($address->email) .'</a>';
 		print '</div>';
 		print '</div>';
 		print '</div>';
@@ -174,7 +174,7 @@ if(count($addresses) > 0) {
 			$d2u_helper = rex_addon::get("d2u_helper");
 			$api_key = "";
 			if($d2u_helper->getConfig("maps_key", "") !== "") {
-				$api_key = '?key='. $d2u_helper->getConfig("maps_key");
+				$api_key = '?key='. rawurlencode($d2u_helper->getConfig("maps_key"));
 			}
 	?>
 
@@ -187,24 +187,23 @@ if(count($addresses) > 0) {
 			foreach($addresses as $address) {
 				print "[";
 				// Address for Geocoder
-				print '"'. $address->street .', '. $address->zip_code .' '. $address->city .'", ';
+				print json_encode($address->street .', '. $address->zip_code .' '. $address->city) .', ';
 				// Infotext
-				$infotext = $address->company .'<br />';
+				$infotext = rex_escape($address->company) .'<br />';
 				if($address->contact_name !== "") {
-					$infotext .= $address->contact_name .'<br />';			
+					$infotext .= rex_escape($address->contact_name) .'<br />';
 				}
-				$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? $address->country->name .' - ' : '') . $address->zip_code .' '. $address->city;
+				$infotext .= ($address->country instanceof FriendsOfRedaxo\D2UAddress\Country ? rex_escape($address->country->name) .' - ' : '') . rex_escape($address->zip_code) .' '. rex_escape($address->city);
 				if($address->phone !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. $address->phone;			
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_phone') .' '. rex_escape($address->phone);
 				}
 				if($address->mobile !== '') {
-					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. $address->mobile;			
+					$infotext .= '<br />'. \Sprog\Wildcard::get('d2u_address_mobile') .' '. rex_escape($address->mobile);
 				}
-				$infotext .= '"';
 
-				print $infotext .", ";
+				print json_encode($infotext) .", ";
 				// Latitude and Longitude
-				print $address->latitude .', '. $address->longitude;
+				print (float) $address->latitude .', '. (float) $address->longitude;
 				print "],". PHP_EOL;
 			}	
 		?>];

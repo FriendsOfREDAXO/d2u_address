@@ -22,9 +22,9 @@ echo '<div class="col-12 col-sm-'. $cols_sm .' col-md-'. $cols_md .' col-lg-'. $
                         '' !== rex_config::get('d2u_address', 'analytics_emailevent_category', '') &&
                         '' !== rex_config::get('d2u_address', 'analytics_emailevent_action', '') &&
                         false === rex_request('search_it_build_index', 'int', false)) {
-                    $google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". $address->email ."');\"";
+                    $google_analytics = " onClick=\"ga('send', 'event', '". rex_config::get('d2u_address', 'analytics_emailevent_category') ."', '". rex_config::get('d2u_address', 'analytics_emailevent_action') ."', '". rex_escape($address->email, 'html_attr') ."');\"";
                 }
-                echo '<p><a href="mailto:'. $address->email .'"'. $google_analytics .'>'. $address->email .'</a></p>';
+                echo '<p><a href="mailto:'. rex_escape($address->email, 'html_attr') .'"'. $google_analytics .'>'. rex_escape($address->email) .'</a></p>';
             }
         ?>
 	</div>
