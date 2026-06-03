@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/FriendsOfRedaxo/d2u_address" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.6.2-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.6.1:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in den Formularen fuer Adressen, Adresstypen, Laender, Kontinente und PLZ fuehren jetzt wieder zur Liste statt einen normalen Formular-Submit auszufuehren.</li>
