@@ -149,18 +149,22 @@ class ZipCode
     public function save()
     {
         $query = rex::getTablePrefix() .'d2u_address_zipcodes SET '
-                ."address_ids = '|". implode('|', $this->address_ids) ."|', "
-                ."range_from = '". $this->range_from ."', "
-                ."range_to = '". $this->range_to ."', "
-                .'country_id = '. $this->country->country_id .' ';
+                .'address_ids = :address_ids, '
+                .'range_from = :range_from, '
+                .'range_to = :range_to, '
+                .'country_id = '. (int) $this->country->country_id .' ';
         if (0 === $this->zipcode_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE zipcode_id = '. $this->zipcode_id;
+            $query = 'UPDATE '. $query .' WHERE zipcode_id = '. (int) $this->zipcode_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':address_ids' => '|'. implode('|', $this->address_ids) .'|',
+            ':range_from' => $this->range_from,
+            ':range_to' => $this->range_to,
+        ]);
         if (0 === $this->zipcode_id) {
             $this->zipcode_id = (int) $result->getLastId();
         }

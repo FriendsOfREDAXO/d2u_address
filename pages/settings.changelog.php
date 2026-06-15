@@ -4,7 +4,7 @@
 <h2>Changelog</h2>
 <p>1.6.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Security/Bugfix: Die zuletzt noch per String-Konkatenation gesetzten Felder in <code>lib/ZipCode.php</code> (<code>address_ids</code>, <code>range_from</code>, <code>range_to</code>), <code>lib/Country.php</code> (<code>iso_lang_codes</code>, <code>translation_needs_update</code>) und <code>lib/Continent.php</code> (<code>country_ids</code>, <code>translation_needs_update</code>) verwenden jetzt ebenfalls gebundene Parameter; numerische IDs werden strikt nach <code>int</code> gecastet. Verhindert SQL-Injection und <code>rex_sql_exception</code> bei Werten mit einfachen Anfuehrungszeichen.</li>
 </ul>
 <p>1.6.1:</p>
 <ul>

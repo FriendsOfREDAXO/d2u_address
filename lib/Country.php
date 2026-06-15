@@ -299,27 +299,27 @@ class Country implements \TobiasKrais\D2UHelper\ITranslationHelper
         $result = rex_sql::factory();
         if (0 === $this->country_id || $pre_save_country !== $this) {
             $query = rex::getTablePrefix() .'d2u_address_countries SET '
-                    ."iso_lang_codes = '". implode(',', $this->iso_lang_codes) ."', "
-                    .'maps_zoom = '. $this->maps_zoom .' ';
+                    .'iso_lang_codes = :iso_lang_codes, '
+                    .'maps_zoom = '. (int) $this->maps_zoom .' ';
 
             if (0 === $this->country_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE country_id = '. $this->country_id;
+                $query = 'UPDATE '. $query .' WHERE country_id = '. (int) $this->country_id;
             }
 
-            $result->setQuery($query);
+            $result->setQuery($query, [':iso_lang_codes' => implode(',', $this->iso_lang_codes)]);
             if (0 === $this->country_id) {
                 $this->country_id = (int) $result->getLastId();
                 $error = $result->hasError();
             }
 
             // Update assigned addresses
-            $result->setQuery('DELETE FROM '. rex::getTablePrefix() .'d2u_address_2_countries WHERE country_id = '. $this->country_id);
+            $result->setQuery('DELETE FROM '. rex::getTablePrefix() .'d2u_address_2_countries WHERE country_id = '. (int) $this->country_id);
             foreach ($this->address_ids as $address_id) {
                 $query = 'INSERT INTO '. rex::getTablePrefix() .'d2u_address_2_countries SET '
-                        .'country_id = '. $this->country_id .', '
-                        .'address_id = '. $address_id;
+                        .'country_id = '. (int) $this->country_id .', '
+                        .'address_id = '. (int) $address_id;
                 $result->setQuery($query);
                 $error = $result->hasError();
             }
@@ -333,8 +333,11 @@ class Country implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'country_id = '. (int) $this->country_id .', '
                         .'clang_id = '. (int) $this->clang_id .', '
                         .'name = :name, '
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
-                $result->setQuery($query, [':name' => $this->name]);
+                        .'translation_needs_update = :translation_needs_update ';
+                $result->setQuery($query, [
+                    ':name' => $this->name,
+                    ':translation_needs_update' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

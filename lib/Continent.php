@@ -152,15 +152,15 @@ class Continent implements \TobiasKrais\D2UHelper\ITranslationHelper
         $result = rex_sql::factory();
         if (0 === $this->continent_id || $pre_save_country !== $this) {
             $query = rex::getTablePrefix() .'d2u_address_continents SET '
-                    ."country_ids = '|". implode('|', $this->country_ids) ."|' ";
+                    .'country_ids = :country_ids ';
 
             if (0 === $this->continent_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE continent_id = '. $this->continent_id;
+                $query = 'UPDATE '. $query .' WHERE continent_id = '. (int) $this->continent_id;
             }
 
-            $result->setQuery($query);
+            $result->setQuery($query, [':country_ids' => '|'. implode('|', $this->country_ids) .'|']);
             if (0 === $this->continent_id) {
                 $this->continent_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -175,8 +175,11 @@ class Continent implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'continent_id = '. (int) $this->continent_id .', '
                         .'clang_id = '. (int) $this->clang_id .', '
                         .'name = :name, '
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
-                $result->setQuery($query, [':name' => $this->name]);
+                        .'translation_needs_update = :translation_needs_update ';
+                $result->setQuery($query, [
+                    ':name' => $this->name,
+                    ':translation_needs_update' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }
