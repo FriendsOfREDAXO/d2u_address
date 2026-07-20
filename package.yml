@@ -30,7 +30,7 @@ page:
 
 requires:
     packages:
-        d2u_helper: '>=2.1.4'
+        d2u_helper: '>=2.2.5'
         sprog: '>=1.0.0'
     php: '>=8.0'
         

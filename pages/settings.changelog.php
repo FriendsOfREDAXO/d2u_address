@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>1.6.2-DEV:</p>
 <ul>
+	<li>Anpassung an d2u_helper: Die Leaflet-Bibliothek liegt im d2u_helper-Addon jetzt unter <code>assets/leaflet/</code> statt <code>assets/modules/04-2/</code>. Die Module 20-1, 20-3, 20-4 und 20-6 laden die Leaflet-Assets (JS und Marker-Bilder) entsprechend über die neuen Pfade. Benötigt d2u_helper mit verschobenen Assets.</li>
 	<li>Bugfix: Der Online/Offline-Schalter in der Backend-Liste funktioniert wieder. Beim Erzeugen des CSRF-geschützten Status-Links wurde der Platzhalter für die Datensatz-ID URL-kodiert und dadurch nicht mehr durch die echte ID ersetzt.</li>
 	<li>Security/Bugfix: Die zuletzt noch per String-Konkatenation gesetzten Felder in <code>lib/ZipCode.php</code> (<code>address_ids</code>, <code>range_from</code>, <code>range_to</code>), <code>lib/Country.php</code> (<code>iso_lang_codes</code>, <code>translation_needs_update</code>) und <code>lib/Continent.php</code> (<code>country_ids</code>, <code>translation_needs_update</code>) verwenden jetzt ebenfalls gebundene Parameter; numerische IDs werden strikt nach <code>int</code> gecastet. Verhindert SQL-Injection und <code>rex_sql_exception</code> bei Werten mit einfachen Anfuehrungszeichen.</li>
 </ul>

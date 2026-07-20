@@ -317,7 +317,7 @@ if(count($addresses) > 0) {
 			}
 
 			if ($address_counter > 0) {
-				$leaflet_js_file = 'modules/04-2/leaflet.js';
+				$leaflet_js_file = 'leaflet/leaflet.js';
 				print '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
 	?>
 		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 500px"></div>
@@ -330,8 +330,8 @@ if(count($addresses) > 0) {
 			}).addTo(map);
 			map.scrollWheelZoom.disable();
 			var myIcon = L.icon({
-				iconUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'); ?>',
-				shadowUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'); ?>',
+				iconUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'leaflet/marker-icon.png'); ?>',
+				shadowUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'leaflet/marker-shadow.png'); ?>',
 
 				iconSize:     [25, 41], // size of the icon
 				shadowSize:   [41, 41], // size of the shadow
