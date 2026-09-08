@@ -10,6 +10,7 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 if (\rex::isBackend()) {
     rex_extension::register('CLANG_DELETED', rex_d2u_address_clang_deleted(...));
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_address_translation_list(...));
+    rex_extension::register('D2U_HELPER_TRANSLATE_OBJECT', rex_d2u_address_translate_object(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_address_media_is_in_use(...));
 }
 
@@ -94,7 +95,7 @@ function rex_d2u_address_translation_list(rex_extension_point $ep) {
             if ('' === $continent->name) {
                 $continent = new \FriendsOfRedaxo\D2UAddress\Continent($continent->continent_id, $source_clang_id);
             }
-            $html_continents .= '<li><a href="'. rex_url::backendPage('d2u_address/continent', ['entry_id' => $continent->continent_id, 'func' => 'edit']) .'">'. $continent->name .'</a></li>';
+            $html_continents .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_address', 'continent', $continent->continent_id, $continent->name, rex_url::backendPage('d2u_address/continent', ['entry_id' => $continent->continent_id, 'func' => 'edit']));
         }
         $html_continents .= '</ul>';
         
@@ -112,7 +113,7 @@ function rex_d2u_address_translation_list(rex_extension_point $ep) {
             if ('' === $country->name) {
                 $country = new \FriendsOfRedaxo\D2UAddress\Country($country->country_id, $source_clang_id);
             }
-            $html_countries .= '<li><a href="'. rex_url::backendPage('d2u_address/continent', ['entry_id' => $country->country_id, 'func' => 'edit']) .'">'. $country->name .'</a></li>';
+            $html_countries .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_address', 'country', $country->country_id, $country->name, rex_url::backendPage('d2u_address/continent', ['entry_id' => $country->country_id, 'func' => 'edit']));
         }
         $html_countries .= '</ul>';
         
@@ -126,4 +127,57 @@ function rex_d2u_address_translation_list(rex_extension_point $ep) {
     $list[] = $list_entry;
 
     return $list;
+}
+
+/**
+ * Translate a single d2u_address object with AI (D2U_HELPER_TRANSLATE_OBJECT).
+ * @param rex_extension_point<array<string,mixed>> $ep Redaxo extension point
+ * @return array<string,mixed> Result array with success, name and message
+ */
+function rex_d2u_address_translate_object(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    if ('d2u_address' !== ($params['addon'] ?? '')) {
+        return $ep->getSubject();
+    }
+
+    $type = (string) ($params['type'] ?? '');
+    $id = (int) ($params['id'] ?? 0);
+    $source_clang_id = (int) ($params['source_clang_id'] ?? 0);
+    $target_clang_id = (int) ($params['target_clang_id'] ?? 0);
+
+    // These constructors only return a row when a translation for that clang
+    // exists. For missing translations load the source and retarget it.
+    $object = null;
+    switch ($type) {
+        case 'continent':
+            $continent = new \FriendsOfRedaxo\D2UAddress\Continent($id, $target_clang_id);
+            if ($continent->continent_id <= 0) {
+                $continent = new \FriendsOfRedaxo\D2UAddress\Continent($id, $source_clang_id);
+                $continent->clang_id = $target_clang_id;
+            }
+            $object = $continent->continent_id > 0 ? $continent : null;
+            break;
+        case 'country':
+            $country = new \FriendsOfRedaxo\D2UAddress\Country($id, $target_clang_id);
+            if ($country->country_id <= 0) {
+                $country = new \FriendsOfRedaxo\D2UAddress\Country($id, $source_clang_id);
+                $country->clang_id = $target_clang_id;
+            }
+            $object = $country->country_id > 0 ? $country : null;
+            break;
+        default:
+            return $ep->getSubject();
+    }
+
+    if (!$object instanceof \TobiasKrais\D2UHelper\ITranslateable) {
+        return ['success' => false, 'name' => '', 'message' => rex_i18n::msg('d2u_helper_translations_ai_error')];
+    }
+
+    $success = $object->translateFrom($source_clang_id);
+
+    return [
+        'success' => $success,
+        'name' => $object->name,
+        'message' => $success ? '' : rex_i18n::msg('d2u_helper_translations_ai_error'),
+    ];
 }

@@ -4,7 +4,7 @@
 <h2>Changelog</h2>
 <p>1.6.3-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Neu: KI-Übersetzung in der Übersetzungshilfe von d2u_helper. Ist das Addon <code>ai_platform</code> installiert und ein Standard-Textprofil konfiguriert, lassen sich fehlende oder zu aktualisierende Übersetzungen von Kontinent- und Ländernamen direkt in der Übersetzungshilfe automatisch übersetzen (einzeln oder alle auf einmal). Dazu implementieren <code>Continent</code> und <code>Country</code> das neue Interface <code>TobiasKrais\D2UHelper\ITranslateable</code> und die <code>boot.php</code> beantwortet den Extension Point <code>D2U_HELPER_TRANSLATE_OBJECT</code>.</li>
 </ul>
 <p>1.6.2:</p>
 <ul>
